@@ -1,0 +1,11 @@
+.maid/maid.log
+.maid/rules.sample.rb
+.swp
+.netrwhist
+.vim/tmp/
+.vim/plugged/*
+.secret
+zsh-custom/sourced/secret
+sourced/secret
+secret/
+.gitconfig

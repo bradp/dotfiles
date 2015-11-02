@@ -1,0 +1,24 @@
+#
+#                     ██   ██
+# ██████             ░██  ░██
+# ░██░░░██  ██████   ██████░██       ██████
+# ░██  ░██ ░░░░░░██ ░░░██░ ░██████  ██░░░░
+# ░██████   ███████   ░██  ░██░░░██░░█████
+# ░██░░░   ██░░░░██   ░██  ░██  ░██ ░░░░░██
+# ░██     ░░████████  ░░██ ░██  ░██ ██████
+# ░░       ░░░░░░░░    ░░  ░░   ░░ ░░░░░░
+#
+
+alias box="cd ~/Dropbox/"
+alias working="cd ~/Dropbox/Working/"
+alias wds="cd ~/Dropbox/WDS/"
+
+alias sites="cd ~/Sites/www"
+alias wpc="cd htdocs/wp-content"
+
+alias goo="cd ~/go/src/github.com/bradp/"
+
+alias docs="cd ~/Documents/"
+alias dl="cd ~/Downloads"
+alias dt="cd ~/Desktop"
+

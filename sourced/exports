@@ -1,0 +1,32 @@
+#	                                           ██
+#	                 ██████                   ░██
+#	  █████  ██   ██░██░░░██  ██████  ██████ ██████  ██████
+#	 ██░░░██░░██ ██ ░██  ░██ ██░░░░██░░██░░█░░░██░  ██░░░░
+#	░███████ ░░███  ░██████ ░██   ░██ ░██ ░   ░██  ░░█████
+#	░██░░░░   ██░██ ░██░░░  ░██   ░██ ░██     ░██   ░░░░░██
+#	░░██████ ██ ░░██░██     ░░██████ ░███     ░░██  ██████
+#	 ░░░░░░ ░░   ░░ ░░       ░░░░░░  ░░░       ░░  ░░░░░░
+#
+
+export HOMEBREW_CASK_OPTS="--appdir=/Applications --caskroom=/opt/homebrew-cask/Caskroom"
+
+export EDITOR="vim";
+
+export GREP_OPTIONS="--color=auto";
+
+export HISTSIZE=32768; # Larger bash history (allow 32³ entries; default is 500)
+export HISTFILESIZE=$HISTSIZE;
+export HISTCONTROL=ignoredups;
+export HISTIGNORE="ls:cd:cd -:pwd:exit:date:* --help"; # Make some commands not show up in history
+
+export LANG="en_US.UTF-8";
+export LC_ALL="en_US.UTF-8";
+
+export MANPAGER="less -X";
+
+# 10 second wait if you do something that will delete everything.  I wish I'd had this before...
+setopt RM_STAR_WAIT
+
+export GOPATH="$HOME/go"
+
+export LSCOLORS=gxfxbEaEBxxEhEhBaDaCaD

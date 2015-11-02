@@ -1,0 +1,31 @@
+# snippets.snippets - Snippets for snippets file type
+
+snippet _skel "Snippet file" b
+# `!v expand("%:t")` - Snippets for `!v expand("%:t:r")` file type
+
+$0
+endsnippet
+
+# We use a little hack so that the snippet is expanded
+# and parsed correctly
+snippet snip "Snippet definition" b
+`!p snip.rv = "snippet"` ${1:Tab_trigger} "${2:Description}" ${3:b}
+${0:${VISUAL}}
+`!p snip.rv = "endsnippet"`
+endsnippet
+
+snippet global "Global snippet" b
+`!p snip.rv = "global"` !p
+${0:${VISUAL}}
+`!p snip.rv = "endglobal"`
+endsnippet
+
+snippet vis "${VISUAL}" i
+\$\{VISUAL${1:${2:default}${3:/transform/}}\}
+endsnippet
+
+snippet h "Snippet heading" b
+#
+# ${VISUAL}$1
+#
+endsnippet

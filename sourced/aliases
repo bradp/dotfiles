@@ -1,0 +1,94 @@
+#             ██ ██
+#            ░██░░
+#   ██████   ░██ ██  ██████    ██████  █████   ██████
+#  ░░░░░░██  ░██░██ ░░░░░░██  ██░░░░  ██░░░██ ██░░░░
+#   ███████  ░██░██  ███████ ░░█████ ░███████░░█████
+#  ██░░░░██  ░██░██ ██░░░░██  ░░░░░██░██░░░░  ░░░░░██
+# ░░████████ ███░██░░████████ ██████ ░░██████ ██████
+#  ░░░░░░░░ ░░░ ░░  ░░░░░░░░ ░░░░░░   ░░░░░░ ░░░░░░
+#
+alias zshconfig="$EDITOR ~/.zshrc"
+alias ohmyzsh="$EDITOR ~/.oh-my-zsh"
+alias ssource='source ~/.zshrc'
+
+alias lss="ls -Gal"
+alias lp="ls -p"
+
+alias h="history"
+alias "cd.."="cd .."
+
+alias hosts="sudo $EDITOR /etc/hosts"
+alias c="cd"
+alias g="git"
+alias gs="git status"
+alias gcm="git commit -m"
+alias e="$EDITOR ."
+alias ql="qlmanage -p"
+
+alias yolo="git commit -am '`curl -s http://whatthecommit.com/index.txt`'"
+alias yoloo="git commit -am '`curl -s http://whatthecommit.com/index.txt`' && git push origin master --force"
+
+alias unhidelibrary="chflags nohidden ~/Library"
+alias showdotfiles="defaults write com.apple.finder AppleShowAllFiles -bool true && killall Finder"
+alias hidedotfiles="defaults write com.apple.finder AppleShowAllFiles -bool false && killall Finder"
+
+alias cleanup="find . -type f -name '*.DS_Store' -ls -delete"
+alias lscleanup="/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -kill -r -domain local -domain system -domain user && killall Finder"
+
+alias pubkey="more ~/.ssh/id_rsa.pub | pbcopy | printf '=> Public key copied to pasteboard.\n'";
+
+alias vup="vagrant up && vagrant provision && vagrant ssh"
+alias vp="vagrant provision"
+alias vs='sites && vagrant ssh'
+alias vag="vagrant"
+
+alias caff="caffeinate -dis"
+alias lc="lolcat"
+
+# http://xkcd.com/530/
+alias stfu="osascript -e 'set volume output muted true'"
+alias pumpitup="osascript -e 'set volume 10'"
+
+alias bell='echo "\a"'
+
+alias v=vim
+alias vi=vim
+alias vim=/Applications/MacVim.app/Contents/MacOS/Vim
+alias mvi=mvim
+
+alias currentdate='date "+%Y.%m.%d"'
+
+alias fs='fortune -as | cowsay -f small | lolcat'
+
+alias ip="curl ipinfo.io/ip"
+alias ips="ifconfig -a | perl -nle'/(\d+\.\d+\.\d+\.\d+)/ && print $1'"
+alias stest="wget -O /dev/null http://speedtest.wdc01.softlayer.com/downloads/test10.zip"
+
+alias ack=ag
+
+alias server="python -m SimpleHTTPServer" # start virutal server in the present directory
+
+alias ll1="tree --dirsfirst -ChFL 1"
+alias ll2="tree --dirsfirst -ChFL 2"
+alias ll3="tree --dirsfirst -ChFL 3"
+alias ll4="tree --dirsfirst -ChFupDaL 1"
+alias ll5="tree --dirsfirst -ChFupDaL 2"
+alias ll6="tree --dirsfirst -ChFupDaL 3"
+
+alias gist="gist -ec $1"
+alias exot=exit
+
+alias 3d="figlet -f 3d $1"
+
+alias pc='phpcs --standard="WordPress" $@'
+alias pcf='phpcbf --standard="WordPress" $@'
+alias pcbfall='find . | grep .php | xargs phpcbf --standard="WordPress"'
+alias pcsall='find . | grep .php | xargs phpcs --standard="WordPress"'
+alias pcsalle='find . | grep .php | xargs phpcs -n --standard="WordPress"'
+
+alias dand=dandelion
+alias gifs_deploy="sh generate_json && git add . && git commit -m 'Gifs' && git push origin master && dandelion deploy"
+
+alias tailf="less +F $0"
+
+alias sha256="shasum -a 256 "$1" "

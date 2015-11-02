@@ -1,0 +1,191 @@
+#      ████                            ██   ██
+#     ░██░                            ░██  ░░
+#    ██████ ██   ██ ███████   █████  ██████ ██  ██████  ███████   ██████
+#   ░░░██░ ░██  ░██░░██░░░██ ██░░░██░░░██░ ░██ ██░░░░██░░██░░░██ ██░░░░
+#     ░██  ░██  ░██ ░██  ░██░██  ░░   ░██  ░██░██   ░██ ░██  ░██░░█████
+#     ░██  ░██  ░██ ░██  ░██░██   ██  ░██  ░██░██   ░██ ░██  ░██ ░░░░░██
+#     ░██  ░░██████ ███  ░██░░█████   ░░██ ░██░░██████  ███  ░██ ██████
+#     ░░    ░░░░░░ ░░░   ░░  ░░░░░     ░░  ░░  ░░░░░░  ░░░   ░░ ░░░░░░
+
+function gi()  {
+	curl http://www.gitignore.io/api/$@;
+}
+
+resest-mod-dir() {
+	git checkout -- ` git ls-files -m -- "$*"`
+}
+
+function mkd()  {
+	mkdir -p -- "$@" && cd -- "$@"
+}
+
+# find shorthand
+function f()  {
+	find . -name "$1"
+}
+
+# Copy w/ progress
+cp_p ()  {
+	rsync -WavP --human-readable --progress $1 $2
+}
+
+function please()  {
+	sudo $1
+}
+
+function app-install() {
+	brew cask install $@ --appdir=/Applications --caskroom=/etc/Caskroom
+}
+
+function lol() {
+	$@ | lolcat
+}
+
+function chrome() {
+	open $@ --args --allow-file-access-from-files
+}
+
+# Go up N directories
+# usage: up N
+# taken from https://github.com/anishathalye/dotfiles/commit/c7256407e27263abc21bed2667a81373fa958d25#diff-1f7e07657816dcfba81e81892df0eac7R30
+function up() {
+	if [[ "${1}" == "" ]]; then
+		cd ..
+			elif ! [[ "${1}" =~ ^[0-9]+$ ]]; then
+			echo "Error: argument must be a number"
+			elif ! [[ "${1}" -gt "0" ]]; then
+			echo "Error: argument must be positive"
+	else
+		for i in {1..${1}}; do
+			cd ..
+		done
+	fi
+}
+
+# git checkout branch
+function gcb() {
+	git fetch
+		git checkout -b $@ origin/$@
+}
+
+# diff to prod
+function prod_diff() {
+	git diff prod $@
+}
+
+function gitupdateall() {
+# Runs `git pull` on every directory within the current directory
+	find . -type d -print -maxdepth 1 -execdir git --git-dir={}/.git --work-tree=$PWD/{} pull \;
+}
+
+function transfer() {
+# write to output to tmpfile because of progress bar
+	tmpfile=$( mktemp -t transferXXX )
+		curl --progress-bar --upload-file $1 https://transfer.sh/$(basename $1) >> $tmpfile;
+	cat $tmpfile;
+	rm -f $tmpfile;
+}
+
+
+#feeed in path path to a wp dir
+function wpdebug() {
+	tail -f $1/wp-content/debug.log
+}
+
+#creates a short url with git.io
+function short() {
+	curl -i http://git.io -s -F"url=$1" | ag Location | sed 's/Location: //' | pbcopy
+}
+
+function kill9() {
+	afplay ~/dotfiles/misc/kill-9.wav && kill -9 $1
+}
+
+# vim(): open 'foo:12' as foo at line 12
+# http://www.zsh.org/mla/users/2011/msg00333.html
+function vim() {
+	if test $# != 1 -o -r $1; then
+		command vim "${@}"
+	else
+		local args
+			args=(${(s.:.)1})
+			[[ $#args -ge 2 && $args[2] == <-> ]] \
+			&& command vim $args[1] +$args[2] \
+			|| command vim $args[1]
+			fi
+}
+
+function dand-setup() {
+# usage: dand-setup <name> <user> <host>
+	touch dandelion.yml
+		echo "
+adapter: sftp
+host: $3
+username: $2
+path: /var/www/$1/html
+
+exclude:
+- .gitignore
+- dandelion.yml
+" >> dandelion.yml
+}
+
+function hide() {
+	chflags hidden $0
+}
+
+function unhide() {
+	chflags nohidden $0
+}
+
+function newscotch() {
+	git clone git@github.com:scotch-io/scotch-box.git $1
+	if [[ ! -z $1 ]]; then
+		cd $1
+	else
+		cd scotch-box
+	fi
+	rm -rf .git
+	rm README.md
+}
+
+
+function add_to_sourced() {
+	current_dir=$(pwd)
+	echo "PATH=\${PATH}:$current_dir" >> "$HOME"/dotfiles/sourced/project_paths
+}
+
+
+function sproj() {
+
+project="${PWD##*/}"
+echo "{
+	\"folders\":
+	[
+		{
+			\"name\": \"mu-plugins\",
+			\"path\": \"htdocs/wp-content/mu-plugins\"
+		},
+		{
+			\"name\": \"plugins\",
+			\"path\": \"htdocs/wp-content/plugins\"
+		},
+		{
+			\"name\": \"themes/$project\",
+			\"path\": \"htdocs/wp-content/themes/$project\"
+		},
+		{
+			\"name\": \".\",
+			\"path\": \"htdocs/wp-content/\"
+		},
+		{
+			\"name\": \"..\",
+			\"path\": \"htdocs/\"
+		},
+		{
+			\"name\": \"/\",
+			\"path\": \"/\"
+		}
+	]
+}" > "$project".sublime-project
+}

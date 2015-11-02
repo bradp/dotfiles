@@ -1,0 +1,78 @@
+snippet _skel "php_tag" b
+<?php
+
+$0
+endsnippet
+
+snippet action "Function & Add Action" b
+function ${1}(){
+	${4}
+}
+add_action( '${2}', '${3}' );
+endsnippet
+
+
+snippet array "array" b
+$${1:arrayName} = array(
+	'${2}' => ${3},
+);${4}
+endsnippet
+
+snippet def "def" b
+define( '${1}', ${2} );${3}
+endsnippet
+
+snippet dfunc "dfunc"
+/**
+ * $2
+ * @return ${4:void}
+ **/
+${1:public }function ${2:someFunc}(${3}){
+${6}
+}
+endsnippet
+
+snippet dblock "dblock"
+/**
+ * $1
+*
+ * @param  $2 $3
+ * @return $4 $5
+ * @since $6
+ */
+
+endsnippet
+
+snippet for "for"
+for ($${2:i} = 0; $$2 < ${1:count}; $$2${3:++}) {
+	${4:// code...}
+}
+endsnippet
+
+snippet get "get"
+$_GET['${1}']${2}
+endsnippet
+
+snippet if "if"
+if (${1:/* condition */}) {
+	${2:// code...}
+}
+endsnippet
+
+snippet log "log"
+error_log(var_export(${1}, true));${2}
+endsnippet
+
+snippet post "post"
+$_POST['${1}']${2}
+endsnippet
+
+snippet req1 "req1"
+require_once '${1:file}';${2}
+endsnippet
+
+snippet vardumb "Debug helper in HTML"
+echo '<pre>' . var_dump($1, 1) . '</pre>';$0
+endsnippet
+
+
