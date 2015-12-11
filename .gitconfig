@@ -1,0 +1,112 @@
+#            ██   ██                               ████ ██
+#     █████ ░░   ░██                              ░██░ ░░   █████
+#    ██░░░██ ██ ██████  █████   ██████  ███████  ██████ ██ ██░░░██
+#   ░██  ░██░██░░░██░  ██░░░██ ██░░░░██░░██░░░██░░░██░ ░██░██  ░██
+#   ░░██████░██  ░██  ░██  ░░ ░██   ░██ ░██  ░██  ░██  ░██░░██████
+#    ░░░░░██░██  ░██  ░██   ██░██   ░██ ░██  ░██  ░██  ░██ ░░░░░██
+#     █████ ░██  ░░██ ░░█████ ░░██████  ███  ░██  ░██  ░██  █████
+#    ░░░░░  ░░    ░░   ░░░░░   ░░░░░░  ░░░   ░░   ░░   ░░  ░░░░░
+
+[user]
+    # name = Brad Parbs
+    # email = brad@bradparbs.com
+    # github = bradp
+[core]
+	editor = vim
+	excludesfile = ~/dotfiles/.global_ignore
+
+    # Enable parallel I/O for operations like "git diff".
+    preloadindex = true
+
+    # Use 12 characters for the abbreviated commit hash. I can currently make
+    # do with 10, but this should provide a certain level of safety for the
+    # near-ish future. See the interesting and well-researched article at
+    # http://blog.cuviper.com/2013/11/10/how-short-can-git-abbreviate/
+    abbrev = 12
+[mergetool]
+	keepBackup = true
+
+[color]
+    branch = auto
+    diff = auto
+    status = auto
+	ui = auto
+
+[color "branch"]
+    current = red reverse
+    local = blue
+    remote = green
+
+[color "diff"]
+    meta = yellow bold
+    frag = magenta bold
+    old = red bold
+    new = green bold
+
+[color "status"]
+    added = yellow
+    changed = green
+    untracked = cyan
+
+[alias]
+    ls = log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate
+    ll = log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --numstat
+    filelog = log -u
+    dlc = diff --cached HEAD^
+    dl = "!git ll -1"
+    la = "!git config -l | grep alias | cut -c 7-"
+    cp = cherry-pick
+    st = status -s
+    cl = clone
+    ci = commit
+    co = checkout
+    br = branch
+    a = add
+    s = status
+    c = commit
+    d = !sh ~/dotfiles/bin/git-diff
+    diff = diff --word-diff
+    dc = diff --cached
+    aa= !git add -u && git add . && git status
+    cob = checkout -b
+    up = !git fetch origin && git rebase origin/master
+    ir = !git rebase -i origin/master
+    done = !git fetch && git rebase origin/master && git checkout master && git merge @{-1}  && git push
+    lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+    st = status -sb
+    gg = log --oneline --abbrev-commit --all --graph --decorate --color
+    unstage = reset HEAD --
+    switch = !legit switch \"$@\"
+    branches = !legit branches
+    sprout = !legit sprout \"$@\"
+    unpublish = !legit unpublish \"$@\"
+    harvest = !legit harvest \"$@\"
+    sync = !legit sync \"$@\"
+    publish = !legit publish \"$@\"
+    graft = !legit graft \"$@\"
+
+    go = checkout -B
+
+    tig = !tig
+    ctags = !.git/hooks/ctags
+
+    changelog = "!_() { t=$(git describe --abbrev=0 --tags); git log ${t}..HEAD --no-merges --pretty=format:'* %s'; }; _"
+
+[credential]
+	helper = osxkeychain
+
+[core]
+	editor = vim
+	exludesfile = ~/.global_ignore
+
+[help]
+	autocorrect = 1
+
+[push]
+	default = matching
+
+[branch]
+	autosetupmerge = true
+
+[advice]
+	statusHints = false
