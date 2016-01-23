@@ -24,7 +24,6 @@ setopt INTERACTIVE_COMMENTS
 plugins=(
 	brew
 	brew-cask
-	catimg
 	git
 	git-extras
 	github

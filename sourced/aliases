@@ -82,9 +82,9 @@ alias 3d="figlet -f 3d $1"
 
 alias pc='phpcs --standard="WordPress" $@'
 alias pcf='phpcbf --standard="WordPress" $@'
-alias pcbfall='find . | grep .php | xargs phpcbf --standard="WordPress"'
-alias pcsall='find . | grep .php | xargs phpcs --standard="WordPress"'
-alias pcsalle='find . | grep .php | xargs phpcs -n --standard="WordPress"'
+alias pcbfall='find . | grep .php | xargs phpcbf --standard="WordPress" --ignore=node_modules/'
+alias pcsall='find . | grep .php | xargs phpcs --standard="WordPress" --ignore=node_modules/'
+alias pcsalle='find . | grep .php | xargs phpcs -n --standard="WordPress" --ignore=node_modules/'
 
 alias dand=dandelion
 alias gifs_deploy="sh generate_json && git add . && git commit -m 'Gifs' && git push origin master && dandelion deploy"
@@ -92,3 +92,6 @@ alias gifs_deploy="sh generate_json && git add . && git commit -m 'Gifs' && git 
 alias tailf="less +F $0"
 
 alias sha256="shasum -a 256 "$1" "
+
+alias kdiff="git difftool $1 $2  -y -t Kaleidoscope"
+

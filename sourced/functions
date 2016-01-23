@@ -189,3 +189,34 @@ echo "{
 	]
 }" > "$project".sublime-project
 }
+
+function proj() {
+	project="${PWD##*/}"
+
+	echo "Setting up new project folder / file structure for $project..."
+	echo "Making misc dirs..."
+
+	mkdir -p "_misc/assets"
+	mkdir -p "_misc/backups"
+	mkdir -p "_misc/notes"
+	mkdir -p "_misc/sublime"
+
+	echo "Creating sublime project file..."
+	sproj
+	mv "$project".sublime-project _misc/sublime/"$project".sublime-project
+
+	echo "Hiding misc VVV files..."
+
+	chflags hidden vvv-hosts
+	chflags hidden vvv-init.sh
+	chflags hidden wp-cli.yml
+
+	echo "Done!"
+
+}
+
+
+function gall() {
+	git branch -a | grep -v HEAD | perl -ne 'chomp($_); s|^\*?\s*||; if (m|(.+)/(.+)| && not $d{$2}) {print qq(git branch --track $2 $1/$2\n)} else {$d{$_}=1}' | csh -xfs
+}
+
