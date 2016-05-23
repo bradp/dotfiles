@@ -64,6 +64,9 @@ Maid.rules do
 	rule 'Update npm' do
 		`sudo npm -g update`
 	end
+	rule 'Update composer' do
+		`composer self-update`
+	end
 
 	#
 	# Downloads Folder Stuff
