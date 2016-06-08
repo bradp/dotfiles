@@ -16,3 +16,6 @@
 [submodule "misc/wpcs"]
 	path = misc/wpcs
 	url = https://github.com/WordPress-Coding-Standards/WordPress-Coding-Standards.git
+[submodule "bin/t"]
+	path = bin/t
+	url = git@github.com:bradp/t.git

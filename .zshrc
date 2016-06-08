@@ -54,6 +54,7 @@ PATH=${PATH}:/opt/sm/pkg/active/sbin
 PATH=${PATH}:/usr/local/heroku/bin
 PATH=${PATH}:"$HOME"/dotfiles/misc
 PATH=${PATH}:"$HOME"/dotfiles/bin
+PATH=${PATH}:"$HOME"/dotfiles/bin/t
 PATH=${PATH}:"$HOME"/.composer/vendor/bin
 PATH=${PATH}:"$HOME"/go/bin
 
