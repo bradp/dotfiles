@@ -9,6 +9,7 @@
 #
 
 export HOMEBREW_CASK_OPTS="--appdir=/Applications --caskroom=/opt/homebrew-cask/Caskroom"
+export HOMEBREW_NO_ANALYTICS=1
 
 export EDITOR="vim";
 
