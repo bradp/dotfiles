@@ -164,23 +164,23 @@ echo "{
 	[
 		{
 			\"name\": \"mu-plugins\",
-			\"path\": \"htdocs/wp-content/mu-plugins\"
+			\"path\": \"../../htdocs/wp-content/mu-plugins\"
 		},
 		{
 			\"name\": \"plugins\",
-			\"path\": \"htdocs/wp-content/plugins\"
+			\"path\": \"../../htdocs/wp-content/plugins\"
 		},
 		{
 			\"name\": \"themes/$project\",
-			\"path\": \"htdocs/wp-content/themes/$project\"
+			\"path\": \"../../htdocs/wp-content/themes/$project\"
 		},
 		{
 			\"name\": \".\",
-			\"path\": \"htdocs/wp-content/\"
+			\"path\": \"../../htdocs/wp-content/\"
 		},
 		{
 			\"name\": \"..\",
-			\"path\": \"htdocs/\"
+			\"path\": \"../../htdocs/\"
 		},
 		{
 			\"name\": \"/\",
@@ -198,6 +198,7 @@ function proj() {
 
 	mkdir -p "_misc/assets"
 	mkdir -p "_misc/backups"
+	mkdir -p "_misc/misc"
 	mkdir -p "_misc/notes"
 	mkdir -p "_misc/sublime"
 
@@ -214,7 +215,6 @@ function proj() {
 	echo "Done!"
 
 }
-
 
 function gall() {
 	git branch -a | grep -v HEAD | perl -ne 'chomp($_); s|^\*?\s*||; if (m|(.+)/(.+)| && not $d{$2}) {print qq(git branch --track $2 $1/$2\n)} else {$d{$_}=1}' | csh -xfs
