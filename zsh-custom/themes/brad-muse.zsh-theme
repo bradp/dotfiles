@@ -6,7 +6,7 @@ setopt promptsubst
 autoload -U add-zsh-hook
 
 function local_host_name {
-	echo %{$fg[magenta]%}%n%{$reset_color%}@%{$fg[green]%}%m%{$reset_color%}
+	echo %{$fg[magenta]%}%n%{$reset_color%}
 }
 
 
@@ -32,5 +32,5 @@ ZSH_THEME_GIT_PROMPT_UNTRACKED="%{$FG[190]%}✭%{$reset_color%}"
 
 
 PROMPT='%{$PROMPT_SUCCESS_COLOR%}%~%{$reset_color%} %{$GIT_PROMPT_INFO%}
-$(git_prompt_info)%{$GIT_DIRTY_COLOR%}$(git_prompt_status) %{$reset_color%}%{$PROMPT_PROMPT%}$ %{$reset_color%}'
+$(git_prompt_info)%{$GIT_DIRTY_COLOR%}$(git_prompt_status) %{$reset_color%}%{$PROMPT_PROMPT%}▲ %{$reset_color%}'
 RPROMPT=$(local_host_name)
