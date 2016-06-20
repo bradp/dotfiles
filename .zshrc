@@ -57,6 +57,9 @@ PATH=${PATH}:"$HOME"/dotfiles/bin
 PATH=${PATH}:"$HOME"/dotfiles/bin/t
 PATH=${PATH}:"$HOME"/.composer/vendor/bin
 PATH=${PATH}:"$HOME"/go/bin
+PATH=${PATH}:"/usr/local/sbin"
+PATH=${PATH}:"usr/local/share/npm/bin"
 
 export PATH=${PATH}
+
 
