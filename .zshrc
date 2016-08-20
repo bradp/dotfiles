@@ -42,6 +42,11 @@ for file in $HOME/dotfiles/sourced/*; do
    source "$file"
 done
 
+if (( $+commands[tag] )); then
+	tag() { command tag "$@"; source ${TAG_ALIAS_FILE:-/tmp/tag_aliases} 2>/dev/null }
+	alias ag=tag
+fi
+
 PATH=${PATH}:/usr/local/bin
 PATH=${PATH}:/usr/bin
 PATH=${PATH}:/bin
