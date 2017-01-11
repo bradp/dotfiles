@@ -94,4 +94,10 @@ alias tailf="less +F $0"
 alias sha256="shasum -a 256 "$1" "
 
 alias kdiff="git difftool $1 $2  -y -t Kaleidoscope"
+
+alias yt="youtube-dl $@"
+alias dyt="cd /Volumes/Jet/YouTube; yt $@"
+
+alias codebackup="cd ~/Documents/Code\ Backup; php backup.php"
+
 alias hulp="gulp $@"
