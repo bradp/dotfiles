@@ -94,3 +94,4 @@ alias tailf="less +F $0"
 alias sha256="shasum -a 256 "$1" "
 
 alias kdiff="git difftool $1 $2  -y -t Kaleidoscope"
+alias hulp="gulp $@"
