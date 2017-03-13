@@ -19,3 +19,6 @@
 [submodule "bin/t"]
 	path = bin/t
 	url = git@github.com:bradp/t.git
+[submodule "misc/hmcs"]
+	path = misc/hmcs
+	url = git@github.com:humanmade/coding-standards.git
