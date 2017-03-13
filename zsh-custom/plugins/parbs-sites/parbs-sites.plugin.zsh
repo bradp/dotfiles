@@ -1,7 +1,7 @@
 site() {
-    cd ~/Sites/www/$1/htdocs/wp-content;
+    cd ~/Sites/$1/content;
 }
 _site() {
-    _files -W ~/Sites/www/ -/;
+    _files -W ~/Sites/ -/;
 }
 compdef _site site

@@ -14,7 +14,7 @@ alias working="cd ~/Dropbox/Working/"
 alias ww="working"
 alias wds="cd ~/Dropbox/WDS/"
 
-alias sites="cd ~/Sites/www"
+alias sites="cd ~/Sites"
 alias wpc="cd htdocs/wp-content"
 
 alias goo="cd ~/go/src/github.com/bradp/"
