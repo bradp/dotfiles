@@ -6,14 +6,51 @@
 # ░██░░░   ░██   ░██   ░██ ██░██░██░░░░ ░██   ██  ░██
 # ░██     ░███   ░░██████ ░░███ ░░██████░░█████   ░░██
 # ░░      ░░░     ░░░░░░   ░░░   ░░░░░░  ░░░░░     ░░
-#                      ██   ██
-#  ██████             ░██  ░██
-# ░██░░░██  ██████   ██████░██       ██████
-# ░██  ░██ ░░░░░░██ ░░░██░ ░██████  ██░░░░
-# ░██████   ███████   ░██  ░██░░░██░░█████
-# ░██░░░   ██░░░░██   ░██  ░██  ░██ ░░░░░██
-# ░██     ░░████████  ░░██ ░██  ░██ ██████
-# ░░       ░░░░░░░░    ░░  ░░   ░░ ░░░░░░
 #
 
-PATH=${PATH}:/Users/brad/Dropbox/Working/vvv-provision-flipper
+# Create new project structure
+function proj() {
+	project="${PWD##*/}"
+
+	echo "Setting up new project folder / file structure for $project..."
+	echo "Making misc dirs..."
+
+	mkdir -p "_misc/assets"
+	mkdir -p "_misc/backups"
+	mkdir -p "_misc/misc"
+	mkdir -p "_misc/notes"
+	mkdir -p "_misc/sublime"
+
+	echo "Creating sublime project file..."
+	sproj "$project" "_misc/sublime/" "../../"
+
+	echo "Done!"
+}
+
+# Create new scotchbox
+function newscotch() {
+	git clone git@github.com:scotch-io/scotch-box.git $1
+	if [[ ! -z $1 ]]; then
+		cd $1
+	else
+		cd scotch-box
+	fi
+	rm -rf .git
+	rm README.md
+}
+
+# Set up dandelion deploy config
+function dand-setup() {
+# usage: dand-setup <name> <user> <host>
+	touch dandelion.yml
+		echo "
+adapter: sftp
+host: $3
+username: $2
+path: /var/www/$1/html
+
+exclude:
+- .gitignore
+- dandelion.yml
+" >> dandelion.yml
+}

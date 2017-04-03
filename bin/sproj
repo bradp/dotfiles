@@ -1,0 +1,44 @@
+#!/bin/bash
+
+#
+# Set up a sublime text project
+#
+# usage:
+# 	sproj
+# 		will use current folder for project name
+# 	sproj 'name'
+# 		will use 'name' as project name
+# 	sproj 'name' '_misc/sublime/' '../../'
+# 		will put project file in _misc/sublime folder
+# 		and prepend ../../ to paths for project items
+#
+
+# Set up our vars
+current_dir="${PWD##*/}"
+project=$1$current_dir
+project_file="$2$project.sublime-project"
+prepend_to_paths="$3"
+
+function do_json_part() {
+echo "
+		{
+			\"name\": \"$1\",
+			\"path\": \"$prepend_to_paths$2\"
+		}," >> "$project_file"
+}
+
+echo "{
+	\"folders\":
+	[" > "$project_file"
+
+	do_json_part "mu-plugins" "content/mu-plugins"
+	do_json_part "plugins" "content/plugins"
+	do_json_part "themes" "content/themes"
+	do_json_part "." "content"
+	do_json_part ".." ""
+
+echo "
+	{}
+	]
+}" >> "$project_file"
+

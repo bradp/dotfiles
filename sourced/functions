@@ -6,48 +6,17 @@
 #     ░██  ░██  ░██ ░██  ░██░██   ██  ░██  ░██░██   ░██ ░██  ░██ ░░░░░██
 #     ░██  ░░██████ ███  ░██░░█████   ░░██ ░██░░██████  ███  ░██ ██████
 #     ░░    ░░░░░░ ░░░   ░░  ░░░░░     ░░  ░░  ░░░░░░  ░░░   ░░ ░░░░░░
+#
 
-function gi()  {
-	curl http://www.gitignore.io/api/$@;
-}
-
-resest-mod-dir() {
-	git checkout -- ` git ls-files -m -- "$*"`
-}
-
+#########################################
+# Directories                          #
+#########################################
+# Make a directory and cd into it
 function mkd()  {
 	mkdir -p -- "$@" && cd -- "$@"
 }
 
-# find shorthand
-function f()  {
-	find . -name "$1"
-}
-
-# Copy w/ progress
-cp_p ()  {
-	rsync -WavP --human-readable --progress $1 $2
-}
-
-function please()  {
-	sudo $1
-}
-
-function app-install() {
-	brew cask install $@ --appdir=/Applications --caskroom=/etc/Caskroom
-}
-
-function lol() {
-	$@ | lolcat
-}
-
-function chrome() {
-	open $@ --args --allow-file-access-from-files
-}
-
-# Go up N directories
-# usage: up N
-# taken from https://github.com/anishathalye/dotfiles/commit/c7256407e27263abc21bed2667a81373fa958d25#diff-1f7e07657816dcfba81e81892df0eac7R30
+# Go up N directories from https://git.io/updir
 function up() {
 	if [[ "${1}" == "" ]]; then
 		cd ..
@@ -62,47 +31,73 @@ function up() {
 	fi
 }
 
-# git checkout branch
-function gcb() {
-	git fetch
-		git checkout -b $@ origin/$@
+# Copy w/ progress
+function cp_p ()  {
+	rsync -WavP --human-readable --progress $1 $2
 }
 
-# diff to prod
-function prod_diff() {
-	git diff prod $@
-}
-
-function gitupdateall() {
+#########################################
+# Git                                   #
+#########################################
 # Runs `git pull` on every directory within the current directory
+function gitupdateall() {
 	find . -type d -print -maxdepth 1 -execdir git --git-dir={}/.git --work-tree=$PWD/{} pull \;
 }
 
-function transfer() {
-# write to output to tmpfile because of progress bar
-	tmpfile=$( mktemp -t transferXXX )
-		curl --progress-bar --upload-file $1 https://transfer.sh/$(basename $1) >> $tmpfile;
-	cat $tmpfile;
-	rm -f $tmpfile;
+# Update all git branches
+function gall() {
+	git branch -a | grep -v HEAD | perl -ne 'chomp($_); s|^\*?\s*||; if (m|(.+)/(.+)| && not $d{$2}) {print qq(git branch --track $2 $1/$2\n)} else {$d{$_}=1}' | csh -xfs
 }
 
-
-#feeed in path path to a wp dir
-function wpdebug() {
-	tail -f $1/wp-content/debug.log
+# Move user to root of git directory
+function root() {
+	TEMP_P=$(pwd)
+	while ! [ -d .git ]; do
+		cd ..
+	done
+	OLDPWD="$TEMP_PWD"
 }
 
-#creates a short url with git.io
-function short() {
-	curl -i http://git.io -s -F"url=$1" | ag Location | sed 's/Location: //' | pbcopy
+#########################################
+# Projects                              #
+#########################################
+function add_to_sourced() {
+	current_dir=$(pwd)
+	echo "PATH=\${PATH}:$current_dir" >> "$HOME"/dotfiles/sourced/project_paths
 }
 
-function kill9() {
-	afplay ~/dotfiles/misc/kill-9.wav && kill -9 $1
+#########################################
+# Shortcuts                             #
+#########################################
+# Find shorthand
+function f()  {
+	find . -name "$1"
 }
 
-# vim(): open 'foo:12' as foo at line 12
-# http://www.zsh.org/mla/users/2011/msg00333.html
+# Sudo please
+function please()  {
+	sudo "$1"
+}
+
+# Brew cask install
+function app-install() {
+	brew cask install $@ --appdir=/Applications --caskroom=/etc/Caskroom
+}
+
+# LOL
+function lol() {
+	$@ | lolcat
+}
+
+#########################################
+# Misc                                  #
+#########################################
+# Open file in browser
+function chrome() {
+	open $@ --args --allow-file-access-from-files
+}
+
+# vim(): open 'foo:12' as foo at line 12 from: http://www.zsh.org/mla/users/2011/msg00333.html
 function vim() {
 	if test $# != 1 -o -r $1; then
 		command vim "${@}"
@@ -113,117 +108,4 @@ function vim() {
 			&& command vim $args[1] +$args[2] \
 			|| command vim $args[1]
 			fi
-}
-
-function dand-setup() {
-# usage: dand-setup <name> <user> <host>
-	touch dandelion.yml
-		echo "
-adapter: sftp
-host: $3
-username: $2
-path: /var/www/$1/html
-
-exclude:
-- .gitignore
-- dandelion.yml
-" >> dandelion.yml
-}
-
-function hide() {
-	chflags hidden $0
-}
-
-function unhide() {
-	chflags nohidden $0
-}
-
-function newscotch() {
-	git clone git@github.com:scotch-io/scotch-box.git $1
-	if [[ ! -z $1 ]]; then
-		cd $1
-	else
-		cd scotch-box
-	fi
-	rm -rf .git
-	rm README.md
-}
-
-
-function add_to_sourced() {
-	current_dir=$(pwd)
-	echo "PATH=\${PATH}:$current_dir" >> "$HOME"/dotfiles/sourced/project_paths
-}
-
-
-function sproj() {
-
-project="${PWD##*/}"
-echo "{
-	\"folders\":
-	[
-		{
-			\"name\": \"mu-plugins\",
-			\"path\": \"../../htdocs/wp-content/mu-plugins\"
-		},
-		{
-			\"name\": \"plugins\",
-			\"path\": \"../../htdocs/wp-content/plugins\"
-		},
-		{
-			\"name\": \"themes/$project\",
-			\"path\": \"../../htdocs/wp-content/themes/$project\"
-		},
-		{
-			\"name\": \".\",
-			\"path\": \"../../htdocs/wp-content/\"
-		},
-		{
-			\"name\": \"..\",
-			\"path\": \"../../htdocs/\"
-		},
-		{
-			\"name\": \"/\",
-			\"path\": \"/\"
-		}
-	]
-}" > "$project".sublime-project
-}
-
-function proj() {
-	project="${PWD##*/}"
-
-	echo "Setting up new project folder / file structure for $project..."
-	echo "Making misc dirs..."
-
-	mkdir -p "_misc/assets"
-	mkdir -p "_misc/backups"
-	mkdir -p "_misc/misc"
-	mkdir -p "_misc/notes"
-	mkdir -p "_misc/sublime"
-
-	echo "Creating sublime project file..."
-	sproj
-	mv "$project".sublime-project _misc/sublime/"$project".sublime-project
-
-	echo "Hiding misc VVV files..."
-
-	chflags hidden vvv-hosts
-	chflags hidden vvv-init.sh
-	chflags hidden wp-cli.yml
-
-	echo "Done!"
-
-}
-
-function gall() {
-	git branch -a | grep -v HEAD | perl -ne 'chomp($_); s|^\*?\s*||; if (m|(.+)/(.+)| && not $d{$2}) {print qq(git branch --track $2 $1/$2\n)} else {$d{$_}=1}' | csh -xfs
-}
-
-function cdp() {
-	TEMP_P=$(pwd)
-	while ! [ -d git ]; do
-		cd ..
-	done
-	OLDPWD="$TEMP_PWD"
 }
