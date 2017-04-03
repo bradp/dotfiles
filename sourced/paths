@@ -9,14 +9,18 @@
 # ░░       ░░░░░░░░    ░░  ░░   ░░ ░░░░░░
 #
 
+#########################################
+# Dropbox                               #
+#########################################
 alias box="cd ~/Dropbox/"
 alias working="cd ~/Dropbox/Working/"
 alias ww="working"
 
+#########################################
+# Sites                                 #
+#########################################
 alias sites="cd ~/Sites"
 alias sitesold="cd ~/SitesOld"
-
-alias wpc="cd htdocs/wp-content"
 
 alias goo="cd ~/go/src/github.com/bradp/"
 

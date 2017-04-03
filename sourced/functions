@@ -9,7 +9,7 @@
 #
 
 #########################################
-# Directories                          #
+# Directories                           #
 #########################################
 # Make a directory and cd into it
 function mkd()  {
@@ -61,9 +61,11 @@ function root() {
 #########################################
 # Projects                              #
 #########################################
+# Add a dir to our project_paths source file
 function add_to_sourced() {
 	current_dir=$(pwd)
 	echo "PATH=\${PATH}:$current_dir" >> "$HOME"/dotfiles/sourced/project_paths
+	source "$HOME"/dotfiles/source/project_paths
 }
 
 #########################################

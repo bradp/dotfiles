@@ -18,10 +18,20 @@
 # ░░░░░░  ░░       ░░░░░░  ░░░░░  ░░   ░░   ░░  ░░░░░
 #
 
+#########################################
+# youtube-dl helpers                    #
+#########################################
 alias yt="youtube-dl $@"
 alias dyt="cd ~/Desktop/; youtube-dl $@"
 alias jyt="cd /Volumes/Jet/YouTube; youtube-dl $@"
 
-alias codebackup="cd ~/Documents/Code\ Backup; php backup.php"
+#########################################
+# Code backup                           #
+#########################################
+alias codebackup="cd ~/Dropbos/Code\ Backup; php backup.php"
 
+#########################################
+# Project deploys                       #
+#########################################
 alias gifs_deploy="sh generate_json && git add . && git commit -m 'Gifs' && git push origin master && dandelion deploy"
+
