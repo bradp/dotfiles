@@ -39,6 +39,12 @@ function newscotch() {
 	rm README.md
 }
 
+# Create new bash project
+function newbash() {
+	cp ~/dotfiles/bin/bash_starter bash_starter
+	chmod +x bash_starter
+}
+
 # Set up dandelion deploy config
 function dand-setup() {
 # usage: dand-setup <name> <user> <host>
