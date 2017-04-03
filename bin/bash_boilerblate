@@ -12,31 +12,27 @@ cyan=$(tput setaf 6)
 # Usage: info "message"
 # Example: info "It's Working"
 # Output (to STDOUT): [...] It's Working
-info ()
-{
+info () {
     printf "%b" "[${green}...${normal}] $1\n"
 }
 
 # Usage: prompt "question"
 # Example: prompt "What's Your Name?"
-# Output (to STDOUT): [ ? ] What's Your Name?  
-prompt ()
-{
+# Output (to STDOUT): [ ? ] What's Your Name?
+prompt () {
     printf "%b" "[${yellow} ? ${normal}] $1 "
 }
 
 # Usage: error ["message"]
 # Example: error "You're Ugly"
 # Output (to STDERR): [ERROR] /script/name: You're Ugly
-error ()
-{
+error () {
     printf "%b" "[${red}ERROR${normal}] ${0}: ${1:-'Unkown Error'}\n" >&2
 }
 
 # Usage: fail "message" [exit_code]
 # Example: fail "Unknown Option" 254
-fail ()
-{
+fail () {
     error "$1"
 
     case $2 in
@@ -54,10 +50,9 @@ fail ()
 # ask function https://gist.github.com/davejamesmiller/1965569
 # Usage: ask "Yes or No?" [default option]
 # Example: if "Yes or No?" Y; then
-ask ()
-{
+ask () {
     while true; do
- 
+
         if [ "${2:-}" = "Y" ]; then
             prompt_tail="Y/n"
             default=Y
@@ -68,16 +63,16 @@ ask ()
             prompt_tail="y/n"
             default=
         fi
- 
+
         # Ask the question
         prompt "$1 [$prompt_tail]"
         read REPLY
- 
+
         # Default?
         if [ -z "$REPLY" ]; then
             REPLY=$default
         fi
- 
+
         # Check if the reply is valid
         case "$REPLY" in
             Y*|y*) return 0 ;;
@@ -89,8 +84,7 @@ ask ()
 
 # Usage: show_help [exit_code]
 # Example: show_help 254
-show_help ()
-{
+show_help () {
     cat <<HELP
     Usage:
         $0 [OPTION]...
@@ -116,13 +110,11 @@ HELP
     exit $exit_code
 }
 
-argument_expected()
-{
+argument_expected() {
     fail "$1 expected an argument"
 }
 
-finally()
-{
+finally() {
     if [ ! -z $example_one ]; then
         info "Finally, Example One: \"$example_one\""
     fi
@@ -133,15 +125,14 @@ finally()
 
 }
 
-check_args()
-{
+check_args() {
     while [ ! -z "$1" ]; do
         local arg="$1"
         case "$1" in
-            -h|--help) 
+            -h|--help)
                 local help=0
                 shift
-                ;; 
+                ;;
             -ex1|--example-one)
                 shift
 
@@ -173,8 +164,7 @@ check_args()
     exit 0
 }
 
-main()
-{
+main() {
     if [ -z $1 ]; then
         show_help
     fi
