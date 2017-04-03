@@ -1,38 +1,84 @@
 #!/usr/bin/env bash
+#
+# <name of thing>
+# By Brad Parbs <brad@bradparbs.com>
+#
+# <command> : <description of functionality>
+#
+# Copyright (C) 2015 Brad Parbs
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License along
+# with this program; if not, write to the Free Software Foundation, Inc.,
+# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.1.6.0
 
-normal=$(tput sgr0)
-bold=$(tput bold)
-red=$(tput setaf 1)
-green=$(tput setaf 2)
-yellow=$(tput setaf 3)
-blue=$(tput setaf 4)
-magenta=$(tput setaf 5)
-cyan=$(tput setaf 6)
+# Version number
+version_number=1.0.0
+
+# We check this before anything else, so we can debug it
+# This will output all the commands that are being run
+if [[ "$1" == "internal_debug" ]]; then
+    set -x
+    shift
+fi
+
+# Airplane mode. Pass x as the first argument to kill all internet things
+# <command> x subcommand, This will probably break things
+# and stuff though.
+internet=true
+if [[ "$1" == "x" ]]; then
+    internet=false
+    shift
+fi
+
+# Verify we have a home variable set, and force it if we can
+home=${HOME:-"~"}
+
+# If we have tput, let's set our colors
+if [[ ! -z $(which tpuasdft 2>/dev/null) ]]; then
+    normal=$(tput sgr0)
+    bold=$(tput bold)
+    red=$(tput setaf 1)
+    green=$(tput setaf 2)
+    yellow=$(tput setaf 3)
+    blue=$(tput setaf 4)
+    magenta=$(tput setaf 5)
+    cyan=$(tput setaf 6)
+fi
 
 # Usage: info "message"
 # Example: info "It's Working"
 # Output (to STDOUT): [...] It's Working
-info () {
+function info() {
     printf "%b" "[${green}...${normal}] $1\n"
 }
 
 # Usage: prompt "question"
 # Example: prompt "What's Your Name?"
 # Output (to STDOUT): [ ? ] What's Your Name?
-prompt () {
+function prompt() {
     printf "%b" "[${yellow} ? ${normal}] $1 "
 }
 
 # Usage: error ["message"]
 # Example: error "You're Ugly"
 # Output (to STDERR): [ERROR] /script/name: You're Ugly
-error () {
+function error() {
     printf "%b" "[${red}ERROR${normal}] ${0}: ${1:-'Unkown Error'}\n" >&2
 }
 
 # Usage: fail "message" [exit_code]
 # Example: fail "Unknown Option" 254
-fail () {
+function fail() {
     error "$1"
 
     case $2 in
@@ -50,7 +96,7 @@ fail () {
 # ask function https://gist.github.com/davejamesmiller/1965569
 # Usage: ask "Yes or No?" [default option]
 # Example: if "Yes or No?" Y; then
-ask () {
+function ask() {
     while true; do
 
         if [ "${2:-}" = "Y" ]; then
@@ -78,13 +124,12 @@ ask () {
             Y*|y*) return 0 ;;
             N*|n*) return 1 ;;
         esac
-
     done
 }
 
 # Usage: show_help [exit_code]
 # Example: show_help 254
-show_help () {
+function show_help() {
     cat <<HELP
     Usage:
         $0 [OPTION]...
@@ -96,7 +141,6 @@ show_help () {
         $0 **example**
 
 HELP
-
     # Fail with general error if status code passed
     case $1 in
         ''|*[!0-9]*)
@@ -106,26 +150,14 @@ HELP
             exit_code=$1
         ;;
     esac
-
     exit $exit_code
 }
 
-argument_expected() {
+function argument_expected() {
     fail "$1 expected an argument"
 }
 
-finally() {
-    if [ ! -z $example_one ]; then
-        info "Finally, Example One: \"$example_one\""
-    fi
-
-    if [ ! -z $example_two ]; then
-        info "Finally, Example Two: \"$example_two\""
-    fi
-
-}
-
-check_args() {
+function check_args() {
     while [ ! -z "$1" ]; do
         local arg="$1"
         case "$1" in
@@ -164,7 +196,7 @@ check_args() {
     exit 0
 }
 
-main() {
+function main() {
     if [ -z $1 ]; then
         show_help
     fi
