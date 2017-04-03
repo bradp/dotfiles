@@ -47,6 +47,7 @@ Plug 'terryma/vim-multiple-cursors'
 Plug 'fatih/vim-go'
 Plug 'majutsushi/tagbar'
 Plug 'bronson/vim-trailing-whitespace'
+Plug 'junegunn/goyo.vim'
 
 call plug#end()
 
