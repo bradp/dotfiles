@@ -7,12 +7,6 @@
 [submodule "bin/vv"]
 	path = bin/vv
 	url = git@github.com:bradp/vv.git
-[submodule ".grunt-init/wp-plugin"]
-	path = .grunt-init/wp-plugin
-	url = git@github.com:jtsternberg/grunt-wp-plugin.git
-[submodule ".grunt-init/wp-underscores"]
-	path = .grunt-init/wp-underscores
-	url = git@github.com:ericmann/grunt-wp-underscores.git
 [submodule "misc/wpcs"]
 	path = misc/wpcs
 	url = https://github.com/WordPress-Coding-Standards/WordPress-Coding-Standards.git
