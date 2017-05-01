@@ -37,7 +37,6 @@ Plug 'tpope/vim-sensible'
 Plug 'mhinz/vim-startify'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-vinegar'
-" Plug 'Valloric/YouCompleteMe',         { 'do': './install.sh' }
 Plug 'tpope/vim-unimpaired'
 Plug 'tpope/vim-fugitive'
 Plug 'ap/vim-css-color'
@@ -62,11 +61,11 @@ set encoding=utf-8
 set guifont=Inconsolata\ for\ Powerline
 let g:syntastic_always_populate_loc_list = 1
 set confirm " confim instead of error when leaving unsaved file
-let g:syntastic_always_populate_loc_list = 1
 set mouse=a " Enable use of the mouse for all modes
 let g:startify_custom_header = map(split(system('fortune -as | cowsay -f small'), '\n'), '"   ". v:val') + ['','']
 let g:startify_change_to_vcs_root = 1
 let g:ctrlp_reuse_window  = 'startify'
+
 "
 " ==============================
 "	Color Scheme
@@ -78,6 +77,7 @@ colorscheme solarized
 syntax on " Enable syntax highlighting
 let g:solarized_termcolors=256
 let macvim_skip_colorscheme=1
+
 "
 " ==============================
 "	Search
@@ -120,40 +120,12 @@ set nobackup
 set nowritebackup
 set lazyredraw
 
-let g:UltiSnipsListSnippets = "<C-g><Tab>"
-let g:UltiSnipsExpandTrigger = "<tab>"
-let g:UltiSnipsJumpForwardTrigger = "<Tab>"
-let g:UltiSnipsJumpBackwardTrigger = "<S-Tab>"
-let g:UltiSnipsSnippetsDir = "~/dotfiles/.vim/snips"
-let g:UltiSnipsSnippetDirectories = ["snips"]
-
-let g:ycm_filetype_blacklist = {
-      \ 'tagbar' : 1,
-      \ 'qf' : 1,
-      \ 'notes' : 1,
-      \ 'markdown' : 1,
-      \ 'unite' : 1,
-      \ 'text' : 1,
-      \ 'vimwiki' : 1,
-      \ 'pandoc' : 1,
-      \ 'infolog' : 1,
-      \ 'mail' : 1,
-      \ 'html': 1,
-      \ }
-let g:ycm_complete_in_strings = 0
-let g:ycm_autoclose_preview_window_after_insertion = 1
-" Remove <Tab> from maps lest YCM hijack our mapping from above
-let g:ycm_key_list_select_completion = ['<Down>']
-let g:ycm_key_list_previous_completion = ['<Up>']
-
 let g:syntastic_php_checkers = ['php', 'phpcs']
 let g:syntastic_php_phpcs_args="--report=csv --standard=WordPress"
-
 
 let g:phpcomplete_parse_docblock_comments = 1
 
 let g:go_fmt_command = "goimports"
-
 
 
 "
@@ -187,7 +159,7 @@ command Wq wq
 command Q q
 command W w
 
-let g:UltiSnipsExpandTrigger="<tab>"
+let g:UltiSnipsExpandTrigger="<tab-x>"
 let g:UltiSnipsJumpForwardTrigger="<c-b>"
 let g:UltiSnipsJumpBackwardTrigger="<c-z>"
 
