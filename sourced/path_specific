@@ -21,9 +21,9 @@
 #########################################
 # youtube-dl helpers                    #
 #########################################
-alias yt="youtube-dl $@"
-alias dyt="cd ~/Desktop/; youtube-dl $@"
-alias jyt="cd /Volumes/Jet/YouTube; youtube-dl $@"
+alias yt="youtube-dl --mark-watched $@"
+alias dyt="cd ~/Desktop/; yt $@"
+alias jyt="cd /Volumes/Jet/YouTube; yt $@"
 
 #########################################
 # Code backup                           #
