@@ -23,7 +23,7 @@
 #########################################
 alias yt="youtube-dl --mark-watched $@"
 alias dyt="cd ~/Desktop/; yt $@"
-alias jyt="cd /Volumes/Jet/YouTube; yt $@"
+alias myt="cd ~/Documents/Media/YT; yt $@"
 
 #########################################
 # Code backup                           #
