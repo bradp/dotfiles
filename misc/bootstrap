@@ -1,6 +1,6 @@
 #!/bin/bash
 
-git clone --recursive https://github.com/bradp/dotfiles.git ~/dotfiles
+git clone --recursive https://github.com/willenglishiv/dotfiles.git ~/dotfiles
 
 if [ "$(uname)" == "Darwin" ]; then
 	if test ! $(which brew); then

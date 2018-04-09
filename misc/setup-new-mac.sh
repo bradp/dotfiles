@@ -24,8 +24,8 @@ brew install git
 
 echo "Git config"
 
-# git config --global user.name "Brad Parbs"
-# git config --global user.email brad@bradparbs.com
+git config --global user.name "Will English IV"
+git config --global user.email willenglishiv@gmail.com
 
 
 echo "Installing brew git utilities..."
@@ -60,7 +60,7 @@ brew install caskroom/cask/brew-cask
 
 echo "Copying dotfiles from Github"
 cd ~
-git clone --recursive git@github.com:bradp/dotfiles.git dotfiles
+git clone --recursive https://github.com/willenglishiv/dotfiles.git dotfiles
 cd ~/dotfiles
 rake
 

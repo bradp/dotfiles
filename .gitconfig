@@ -8,9 +8,9 @@
 #    ░░░░░  ░░    ░░   ░░░░░   ░░░░░░  ░░░   ░░   ░░   ░░  ░░░░░
 
 [user]
-    # name = Brad Parbs
-    # email = brad@bradparbs.com
-    # github = bradp
+    # name = Will English IV
+    # email = willenglishiv@gmail.com
+    # github = willenglishiv
 [core]
 	editor = vim
 	excludesfile = ~/dotfiles/.global_ignore

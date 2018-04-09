@@ -10,7 +10,7 @@
 ZSH=$HOME/dotfiles/.oh-my-zsh # Path to your oh-my-zsh configuration.
 ZSH_THEME="brad-muse" # Set name of the theme to load.
 
-DEFAULT_USER="bradparbs@bradparbs"
+DEFAULT_USER="wenglish@wenglish"
 COMPLETION_WAITING_DOTS="true"
 DISABLE_AUTO_UPDATE=true
 ZSH_CUSTOM=$HOME/dotfiles/zsh-custom

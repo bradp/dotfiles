@@ -16,12 +16,12 @@
 
 ```
 $ cd ~
-$ git clone --recursive git@github.com:bradp/dotfiles.git
+$ git clone --recursive git@github.com:willenglishiv/dotfiles.git
 $ rake
 ```
 OR
 
-``curl https://raw.githubusercontent.com/bradp/dotfiles/master/misc/bootstrap | sudo bash`` to also install all requirments (Zsh, and friends, etc.)
+``curl https://raw.githubusercontent.com/willenglishiv/dotfiles/master/misc/bootstrap | sudo bash`` to also install all requirments (Zsh, and friends, etc.)
 
 ## How to use
 
