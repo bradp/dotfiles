@@ -16,3 +16,5 @@
 [submodule "misc/hmcs"]
 	path = misc/hmcs
 	url = https://github.com/humanmade/coding-standards.git
+[submodule "oh-my-zsh"]
+	branch = master
