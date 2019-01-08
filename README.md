@@ -43,8 +43,7 @@ Check out [my blog post](http://webdevstudios.com/2015/02/10/a-beginners-guide-t
  	* `faces` (╯°□°）╯︵ ┻━┻
  	* `git-diff` Wrapper for icdiff for git diffs.
  	* `icdiff` Side by side diffs. From [here](http://www.jefftk.com/icdiff).
- 	* `replace` - Find and replace by a given list of files. `replace foo bar **/*.txt` From [here](https://github.
- 	com/thoughtbot/dotfiles/blob/master/bin/replace).
+ 	* `replace` - Find and replace by a given list of files. `replace foo bar **/*.txt` From [here](https://github.com/thoughtbot/dotfiles/blob/master/bin/replace).
 * **`.maid/`**
  	My [Maid](https://github.com/benjaminoakes/maid) rules for cleanup of Desktop, Downloads, and automatic Brew and Oh My Zsh upgrades.
 * **`misc/`** Miscellaneous scripts, that you might not run all the time. Contains:
