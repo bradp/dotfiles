@@ -27,6 +27,7 @@ plugins=(
 	git
 	git-extras
 	github
+	git-it-on
 	lol
 	nyan
 	osx
@@ -35,7 +36,11 @@ plugins=(
 	vagrant
 	z
 	zsh-syntax-highlighting
+	zsh-autosuggestions
+	alias-tips
+	colored-man-pages
 )
+
 
 source $ZSH/oh-my-zsh.sh
 for file in $HOME/dotfiles/sourced/*; do

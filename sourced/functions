@@ -111,3 +111,7 @@ function vim() {
 			|| command vim $args[1]
 			fi
 }
+
+function llynkx () {
+	lynx -accept_all_cookies -use_mouse -vikeys $@
+}

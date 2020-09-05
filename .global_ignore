@@ -22,3 +22,4 @@ tags1
 tags.bak
 debug.log
 *.buildbot
+misc-local/

@@ -12,7 +12,7 @@
 # to the inner folder of a site on your system. Simply change the directory names
 # below for the folder structure you use.
 site() {
-    cd ~/Sites/$1/content;
+    cd ~/Sites/$1/;
 }
 
 # This is our tab-completion definition. This will let you type 'site <TAB>' to
