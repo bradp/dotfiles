@@ -1,14 +1,5 @@
 Maid.rules do
 
-	#
-	# Screenshots
-	#›
-	rule 'Desktop Screenshots' do
-		dir('~/Desktop/Screen Shot *').each do |path|
-			trash(path)
-		end
-	end
-
 	rule 'Dropbox Screenshots' do
 		dir('~/Desktop/Screen Shot *').each do |path|
 			if 1.week.since?(accessed_at(path))
@@ -44,7 +35,7 @@ Maid.rules do
 		`brew update`
 	end
 	rule 'Updating Brews' do
-		`brew upgrade -all`
+		`brew upgrade`
 	end
 	rule 'Cleaning Brew' do
 		`brew cleanup`

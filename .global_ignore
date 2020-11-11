@@ -23,3 +23,6 @@ tags.bak
 debug.log
 *.buildbot
 misc-local/
+*.phpcs-cache*
+.phpcs-cache
+.packages/composer/phpcs-ruleset/WPForms/.phpcs-cache

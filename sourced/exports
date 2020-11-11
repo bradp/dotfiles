@@ -13,7 +13,6 @@
 #########################################
 export HOMEBREW_CASK_OPTS="--appdir=/Applications"
 export HOMEBREW_NO_ANALYTICS=1
-export INIT_CWD="/Users/brad/Sites/wpforms/content/plugins/wpforms"
 
 #########################################
 # History                               #

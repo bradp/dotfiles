@@ -124,3 +124,6 @@ alias currentdate='date "+%Y.%m.%d"'
 alias 3d="figlet -f 3d $1"
 alias tailf="less +F $0"
 alias sha256="shasum -a 256 "$1" "
+
+
+alias fcs=".vendor/bin/phpcs --standard=WPForms wpforms/src/"
