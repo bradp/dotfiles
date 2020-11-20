@@ -23,13 +23,11 @@ setopt INTERACTIVE_COMMENTS
 
 plugins=(
 	brew
-	brew-cask
 	git
 	git-extras
 	github
 	git-it-on
 	lol
-	nyan
 	osx
 	parbs-sites
 	sublime
