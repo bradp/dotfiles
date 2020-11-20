@@ -39,6 +39,8 @@ export LSCOLORS=gxfxbEaEBxxEhEhBaDaCaD
 
 export GOPATH="$HOME/go"
 
+export GPG_TTY=$(tty)
+
 #########################################
 # zsh-specific                          #
 #########################################
