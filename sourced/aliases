@@ -15,6 +15,7 @@ alias zshconfig="$EDITOR ~/.zshrc"
 alias ohmyzsh="$EDITOR ~/.oh-my-zsh"
 alias ssource='source ~/.zshrc'
 alias hosts="sudo $EDITOR /etc/hosts"
+alias x="exa"
 
 #########################################
 # Shorten common commands               #
