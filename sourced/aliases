@@ -15,6 +15,7 @@ alias zshconfig="$EDITOR ~/.zshrc"
 alias ohmyzsh="$EDITOR ~/.oh-my-zsh"
 alias ssource='source ~/.zshrc'
 alias hosts="sudo $EDITOR /etc/hosts"
+alias exa="exa -Flam --git --color-scale"
 alias x="exa"
 
 #########################################
