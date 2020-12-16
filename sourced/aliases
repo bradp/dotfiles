@@ -119,13 +119,11 @@ alias kill9="afplay ~/dotfiles/misc/kill-9.wav && kill -9 $1"
 #########################################
 alias pubkey="more ~/.ssh/id_rsa.pub | pbcopy | printf '=> Public key copied to pasteboard.\n'";
 alias bell='echo "\a"'
-alias dand=dandelion
 alias ack=ag
 alias caff="caffeinate -dis"
 alias currentdate='date "+%Y.%m.%d"'
 alias 3d="figlet -f 3d $1"
 alias tailf="less +F $0"
 alias sha256="shasum -a 256 "$1" "
-
-
-alias fcs=".vendor/bin/phpcs --standard=WPForms wpforms/src/"
+alias qr="qrencode "$1" -o - -t utf8"
+alias webp="cwebp -q 85 $1.png -o $1.webp"

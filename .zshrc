@@ -69,5 +69,6 @@ PATH=${PATH}:"$HOME"/.yarn/bin
 PATH=${PATH}:"/usr/local/sbin"
 PATH=${PATH}:"usr/local/share/npm/bin"
 PATH=${PATH}:"$HOME"/Dropbox/Working/chassis
+PATH=${PATH}:"/usr/local/MacGPG2/bin"
 
 export PATH=${PATH}
