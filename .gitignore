@@ -4,10 +4,6 @@
 .netrwhist
 .vim/tmp/
 .vim/plugged/*
-.secret
-zsh-custom/sourced/secret
-sourced/secret
-secret/
+_secret
 .gitconfig
 back.gitconfig
-

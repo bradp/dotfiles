@@ -2,7 +2,7 @@ function hugodeploy() {
 	hugo --gc --minify;
 	touch public;
 	rm .DS_Store 2> /dev/null;
-	rsync -avz --verbose  --delete public/ root@direct.bradparbs.com:/var/www/"$1"/html/
+	rsync -avz --verbose -human-readable --progress --delete public/ root@direct.bradparbs.com:/var/www/"$1"/html/
 }
 
 function clearBradParbsCache() {

@@ -32,17 +32,14 @@ plugins=(
 	git
 	git-extras
 	osx
-	parbs-sites
 	vagrant
 	z
+	zsh-parbs
 	zsh-syntax-highlighting
 )
 
 source $ZSH/oh-my-zsh.sh
 
-for file in $HOME/dotfiles/sourced/*; do
-   source "$file"
-done
 
 PATH=${PATH}:/usr/local/bin
 PATH=${PATH}:/usr/bin:/bin

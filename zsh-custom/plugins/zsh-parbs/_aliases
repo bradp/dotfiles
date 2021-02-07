@@ -65,7 +65,6 @@ alias mvi=mvim
 # IP / Speedtest                        #
 #########################################
 alias ip="curl ipinfo.io/ip"
-alias stest="wget -O /dev/null http://speedtest.wdc01.softlayer.com/downloads/test10.zip"
 
 #########################################
 # PHPCS                                 #
@@ -92,7 +91,7 @@ alias gpre="git pull --rebase origin $1"
 #########################################
 # Fun                                   #
 #########################################
-alias lc="lolcat"
+alias lol="lolcat"
 alias fs='fortune -as | cowsay -f small | lolcat'
 alias kill9="afplay ~/dotfiles/misc/kill-9.wav && kill -9 $1"
 
@@ -117,3 +116,6 @@ alias exot=exit
 alias yt="youtube-dl --mark-watched $@"
 alias dyt="cd ~/Desktop/; yt $@"
 alias myt="cd ~/Documents/Media/YT; yt $@"
+
+alias please="sudo $@"
+alias lynkx="lynx -accept_all_cookies -use_mouse -vikeys $@"

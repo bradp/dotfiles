@@ -16,6 +16,13 @@ function mkd()  {
 	mkdir -p -- "$@" && cd -- "$@"
 }
 
+# cd to the top of git directory
+function cdt() {
+	while ! [ -d .git ]; do
+		cd ..
+	done
+}
+
 # Go up N directories from https://git.io/updir
 function up() {
 	if [[ "${1}" == "" ]]; then
@@ -31,11 +38,6 @@ function up() {
 	fi
 }
 
-# Copy w/ progress
-function cp_p ()  {
-	rsync -WavP --human-readable --progress $1 $2
-}
-
 #########################################
 # Git                                   #
 #########################################
@@ -44,83 +46,10 @@ function gitupdateall() {
 	find . -type d -print -maxdepth 1 -execdir git --git-dir={}/.git --work-tree=$PWD/{} pull \;
 }
 
-# Update all git branches
-function gall() {
-	git branch -a | grep -v HEAD | perl -ne 'chomp($_); s|^\*?\s*||; if (m|(.+)/(.+)| && not $d{$2}) {print qq(git branch --track $2 $1/$2\n)} else {$d{$_}=1}' | csh -xfs
-}
-
-# Move user to root of git directory
-function root() {
-	TEMP_P=$(pwd)
-	while ! [ -d .git ]; do
-		cd ..
-	done
-	OLDPWD="$TEMP_PWD"
-}
-
-#########################################
-# Projects                              #
-#########################################
-# Add a dir to our project_paths source file
-function add_to_sourced() {
-	current_dir=$(pwd)
-	echo "PATH=\${PATH}:$current_dir" >> "$HOME"/dotfiles/sourced/project_paths
-	source "$HOME"/dotfiles/source/project_paths
-}
-
-#########################################
-# Shortcuts                             #
-#########################################
-# Find shorthand
-function f()  {
-	find . -name "$1"
-}
-
-# Sudo please
-function please()  {
-	sudo "$1"
-}
-
-# Brew cask install
-function app-install() {
-	brew cask install $@ --appdir=/Applications --caskroom=/etc/Caskroom
-}
-
-# LOL
-function lol() {
-	$@ | lolcat
-}
-
-#########################################
-# Misc                                  #
-#########################################
-# Open file in browser
-function chrome() {
-	open $@ --args --allow-file-access-from-files
-}
-
-# vim(): open 'foo:12' as foo at line 12 from: http://www.zsh.org/mla/users/2011/msg00333.html
-function vim() {
-	if test $# != 1 -o -r $1; then
-		command vim "${@}"
-	else
-		local args
-			args=(${(s.:.)1})
-			[[ $#args -ge 2 && $args[2] == <-> ]] \
-			&& command vim $args[1] +$args[2] \
-			|| command vim $args[1]
-			fi
-}
-
-function llynkx () {
-	lynx -accept_all_cookies -use_mouse -vikeys $@
-}
-
-
 
 function newchassis() {
 	git clone --recursive --single-branch --depth 1 https://github.com/Chassis/Chassis "$HOME"/Sites/"$1";
-	cd "$1";
+	cd "$1" || exit;
 	trash .git;
 	vagrant up --provsion;
 }
