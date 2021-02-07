@@ -17,8 +17,6 @@ ZSH_HIGHLIGHT_PATTERNS=('rm -rf *' 'fg=white,bold,bg=red')
 ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern cursor)
 
 COMPLETION_WAITING_DOTS="true"
-
-
 DISABLE_AUTO_UPDATE=true
 
 unsetopt nomatch
@@ -27,14 +25,13 @@ setopt INTERACTIVE_COMMENTS
 
 plugins=(
 	alias-tips
-	brew
 	colored-man-pages
+	composer
 	git
 	git-extras
 	osx
 	vagrant
 	z
-	zsh-parbs
 	zsh-syntax-highlighting
 )
 
@@ -50,7 +47,6 @@ PATH=${PATH}:/opt/sm/pkg/active/sbin
 
 PATH=${PATH}:/usr/local/git/bin
 PATH=${PATH}:/usr/local/share/npm/bin
-PATH=${PATH}:"$HOME"/.composer/vendor/bin
 PATH=${PATH}:"$HOME"/go/bin
 PATH=${PATH}:"$HOME"/.yarn/bin
 PATH=${PATH}:/usr/local/MacGPG2/bin

@@ -33,6 +33,10 @@ This repo contains a Rakefile that does some magic things.
 
 ## Curious about my setup?
 
+TODO:
+ - add new bootstrap / setup script
+ - replace rakefile to symlink files
+
 Check out [my blog post](http://webdevstudios.com/2015/02/10/a-beginners-guide-to-the-best-command-line-tools/) on getting started.
 
 ## What it includes

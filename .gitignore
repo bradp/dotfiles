@@ -1,9 +1,6 @@
-.maid/maid.log
-.maid/rules.sample.rb
 .swp
 .netrwhist
 .vim/tmp/
 .vim/plugged/*
-_secret
+_secret.zsh
 .gitconfig
-back.gitconfig
