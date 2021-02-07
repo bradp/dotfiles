@@ -8,16 +8,16 @@
 #	░░░░░░ ░░░░░░  ░░   ░░ ░░░     ░░░░░
 
 ZSH=$HOME/dotfiles/.oh-my-zsh
-
 ZSH_THEME="brad-muse"
 ZSH_CUSTOM=$HOME/dotfiles/zsh-custom
+
+COMPLETION_WAITING_DOTS=true
+DISABLE_AUTO_UPDATE=true
+HYPHEN_INSENSITIVE=true
 
 typeset -A ZSH_HIGHLIGHT_PATTERNS
 ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern cursor)
 ZSH_HIGHLIGHT_PATTERNS=('rm -rf *' 'fg=white,bold,bg=red' 'trash' 'underline,fg=red')
-
-COMPLETION_WAITING_DOTS="true"
-DISABLE_AUTO_UPDATE=true
 
 unsetopt nomatch
 setopt APPEND_HISTORY
@@ -41,7 +41,6 @@ plugins=(
 
 source $ZSH/oh-my-zsh.sh
 
-
 PATH=${PATH}:/usr/local/bin
 PATH=${PATH}:/usr/bin:/bin
 PATH=${PATH}:/usr/sbin:/sbin
@@ -58,4 +57,4 @@ PATH=${PATH}:/usr/local/MacGPG2/bin
 PATH=${PATH}:"$HOME"/dotfiles/misc
 PATH=${PATH}:"$HOME"/dotfiles/bin
 
-export PATH=${PATH}
+PATH=${PATH}
