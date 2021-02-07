@@ -19,17 +19,13 @@ alias hosts="sudo $EDITOR /etc/hosts"
 #########################################
 # Replace commands                      #
 #########################################
+alias ack="ag"
+alias cat="bat"
+alias gemini="amfora"
+alias hub="gh"
+alias lynx="lynx -accept_all_cookies -use_mouse -vikeys $@"
 alias vim=/Applications/MacVim.app/Contents/MacOS/Vim
 alias x="exa -Flam --git --color-scale"
-alias cat="bat"
-alias ack=ag
-alias hub="gh"
-
-#########################################
-# Shorten common commands               #
-#########################################
-alias e="$EDITOR ."
-alias lss="ls -Gal"
 
 #########################################
 # Hide / Show files                     #
@@ -82,11 +78,8 @@ alias pcsalle='find . | grep .php | xargs phpcs -n --standard="WordPress" --igno
 alias g="git"
 alias gs="git status"
 alias gc="git commit -m"
-
 alias gcb="git fetch && git checkout -b $@ origin/$@"
-
 alias gpre="git pull --rebase origin $1"
-
 
 #########################################
 # Fun                                   #
@@ -100,7 +93,7 @@ alias kill9="afplay ~/dotfiles/misc/kill-9.wav && kill -9 $1"
 #########################################
 alias pubkey="more ~/.ssh/id_rsa.pub | pbcopy | printf '=> Public key copied to pasteboard.\n'";
 alias bell='echo "\a"'
-alias ack=ag
+
 alias caff="caffeinate -dis"
 alias currentdate='date "+%Y.%m.%d"'
 alias 3d="figlet -f 3d $1"
@@ -109,7 +102,7 @@ alias sha256="shasum -a 256 "$1" "
 alias qr="qrencode "$1" -o - -t utf8"
 alias webp="cwebp -q 85 $1.png -o $1.webp"
 alias pa="php artisan $@"
-alias gemini="amfora $@"
+
 alias ql="qlmanage -p" # Quick-look a file
 alias exot=exit
 
@@ -118,4 +111,5 @@ alias dyt="cd ~/Desktop/; yt $@"
 alias myt="cd ~/Documents/Media/YT; yt $@"
 
 alias please="sudo $@"
-alias lynkx="lynx -accept_all_cookies -use_mouse -vikeys $@"
+alias e="$EDITOR ."
+alias lss="ls -Gal"

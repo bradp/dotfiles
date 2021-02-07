@@ -26,7 +26,7 @@ s() {
 }
 
 _s() {
-    _files -W ~/Dropbox/Working/Sites/ -/;
+    _files -W ~/Dropbox/Working/sites/ -/;
 }
 
 compdef _site site
