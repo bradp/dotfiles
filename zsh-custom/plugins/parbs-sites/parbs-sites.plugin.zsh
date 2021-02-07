@@ -8,16 +8,26 @@
 # ░░░░░░  ░░    ░░   ░░░░░░ ░░░░░░
 #
 
-# This sets up a function of 'site <site name>' that will navigate you directly
-# to the inner folder of a site on your system. Simply change the directory names
-# below for the folder structure you use.
+
+# quickly jump to site directory
+# site <site name>
+# s <site name>
+
 site() {
     cd ~/Sites/$1/;
 }
 
-# This is our tab-completion definition. This will let you type 'site <TAB>' to
-# get a list of all your sites. This will need to be update to match your structure.
 _site() {
     _files -W ~/Sites/ -/;
 }
+
+s() {
+    cd ~/Dropbox/Working/sites/$1/;
+}
+
+_s() {
+    _files -W ~/Dropbox/Working/Sites/ -/;
+}
+
 compdef _site site
+compdef _s s

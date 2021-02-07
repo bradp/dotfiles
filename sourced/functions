@@ -115,3 +115,12 @@ function vim() {
 function llynkx () {
 	lynx -accept_all_cookies -use_mouse -vikeys $@
 }
+
+
+
+function newchassis() {
+	git clone --recursive --single-branch --depth 1 https://github.com/Chassis/Chassis "$HOME"/Sites/"$1";
+	cd "$1";
+	trash .git;
+	vagrant up --provsion;
+}

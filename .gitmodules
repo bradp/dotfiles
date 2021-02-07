@@ -1,27 +1,12 @@
 [submodule ".oh-my-zsh"]
 	path = .oh-my-zsh
 	url = https://github.com/robbyrussell/oh-my-zsh.git
-[submodule "bin/vv"]
-	path = bin/vv
-	url = git@github.com:bradp/vv.git
-[submodule "misc/wpcs"]
-	path = misc/wpcs
-	url = https://github.com/WordPress-Coding-Standards/WordPress-Coding-Standards.git
-[submodule "bin/t"]
-	path = bin/t
-	url = git@github.com:bradp/t.git
-[submodule "misc/hmcs"]
-	path = misc/hmcs
-	url = git@github.com:humanmade/coding-standards.git
 [submodule "zsh-custom/plugins/alias-tips"]
 	path = zsh-custom/plugins/alias-tips
 	url = https://github.com/djui/alias-tips.git
 [submodule "zsh-custom/plugins/colored-man-pages"]
 	path = zsh-custom/plugins/colored-man-pages
 	url = https://github.com/zuxfoucault/colored-man-pages_mod.git
-[submodule "zsh-custom/plugins/zsh-autosuggestions"]
-	path = zsh-custom/plugins/zsh-autosuggestions
-	url = git@github.com:zsh-users/zsh-autosuggestions.git
 [submodule "zsh-custom/plugins/zsh-syntax-highlighting"]
 	path = zsh-custom/plugins/zsh-syntax-highlighting
 	url = https://github.com/zsh-users/zsh-syntax-highlighting.git

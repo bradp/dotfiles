@@ -9,22 +9,13 @@
 # ░░       ░░░░░░░░    ░░  ░░   ░░ ░░░░░░
 #
 
-#########################################
-# Dropbox                               #
-#########################################
-alias box="cd ~/Dropbox/"
-alias working="cd ~/Dropbox/Working/"
-alias ww="working"
-
-#########################################
-# Sites                                 #
-#########################################
-alias sites="cd ~/Sites"
-alias sitesold="cd ~/SitesOld"
-
-alias goo="cd ~/go/src/github.com/bradp/"
-
 alias docs="cd ~/Documents/"
 alias dl="cd ~/Downloads"
 alias dt="cd ~/Desktop"
+alias box="cd ~/Dropbox/"
+alias sites="cd ~/Sites"
 
+alias godir="cd ~/go/src/github.com/bradp/"
+
+alias ww="cd ~/Dropbox/Working/"
+alias ws="cd ~/Dropbox/Working/sites"

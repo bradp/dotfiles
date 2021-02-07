@@ -40,7 +40,6 @@ Check out [my blog post](http://webdevstudios.com/2015/02/10/a-beginners-guide-t
 * **`bin/`** Miscellaneous scripts. This is also added to your path. Contains:
  	* `$` for when you accidently copy a command from the internet.
  	* `colors-sample` Test your terminal colors. From [here](https://github.com/xero/dotfiles/blob/master/fun/code/fun/colorscheme).
- 	* `faces` (╯°□°）╯︵ ┻━┻
  	* `git-diff` Wrapper for icdiff for git diffs.
  	* `icdiff` Side by side diffs. From [here](http://www.jefftk.com/icdiff).
  	* `replace` - Find and replace by a given list of files. `replace foo bar **/*.txt` From [here](https://github.com/thoughtbot/dotfiles/blob/master/bin/replace).
@@ -49,17 +48,13 @@ Check out [my blog post](http://webdevstudios.com/2015/02/10/a-beginners-guide-t
  	* `setup-new-mac.sh` to setup a new mac how I like it.
 * **`.oh-my-zsh/`** Submodule checkout of [Oh My Zsh](https://github.com/robbyrussell/oh-my-zsh).
 * **`.vim/`** My Vim plugins.
-* **`sourced`** Contains:
-  * **`aliases`** Aliases. Gets sourced from inside the dotfiles folder.
+* **`sourced`** Everything gets automatically included ntains:
+  * **`aliases`** Aliases.
   * **`exports`** Environment exports.
   * **`functions`** Like aliases, but more bigger
   * **`project_paths`** Project-spefic $PATH entries. Added with `add_to_sourced`
-  * **`secret`** *Not included*, but gets sourced if it exists.
 
 * **`zsh-custom/`** My custom [Oh My Zsh](https://github.com/robbyrussell/oh-my-zsh) theme and Oh My Zsh plugins. Contains:
- 	* `plugins/zsh-syntax-highlighting` Syntax highlighting from [zsh-syntax-highlighting](https://github.com/zsh-users/zsh-syntax-highlighting).
- 	* `plugins/parbs-sites` Helper zsh function to jump to a dir in the ~/Sites folder. Used as `site dir_name` (with autocomplete and everything).
- 	* `themes/brad-muse` Custom theme based off Muse.
 * **`.gemrc`** Speeds up gem installation.
 * **`.gitconfig`** Make git awesome.
 * **`.global_ignore`** Our global git ignore.

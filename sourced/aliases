@@ -15,22 +15,21 @@ alias zshconfig="$EDITOR ~/.zshrc"
 alias ohmyzsh="$EDITOR ~/.oh-my-zsh"
 alias ssource='source ~/.zshrc'
 alias hosts="sudo $EDITOR /etc/hosts"
-alias exa="exa -Flam --git --color-scale"
-alias x="exa"
+
+#########################################
+# Replace commands                      #
+#########################################
+alias vim=/Applications/MacVim.app/Contents/MacOS/Vim
+alias x="exa -Flam --git --color-scale"
+alias cat="bat"
+alias ack=ag
+alias hub="gh"
 
 #########################################
 # Shorten common commands               #
 #########################################
-alias h="history"
-alias "cd.."="cd .."
-alias c="cd"
-alias g="git"
-alias gs="git status"
-alias gcm="git commit -m"
 alias e="$EDITOR ."
 alias lss="ls -Gal"
-alias lp="ls -p"
-alias ql="qlmanage -p" # Quick-look a file
 
 #########################################
 # Hide / Show files                     #
@@ -50,41 +49,23 @@ alias lscleanup="/System/Library/Frameworks/CoreServices.framework/Frameworks/La
 #########################################
 # Vagrant                               #
 #########################################
+alias vag="vagrant"
 alias vup="vagrant up; vagrant provision; vagrant ssh"
 alias vp="vagrant provision"
 alias vs='sites && vagrant ssh'
-alias vag="vagrant"
-
-#########################################
-# Volum Control - http://xkcd.com/530/  #
-#########################################
-alias stfu="osascript -e 'set volume output muted true'"
-alias pumpitup="osascript -e 'set volume 10'"
 
 #########################################
 # VIM                                   #
 #########################################
 alias v=vim
 alias vi=vim
-alias vim=/Applications/MacVim.app/Contents/MacOS/Vim
 alias mvi=mvim
 
 #########################################
 # IP / Speedtest                        #
 #########################################
 alias ip="curl ipinfo.io/ip"
-alias ips="ifconfig -a | perl -nle'/(\d+\.\d+\.\d+\.\d+)/ && print $1'"
 alias stest="wget -O /dev/null http://speedtest.wdc01.softlayer.com/downloads/test10.zip"
-
-#########################################
-# ls via tree shortcuts                 #
-#########################################
-alias ll1="tree --dirsfirst -ChFL 1"
-alias ll2="tree --dirsfirst -ChFL 2"
-alias ll3="tree --dirsfirst -ChFL 3"
-alias ll1e="tree --dirsfirst -ChFupDaL 1"
-alias ll2e="tree --dirsfirst -ChFupDaL 2"
-alias ll3e="tree --dirsfirst -ChFupDaL 3"
 
 #########################################
 # PHPCS                                 #
@@ -99,17 +80,18 @@ alias pcsalle='find . | grep .php | xargs phpcs -n --standard="WordPress" --igno
 #########################################
 # Git                                   #
 #########################################
-alias gist="gist -ec $1"
-alias kdiff="git difftool $1 $2  -y -t Kaleidoscope"
+alias g="git"
+alias gs="git status"
+alias gc="git commit -m"
+
 alias gcb="git fetch && git checkout -b $@ origin/$@"
-alias prod_diff="git diff prod $@"
+
 alias gpre="git pull --rebase origin $1"
+
 
 #########################################
 # Fun                                   #
 #########################################
-alias yolo="git commit -am '`curl -s http://whatthecommit.com/index.txt`'"
-alias yoloo="git commit -am '`curl -s http://whatthecommit.com/index.txt`' && git push origin master --force"
 alias lc="lolcat"
 alias fs='fortune -as | cowsay -f small | lolcat'
 alias kill9="afplay ~/dotfiles/misc/kill-9.wav && kill -9 $1"
@@ -127,3 +109,11 @@ alias tailf="less +F $0"
 alias sha256="shasum -a 256 "$1" "
 alias qr="qrencode "$1" -o - -t utf8"
 alias webp="cwebp -q 85 $1.png -o $1.webp"
+alias pa="php artisan $@"
+alias gemini="amfora $@"
+alias ql="qlmanage -p" # Quick-look a file
+alias exot=exit
+
+alias yt="youtube-dl --mark-watched $@"
+alias dyt="cd ~/Desktop/; yt $@"
+alias myt="cd ~/Documents/Media/YT; yt $@"

@@ -7,68 +7,58 @@
 #	 ██████ ██████ ░██  ░██░███   ░░█████
 #	░░░░░░ ░░░░░░  ░░   ░░ ░░░     ░░░░░
 
-ZSH=$HOME/dotfiles/.oh-my-zsh # Path to your oh-my-zsh configuration.
-ZSH_THEME="brad-muse" # Set name of the theme to load.
+ZSH=$HOME/dotfiles/.oh-my-zsh
 
-DEFAULT_USER="bradparbs@bradparbs"
-COMPLETION_WAITING_DOTS="true"
-DISABLE_AUTO_UPDATE=true
+ZSH_THEME="brad-muse"
 ZSH_CUSTOM=$HOME/dotfiles/zsh-custom
-ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern cursor)
+
+typeset -A ZSH_HIGHLIGHT_PATTERNS
 ZSH_HIGHLIGHT_PATTERNS=('rm -rf *' 'fg=white,bold,bg=red')
+ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern cursor)
+
+COMPLETION_WAITING_DOTS="true"
+
+
+DISABLE_AUTO_UPDATE=true
 
 unsetopt nomatch
 setopt APPEND_HISTORY
 setopt INTERACTIVE_COMMENTS
 
 plugins=(
+	alias-tips
 	brew
+	colored-man-pages
 	git
 	git-extras
-	github
-	git-it-on
-	lol
 	osx
 	parbs-sites
-	sublime
 	vagrant
 	z
 	zsh-syntax-highlighting
-	zsh-autosuggestions
-	alias-tips
-	colored-man-pages
 )
 
-
 source $ZSH/oh-my-zsh.sh
+
 for file in $HOME/dotfiles/sourced/*; do
    source "$file"
 done
 
-if (( $+commands[tag] )); then
-	tag() { command tag "$@"; source ${TAG_ALIAS_FILE:-/tmp/tag_aliases} 2>/dev/null }
-	alias ag=tag
-fi
-
 PATH=${PATH}:/usr/local/bin
-PATH=${PATH}:/usr/bin
-PATH=${PATH}:/bin
-PATH=${PATH}:/usr/sbin
-PATH=${PATH}:/sbin
-PATH=${PATH}:/usr/local/git/bin
+PATH=${PATH}:/usr/bin:/bin
+PATH=${PATH}:/usr/sbin:/sbin
 PATH=${PATH}:/opt/sm/bin
 PATH=${PATH}:/opt/sm/pkg/active/bin
 PATH=${PATH}:/opt/sm/pkg/active/sbin
-PATH=${PATH}:/usr/local/heroku/bin
-PATH=${PATH}:"$HOME"/dotfiles/misc
-PATH=${PATH}:"$HOME"/dotfiles/bin
-PATH=${PATH}:"$HOME"/dotfiles/bin/t
+
+PATH=${PATH}:/usr/local/git/bin
+PATH=${PATH}:/usr/local/share/npm/bin
 PATH=${PATH}:"$HOME"/.composer/vendor/bin
 PATH=${PATH}:"$HOME"/go/bin
 PATH=${PATH}:"$HOME"/.yarn/bin
-PATH=${PATH}:"/usr/local/sbin"
-PATH=${PATH}:"usr/local/share/npm/bin"
-PATH=${PATH}:"$HOME"/Dropbox/Working/chassis
-PATH=${PATH}:"/usr/local/MacGPG2/bin"
+PATH=${PATH}:/usr/local/MacGPG2/bin
+
+PATH=${PATH}:"$HOME"/dotfiles/misc
+PATH=${PATH}:"$HOME"/dotfiles/bin
 
 export PATH=${PATH}

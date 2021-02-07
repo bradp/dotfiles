@@ -11,8 +11,7 @@ require 'rake'
 require 'fileutils'
 
 # These are all the files we want to symlink to ~
-FILES = '.gemrc .gitconfig .gvimrc .hushlogin .maid .vim .vimrc .zshrc .zlogin'
-
+FILES = '.gemrc .gitconfig .gvimrc .hushlogin .vim .vimrc .zshrc .zlogin'
 
 task :default => 'install'
 
