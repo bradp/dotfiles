@@ -13,3 +13,6 @@
 [submodule "zsh-custom/plugins/artisan"]
 	path = zsh-custom/plugins/artisan
 	url = git@github.com:jessarcher/zsh-artisan.git
+[submodule "zsh-custom/plugins/forgit"]
+	path = zsh-custom/plugins/forgit
+	url = git@github.com:wfxr/forgit.git

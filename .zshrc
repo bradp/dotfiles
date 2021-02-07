@@ -25,13 +25,17 @@ setopt INTERACTIVE_COMMENTS
 
 plugins=(
 	alias-tips
+	artisan
 	colored-man-pages
 	composer
-	git
+	dash
+	fzf
+	forgit
 	git-extras
-	osx
-	vagrant
+	rsync
+	safe-paste
 	z
+	zf
 	zsh-syntax-highlighting
 )
 
