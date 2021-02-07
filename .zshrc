@@ -13,8 +13,8 @@ ZSH_THEME="brad-muse"
 ZSH_CUSTOM=$HOME/dotfiles/zsh-custom
 
 typeset -A ZSH_HIGHLIGHT_PATTERNS
-ZSH_HIGHLIGHT_PATTERNS=('rm -rf *' 'fg=white,bold,bg=red')
 ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern cursor)
+ZSH_HIGHLIGHT_PATTERNS=('rm -rf *' 'fg=white,bold,bg=red' 'trash' 'underline,fg=red')
 
 COMPLETION_WAITING_DOTS="true"
 DISABLE_AUTO_UPDATE=true
