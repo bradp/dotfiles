@@ -34,3 +34,9 @@ function up() {
 		done
 	fi
 }
+
+# Grep for a running process
+function p() {
+    ps aux | ag "$*"
+}
+
