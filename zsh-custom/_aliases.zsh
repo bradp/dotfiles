@@ -24,7 +24,9 @@ alias cat="bat"
 alias gemini="amfora"
 alias hub="gh"
 alias lynx="lynx -accept_all_cookies -use_mouse -vikeys $@"
+
 alias x="exa -Flam --git --color-scale"
+alias hist="history"
 
 #########################################
 # Hide / Show files                     #
