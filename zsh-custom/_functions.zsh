@@ -40,3 +40,33 @@ function p() {
     ps aux | ag "$*"
 }
 
+# Move target $1 to $1.bak
+# Example:
+#   $ bak helpers.bash
+#   helpers.bash -> helpers.bash.bak
+# props https://github.com/shazow/dotfiles/blob/master/helpers.bash
+function bak() {
+    declare target=$1;
+    if [[ "${target:0-1}" = "/" ]]; then
+        target=${target%%/}; # Strip trailing / of directories
+    fi
+    mv -v $target{,.bak}
+}
+
+# Revert previously bak'd $1 target
+# Example:
+#   $ unbak *.bak
+#   helpers.bash.bak -> helpers.bash
+function unbak() {
+    declare target=$1;
+    if [[ "${target:0-1}" = "/" ]]; then
+        # Strip trailing / of directories
+        target="${target%%/}"
+    fi
+
+    if [[ "${target:0-4}" = ".bak" ]]; then
+        mv -v "$target" "${target%%.bak}"
+    else
+        echo "No .bak extension, ignoring: $target"
+    fi
+}
