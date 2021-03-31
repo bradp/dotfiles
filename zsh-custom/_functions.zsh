@@ -49,6 +49,11 @@ function p() {
     ps aux | ag "$*"
 }
 
+# Grep for a history entry
+function ha() {
+	history | ag $@
+}
+
 # Move target $1 to $1.bak
 # Example:
 #   $ bak helpers.bash
