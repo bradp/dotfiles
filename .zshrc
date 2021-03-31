@@ -30,10 +30,8 @@ plugins=(
 	composer
 	dash
 	fzf
-	forgit
 	git-extras
 	rsync
-	safe-paste
 	z
 	zf
 	zsh-syntax-highlighting
