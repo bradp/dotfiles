@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-# set -x
-set -u
-
 function error_bad_usage() {
 	echo "Usage: ghback <user>/<repo> [--keep, --meta]" 1>&2;
 	exit
