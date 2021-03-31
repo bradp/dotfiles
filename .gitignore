@@ -2,3 +2,4 @@
 .vim/tmp/
 .vim/plugged/*
 _secret.zsh
+_deploy.zsh
