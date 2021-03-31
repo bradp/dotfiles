@@ -20,7 +20,9 @@ ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern cursor)
 ZSH_HIGHLIGHT_PATTERNS=('rm -rf *' 'fg=white,bold,bg=red' 'trash' 'underline,fg=red')
 
 unsetopt nomatch
+
 setopt APPEND_HISTORY
+setopt HIST_FIND_NO_DUPS
 setopt INTERACTIVE_COMMENTS
 
 plugins=(
