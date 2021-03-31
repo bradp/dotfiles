@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+function github() {
+	curl -sLu $MY_GH_CREDS https://api.github.com/$2
+}
+
+case $1 in
+
+  github | gh)
+    github $2
+    ;;
+
+  *)
+    echo "usage: api github <options>"
+	exit
+    ;;
+esac
