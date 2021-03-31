@@ -35,6 +35,15 @@ function up() {
 	fi
 }
 
+# Move user to root of git directory
+function root() {
+	TEMP_P=$(pwd)
+	while ! [ -d .git ]; do
+		cd ..
+	done
+	OLDPWD="$TEMP_PWD"
+}
+
 # Grep for a running process
 function p() {
     ps aux | ag "$*"
