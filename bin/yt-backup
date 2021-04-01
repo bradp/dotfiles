@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+function ytbackup() {
+
+	# format the output correctly
+	# youtube-dl $1
+
+	# get name somehow
+
+	# tar czf "$video".tar.gz "$video"
+	# rm "$video".tar.gz
+
+	# rclone copy --fast-list --progress --checkers 50 --transfers 50 "$video".tar.gz "b2:parbs-media/YT/saved/$video"
+}

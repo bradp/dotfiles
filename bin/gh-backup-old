@@ -1,0 +1,92 @@
+#!/usr/bin/env bash
+
+function backup_repo() {
+
+	backup-github-with-metadata "$1" --meta
+}
+
+function backup_user() {
+	echo "Cloning & backing up all repos for $1 ..."
+
+	mkdir "$1" 2> /dev/null
+	cd "$1" || exit
+
+	curl -sLu "$MY_GH_CREDS" "https://api.github.com/users/$1/repos?per_page=100" |  jq -r '.[] | select(.fork == false) | .ssh_url' | xargs -L1 -P10 git clone --depth 1
+
+	for d in */ ; do
+		echo "Compressing ${d%/} ..."
+
+	    tar czf "${d%/}".tar.gz "$d"
+
+		rm -rf "$d"
+	done
+
+	cd ../ || exit
+
+	echo "Sending to b2 ..."
+#
+	rclone copy --fast-list --progress --exclude '.git/**' --checkers 50 --transfers 50 "$1" "b2:parbs-github/$1"
+
+	rm -rf "$1"
+}
+
+function backup_stars() {
+	echo "Cloning & backing up all starred repos for $1 ..."
+
+	mkdir "$1" 2> /dev/null
+	cd "$1" || exit
+
+	curl -sLu "$MY_GH_CREDS" "https://api.github.com/users/$1/starred?per_page=100" |  jq -r '.[] | select(.fork == false) | .ssh_url' | xargs -L1 -P10 git clone --depth 1
+
+	for d in */ ; do
+		echo "Compressing ${d%/} ..."
+
+	    tar czf "${d%/}".tar.gz "$d"
+
+		rm -rf "$d"
+	done
+
+	cd ../ || exit
+
+	echo "Sending to b2 ..."
+#
+	rclone copy --fast-list --progress --exclude '.git/**' --checkers 50 --transfers 50 "$1" "b2:parbs-github/$1/__starred"
+
+	rm -rf "$1"
+}
+
+function backup_org() {
+
+	echo "Cloning & backing up entire $1 organization ... "
+
+	mkdir "$1" 2> /dev/null
+	cd "$1" || exit
+
+	curl -sLu "$MY_GH_CREDS" "https://api.github.com/orgs/$1/repos?per_page=1000" |  jq -r '.[] | select(.fork == false) | .ssh_url' | xargs -L1 -P10 git clone --depth 1
+
+		for d in */ ; do
+		echo "Compressing ${d%/} ..."
+
+	    tar czf "${d%/}".tar.gz "$d"
+
+		rm -rf "$d"
+	done
+
+	cd ../ || exit
+
+	echo "Sending to b2 ..."
+
+	rclone copy --fast-list --progress --exclude '.git/**' --checkers 50 --transfers 50 "$1" "b2:parbs-github/$1"
+
+	rm -rf "$1"
+}
+
+if [[ "${1}" == "org" ]]; then
+	backup_org "$2"
+elif [[ "${1}" == "user" ]]; then
+	backup_user "$2"
+elif [[ "${1}" == "stars" ]]; then
+	backup_stars "$2"
+else
+	backup_repo "$1" "$2"
+fi
