@@ -32,7 +32,6 @@ plugins=(
 	composer
 	dash
 	fzf
-	git-extras
 	rsync
 	z
 	zf
