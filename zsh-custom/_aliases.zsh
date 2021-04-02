@@ -67,7 +67,6 @@ alias ip="curl ipinfo.io/ip"
 #########################################
 # PHPCS                                 #
 #########################################
-alias p="phpcs --standard=vendor/humanmade/codingstandards $@"
 alias pc='phpcs --standard="WordPress" $@'
 alias pcf='phpcbf --standard="WordPress" $@'
 alias pcbfall='find . | grep .php | xargs phpcbf --standard="WordPress" --ignore=node_modules/'
