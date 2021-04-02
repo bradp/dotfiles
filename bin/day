@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+
+function run_start() {
+
+    osascript -e 'tell application "Airmail 3" to activate'
+    osascript -e 'tell application "Slack" to activate'
+    osascript -e 'tell application "Visual Studio Code" to activate'
+    osascript -e 'tell application "Stream Deck" to activate'
+    osascript -e 'tell application "System Events" to tell process "Stream Deck" to tell window 1 to click (first button whose subrole = "AXCloseButton")'
+}
+
+function run_end() {
+
+    # Generate a random number between 1-10 so that our verify command can't be muscle-memory typed in
+    confirm_val=$(( RANDOM % 10 ))
+
+    read -r -p "To confirm type '$confirm_val':  " confirm
+
+    if [ "$confirm" != "$confirm_val" ]; then
+        exit
+    fi
+
+    osascript -e 'tell application "Airmail 3" to quit'
+    osascript -e 'tell application "Slack" to quit'
+    osascript -e 'tell application "Visual Studio Code" to quit'
+    osascript -e 'tell application "Stream Deck" to quit'
+
+    osascript -e 'tell application "Finder" to eject disk "Small"'
+    osascript -e 'tell application "Finder" to eject disk "Backup 1"'
+    osascript -e 'tell application "Finder" to eject disk "Backup 2"'
+}
+
+function run_help() {
+    echo "Usage: day start|end" 1>&2;
+	exit
+}
+
+if [[ "${1}" == "start" ]]; then
+	run_start "$2"
+elif [[ "${1}" == "end" ]]; then
+	run_end "$2"
+else
+	run_help "$2"
+fi
