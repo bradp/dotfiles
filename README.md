@@ -40,6 +40,7 @@ Check out [my blog post](http://webdevstudios.com/2015/02/10/a-beginners-guide-t
 * **`bin/`** Miscellaneous scripts. This is also added to your path. Contains:
  	* `$` for when you accidently copy a command from the internet.
  	* `api` helper to easily call APIs
+	* `day` helper to start or end my day
  	* `colors-sample` Test your terminal colors. From [here](https://github.com/xero/dotfiles/blob/master/fun/code/fun/colorscheme).
  	* `gh-backup` Backup a github repo with metadata to b2
  	* `imgcat` meow meow images on your terminal
