@@ -56,7 +56,6 @@ Check out [my blog post](http://webdevstudios.com/2015/02/10/a-beginners-guide-t
   * **`_misc.zsh`** Whatever
   * **`_paths.zsh`** Quick aliases to move to certain directories
   * **`_sites.zsh`** Helper to move around my site directories
-* **`.gemrc`** Speeds up gem installation.
 * **`.gitconfig`** Make git awesome.
 * **`.global_ignore`** Our global git ignore.
 * **`.hushlogin`** Stop the login message when logging into remote servers.
