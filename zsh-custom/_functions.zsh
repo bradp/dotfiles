@@ -45,7 +45,7 @@ function root() {
 }
 
 # Grep for a running process
-function p() {
+function pa() {
     ps aux | ag "$*"
 }
 

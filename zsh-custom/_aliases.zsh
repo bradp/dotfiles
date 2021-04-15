@@ -103,7 +103,6 @@ alias tailf="less +F $0"
 alias sha256="shasum -a 256 "$1" "
 alias qr="qrencode "$1" -o - -t utf8"
 alias webp="cwebp -q 85 $1.png -o $1.webp"
-alias pa="php artisan $@"
 
 alias ql="qlmanage -p" # Quick-look a file
 alias exot=exit
