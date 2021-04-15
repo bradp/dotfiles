@@ -105,7 +105,8 @@ alias qr="qrencode "$1" -o - -t utf8"
 alias webp="cwebp -q 85 $1.png -o $1.webp"
 
 alias ql="qlmanage -p" # Quick-look a file
-alias exot=exit
+alias exot="exit"
+alias foot="tail"
 
 alias yt="youtube-dl --mark-watched $@"
 alias dyt="cd ~/Desktop/; yt $@"
