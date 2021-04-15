@@ -1,14 +1,22 @@
 #!/usr/bin/env bash
 
-function ytbackup() {
+cd /tmp || exit
 
-	# format the output correctly
-	# youtube-dl $1
+randome=$((RANDOM))
 
-	# get name somehow
+mkdir "media-saving-$randome"
+cd "media-saving-$randome" || exit
 
-	# tar czf "$video".tar.gz "$video"
-	# rm "$video".tar.gz
+youtube-dl "$1"
 
-	# rclone copy --fast-list --progress --checkers 50 --transfers 50 "$video".tar.gz "b2:parbs-media/YT/saved/$video"
-}
+for f in *.mp4; do
+	echo "$f"
+	tar czf "$f".tar.gz "$f"
+	rm "$f"
+done
+
+cd ../ || exit
+
+rclone copy --fast-list --progress "/tmp/media-saving-$randome/" "b2:parbs-media/YT/"
+
+rm -rf "media-saving-$randome"
