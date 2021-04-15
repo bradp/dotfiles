@@ -31,7 +31,7 @@ export HOMEBREW_NO_ANALYTICS=1
 # Config set                            #
 #########################################
 export EDITOR="vim";
-export MANPAGER="less -X";
+export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 
 export GREP_OPTIONS="--color=auto";
 export LSCOLORS=gxfxbEaEBxxEhEhBaDaCaD
