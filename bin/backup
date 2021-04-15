@@ -1,0 +1,174 @@
+#!/usr/bin/env bash
+
+# When adding target, add to `all` as well as single command.
+
+function run_setup() {
+	set_colors
+	echo ""
+}
+
+function set_colors() {
+	red=$(tput setaf 1)
+	green=$(tput setaf 2)
+	reset=$(tput sgr0)
+}
+
+function display_start() {
+	echo "   $1  $2 ... "
+}
+
+function display_done() {
+	if [[ "$1" == "error" ]];then
+		echo "${red}${2}${reset}"
+	else
+		echo "${green}done.${reset}"
+	fi
+}
+
+function display_message() {
+	echo ""
+	tput bold
+	echo "  $1${reset} "
+	echo ""
+}
+
+function backup_batman() {
+	display_start "🦇️" "batman"
+	ssh batman "rclone copy --fast-list --progress --copy-links --checkers 20 --transfers 20 /etc/apache2 b2:parbs-batman/etc/apache2"
+	ssh batman "rclone copy --fast-list --progress --copy-links --checkers 20 --transfers 20 /var/www b2:parbs-batman/var/www"
+	display_done
+}
+
+function backup_xavier() {
+	display_start "🦽" "xavier"
+	ssh xavier "rclone copy --fast-list --progress --copy-links --checkers 20 --transfers 20 /etc/caddy b2:parbs-xavier/etc/caddy"
+	ssh xavier "rclone copy --fast-list --progress --copy-links --checkers 20 --transfers 20 /var/www b2:parbs-xavier/var/www"
+	display_done
+}
+
+function backup_pihole() {
+	display_start "🍓" "pihole"
+	ssh pihole "rclone copy --fast-list --progress --copy-links --exclude '.git/**' --checkers 50 --transfers 50 /var/www b2:parbs-pihole/var/www"
+	ssh pihole "rclone copy --fast-list --progress --copy-links --exclude '.git/**' --exclude 'wp-gen/**' --exclude '.cache/**' --checkers 50 --transfers 50 /home/pi b2:parbs-pihole/home/pi"
+	display_done
+}
+
+function backup_dropbox() {
+	display_start "🗄️ " "dropbox"
+	# rclone copy --fast-list --progress --copy-links --checkers 8 --transfers 10 dropbox: b2:parbs-dropbox
+	display_done
+}
+
+function backup_dropbox_local() {
+	display_start "📁️" "dropbox-local"
+	rclone copy --fast-list --progress --copy-links --exclude '.git/**' --exclude 'node_modules/**' --exclude '.dropbox.cache/**' --checkers 50 --transfers 50 /Users/brad/Dropbox b2:parbs-dropbox
+	display_done
+}
+
+function backup_sdr() {
+	display_start "📡" "sdr"
+	display_done error "not configured"
+}
+
+function backup_screen() {
+	display_start "🖥️ " "screen"
+	display_done error "not configured"
+}
+
+function backup_github() {
+	display_start "💽️" "github"
+
+	ghback user bradp
+
+	display_done
+}
+
+function backup_github_stars() {
+	display_start "⭐️ " "github-stars"
+
+	ghback starred bradp
+
+	display_done
+}
+
+function backup_media_hdd() {
+	display_start "📀️" "media-hdd"
+
+	if [[ -d /Volumes/Small/Media ]]; then
+		rclone copy --fast-list --progress --copy-links --checkers 50 --transfers 100 /Volumes/Small/Media b2:parbs-media
+
+		display_done
+	else
+		display_done error "hard drive not found"
+	fi
+
+}
+
+function backup_all() {
+	backup_batman
+	backup_xavier
+	backup_pihole
+	backup_sdr
+	backup_screen
+	backup_dropbox
+	backup_dropbox_local
+	backup_github
+	backup_github_stars
+}
+
+function display_help() {
+	echo "${red} Please include a target. ${reset}"
+	echo ""
+	echo "${red} Available targets: ${reset}"
+	echo "  • batman"
+	echo "  • xavier"
+	echo "  • pihole"
+	echo "  • sdr"
+	echo "  • screen"
+	echo "  • dropbox"
+	echo "  • dropbox-local"
+	echo "  • github"
+	echo "  • github-stars"
+	echo "  • media-hdd"
+	echo ""
+
+	exit
+}
+
+run_setup
+
+if [[ -z "$1" ]];then
+	display_help
+fi
+
+display_message "🚚 Starting backup ..."
+
+if [[ "$1" == "all" ]]; then
+	backup_all
+elif [[ "$1" == "batman" ]]; then
+	backup_batman
+elif [[ "$1" == "xavier" ]]; then
+	backup_xavier
+elif [[ "$1" == "pihole" ]]; then
+	backup_pihole
+elif [[ "$1" == "sdr" ]]; then
+	backup_sdr
+elif [[ "$1" == "screen" ]]; then
+	backup_screen
+elif [[ "$1" == "dropbox" ]]; then
+	backup_dropbox
+elif [[ "$1" == "dropbox-local" ]]; then
+	backup_dropbox_local
+elif [[ "$1" == "github" ]]; then
+	backup_github
+elif [[ "$1" == "github-stars" ]]; then
+	backup_github_stars
+elif [[ "$1" == "media-hdd" ]]; then
+	backup_media_hdd
+else
+
+	display_message "🔴️ Backup failed"
+	display_help
+fi
+
+display_message "✅️ Completed backup!"
