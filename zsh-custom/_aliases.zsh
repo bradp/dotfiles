@@ -16,6 +16,8 @@ alias ohmyzsh="$EDITOR ~/.oh-my-zsh"
 alias ssource="source ~/.zshrc"
 alias hosts="sudo $EDITOR /etc/hosts"
 
+alias ghback="gh-backup"
+
 #########################################
 # Replace commands                      #
 #########################################
