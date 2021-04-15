@@ -7,6 +7,8 @@ function run_start() {
     osascript -e 'tell application "Visual Studio Code" to activate'
     osascript -e 'tell application "Stream Deck" to activate'
     osascript -e 'tell application "System Events" to tell process "Stream Deck" to tell window 1 to click (first button whose subrole = "AXCloseButton")'
+
+	office on
 }
 
 function run_end() {
@@ -28,6 +30,8 @@ function run_end() {
     osascript -e 'tell application "Finder" to eject disk "Small"'
     osascript -e 'tell application "Finder" to eject disk "Backup 1"'
     osascript -e 'tell application "Finder" to eject disk "Backup 2"'
+
+	office off
 }
 
 function run_help() {
