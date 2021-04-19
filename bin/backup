@@ -43,6 +43,7 @@ function backup_xavier() {
 	display_start "🦽" "xavier"
 	ssh xavier "rclone copy --fast-list --progress --copy-links --checkers 20 --transfers 20 /etc/caddy b2:parbs-xavier/etc/caddy"
 	ssh xavier "rclone copy --fast-list --progress --copy-links --checkers 20 --transfers 20 /var/www b2:parbs-xavier/var/www"
+	ssh xavier "rclone copy --fast-list --progress --copy-links --checkers 20 --transfers 20 /root/docker b2:parbs-xavier/docker"
 	display_done
 }
 
@@ -78,7 +79,7 @@ function backup_screen() {
 function backup_github() {
 	display_start "💽️" "github"
 
-	ghback user bradp
+	./gh-backup user bradp
 
 	display_done
 }
@@ -86,7 +87,7 @@ function backup_github() {
 function backup_github_stars() {
 	display_start "⭐️ " "github-stars"
 
-	ghback starred bradp
+	./gh-backup starred bradp
 
 	display_done
 }
