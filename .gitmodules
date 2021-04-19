@@ -16,3 +16,6 @@
 [submodule "zsh-custom/plugins/forgit"]
 	path = zsh-custom/plugins/forgit
 	url = git@github.com:wfxr/forgit.git
+[submodule "zsh-custom/plugins/fzf-tab"]
+	path = zsh-custom/plugins/fzf-tab
+	url = https://github.com/Aloxaf/fzf-tab.git

@@ -117,3 +117,7 @@ alias myt="cd ~/Documents/Media/YT; yt $@"
 alias please="sudo $@"
 alias e="$EDITOR ."
 alias lss="ls -Gal"
+
+alias dc="docker compose"
+alias ctop="docker run --rm -ti -v /var/run/docker.sock:/var/run/docker.sock quay.io/vektorlab/ctop:latest"
+
