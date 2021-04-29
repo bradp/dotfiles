@@ -39,3 +39,5 @@ export LSCOLORS=gxfxbEaEBxxEhEhBaDaCaD
 export GOPATH="$HOME/go"
 
 export GPG_TTY=$(tty)
+
+export NEXT_TELEMETRY_DISABLED=1
