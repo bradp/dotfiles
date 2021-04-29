@@ -102,11 +102,44 @@ function backup_media_hdd() {
 	else
 		display_done error "hard drive not found"
 	fi
+}
+
+function backup_pocket() {
+	cd "/Users/brad/Dropbox/Working/backups/pocket" || exit
+
+	items=$( bash api pocket /get | jq -r ".list[].resolved_url")
+
+	date=$(date +"%Y-%m-%d")
+	mkdir "$date" 2> /dev/null
+	cd "$date" || exit
+
+	for i in $items; do
+		echo ""
+		echo "$i"
+		wget --quiet --show-progress --progress=bar:force:noscroll --page-requisites "$i"
+	done
+
+	yt=$(ls www.youtube.com/watch*)
+	yt2=$(ls youtube.com/watch*)
+
+	mkdir youtube 2> /dev/null
+	cd youtube || exit
+
+	for vid in $yt $yt2; do
+		vid="${vid#www.youtube.com/watch?v=}"
+		vid="${vid#youtube.com/watch?v=}"
+		vid="${vid::11}"
+		youtube-dl "$vid"
+		echo "$vid"
+	done
+	cd ../ || exit
+
+	rm -rf youtube.com 2> /dev/null
+	rm -rf www.youtube.com 2> /dev/null
 
 }
 
 function backup_all() {
-	backup_batman
 	backup_xavier
 	backup_pihole
 	backup_sdr
@@ -115,13 +148,13 @@ function backup_all() {
 	backup_dropbox_local
 	backup_github
 	backup_github_stars
+	backup_pocket
 }
 
 function display_help() {
 	echo "${red} Please include a target. ${reset}"
 	echo ""
 	echo "${red} Available targets: ${reset}"
-	echo "  • batman"
 	echo "  • xavier"
 	echo "  • pihole"
 	echo "  • sdr"
@@ -131,6 +164,7 @@ function display_help() {
 	echo "  • github"
 	echo "  • github-stars"
 	echo "  • media-hdd"
+	echo "  • pocket"
 	echo ""
 
 	exit
@@ -146,8 +180,6 @@ display_message "🚚 Starting backup ..."
 
 if [[ "$1" == "all" ]]; then
 	backup_all
-elif [[ "$1" == "batman" ]]; then
-	backup_batman
 elif [[ "$1" == "xavier" ]]; then
 	backup_xavier
 elif [[ "$1" == "pihole" ]]; then
@@ -166,6 +198,8 @@ elif [[ "$1" == "github-stars" ]]; then
 	backup_github_stars
 elif [[ "$1" == "media-hdd" ]]; then
 	backup_media_hdd
+elif [[ "$1" == "pocket" ]]; then
+	backup_pocket
 else
 
 	display_message "🔴️ Backup failed"
