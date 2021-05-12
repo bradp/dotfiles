@@ -125,8 +125,7 @@ let g:syntastic_php_phpcs_args="--report=csv --standard=WordPress"
 
 let g:phpcomplete_parse_docblock_comments = 1
 
-let g:go_fmt_command = "goimports"
-
+let g:go_fmt_command = "gofumpt"
 
 "
 " ==============================
