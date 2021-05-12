@@ -54,4 +54,4 @@ ZSH_THEME_GIT_PROMPT_UNTRACKED="%{$FG[190]%}✭%{$reset_color%}"
 # Build up our prompt.
 PROMPT='%{$PROMPT_PATH_COLOR%}%~%{$reset_color%} %{$GIT_PROMPT_INFO%}
 $(git_prompt_info)%{$GIT_DIRTY_COLOR%}$(git_prompt_status) %{$reset_color%}%{$PROMPT_PROMPT%}▲ %{$reset_color%}'
-RPROMPT=''
+RPROMPT="%{$FG[239]%}% $(date +"%a, %b %d - %H:%M") - $(battery)% %{$reset_color%}"
