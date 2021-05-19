@@ -1,24 +1,92 @@
+# mac stuff
 .DS_Store
 .DS_Store?
 .Spotlight-V100
 .Trashes
-Icon?
+Icon
+
 ehthumbs.db
 Thumbs.db
-.idea/
-.sass-cache/
-node_modules/
-debug.log
-dandelion.yml
-tags.temp
-tags.lock
-tags
-tags1
-tags.bak
-*.swp
+.AppleDouble
+.LSOverride
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+# vim
+[._]*.s[a-v][a-z]
+[._]*.sw[a-p]
+[._]s[a-rt-v][a-z]
+[._]ss[a-gi-z]
+[._]sw[a-p]
+Session.vim
+Sessionx.vim
+.netrwhist
+
+# linux
+.directory
+.Trash-*
+.nfs*
+
+# dropbox
+.dropbox
+.dropbox.attr
+.dropbox.cache
+
+# sublime
 *.sublime-workspace
 *.sublime-project
-*.local.txt
-*.buildbot
-^.code-workspace
+*.tmlanguage.cache
+*.tmPreferences.cache
+*.stTheme.cache
+
+# vscode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
 *.code-workspace
+.history/
+
+# phpstorm
+.idea/
+
+# hugo
+resources/_gen/
+
+# gpg
+secring.*
+
+# local dev
+.sass-cache
+.vagrant/
+node_modules/
+
+# misc local
+*.local.txt
+___*
+.env
+
+# file mods
+*.bak
+*.tmp
+*.patch
+*.diff
+
+# error logs
+npm-debug.log
+yarn-error.log
+crash.log
+debug.log
+
+
