@@ -40,6 +40,9 @@
     lg = log --pretty=graph --color --graph --abbrev-commit
     dl = ll -1
 
+    ignore = !([ ! -e .gitignore ] && touch .gitignore) | echo $1 >>.gitignore
+
+
     tig = !tig $@
 
 [advice]
@@ -54,7 +57,7 @@
 
 [core]
 	editor = vim
-	excludesfile = ~/dotfiles/.global_ignore
+	excludesfile = /Users/brad/dotfiles/.global_ignore
     preloadindex = true
     abbrev = 12
     pager = diff-so-fancy | less --tabs=4 -RFX
@@ -77,6 +80,7 @@
 
 [commit]
 	gpgSign = true
+	template = /Users/brad/.stCommitMsg
 
 [credential]
 	helper = osxkeychain

@@ -71,6 +71,8 @@ secring.*
 .sass-cache
 .vagrant/
 node_modules/
+db.php
+!*/db.php
 
 # misc local
 *.local.txt
@@ -88,5 +90,4 @@ npm-debug.log
 yarn-error.log
 crash.log
 debug.log
-
 

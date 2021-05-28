@@ -29,7 +29,6 @@ alias imgcat="catimg"
 alias lynx="lynx -accept_all_cookies -use_mouse -vikeys $@"
 alias fzf="fzf --preview 'bat --color=always --style=numbers --line-range=:500 {}'"
 alias x="exa -Flam --git --color-scale"
-alias ls="x"
 alias hist="history"
 
 #########################################
