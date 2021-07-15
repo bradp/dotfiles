@@ -8,6 +8,8 @@
 #	 ░░░░░░ ░░   ░░ ░░       ░░░░░░  ░░░       ░░  ░░░░░░
 #
 
+export BAT_CONFIG_PATH="$HOME/dotfiles/.config/bat/.bat"
+
 export EDITOR="vim";
 
 export FZF_COMPLETION_OPTS='--border --info=inline'
