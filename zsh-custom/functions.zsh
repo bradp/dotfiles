@@ -13,8 +13,8 @@ function mkd()  {
 	mkdir -p -- "$@" && cd -- "$@"
 }
 
-# cd to the top of git directory
-function cdt() {
+# cd to the root of git directory
+function root() {
 	while ! [ -d .git ]; do
 		cd ..
 	done
@@ -33,25 +33,6 @@ function up() {
 			cd ..
 		done
 	fi
-}
-
-# Move user to root of git directory
-function root() {
-	TEMP_P=$(pwd)
-	while ! [ -d .git ]; do
-		cd ..
-	done
-	OLDPWD="$TEMP_PWD"
-}
-
-# Grep for a running process
-function pa() {
-    ps aux | ag "$*"
-}
-
-# Grep for a history entry
-function ha() {
-	history | ag $@
 }
 
 # Move target $1 to $1.bak
@@ -85,18 +66,14 @@ function unbak() {
     fi
 }
 
-# Run httrack on a website
-# Example:
-#   $ htrack fffff.at
-function htrack() {
-    httrack "https://$1/" -O "${1//\//-}" "+*.$1/*" --depth=1000 --display --disable-security-limits --max-rate=10000000000 -c256 -I0;
+# Grep for a running process
+function pa() {
+    ps aux | ag "$*"
 }
 
-# Get number of repos for a GitHub user
-# Example:
-#   $ how-many-repos bradp
-function how-many-repos() {
-    curl -sLu "$MY_GH_CREDS" "https://api.github.com/users/$1" | jq -r '.public_repos'
+# Grep for a history entry
+function ha() {
+	history | ag "$*"
 }
 
 # Get battery percent
@@ -110,8 +87,4 @@ function battery() {
 	echo "$percent"
 }
 
-# Add a spacer to the Dock
-function add-dock-spacer() {
-	defaults write com.apple.dock persistent-apps -array-add '{"tile-type"="spacer-tile";}'
-	killall Dock
 }
