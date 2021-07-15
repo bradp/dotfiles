@@ -27,3 +27,10 @@ function newchassis() {
 function htrack() {
     httrack "https://$1/" -O "${1//\//-}" "+*.$1/*" --depth=1000 --display --disable-security-limits --max-rate=10000000000 -c256 -I0;
 }
+
+# Get number of repos for a GitHub user
+# Example:
+#   $ how-many-repos bradp
+function how-many-repos() {
+    curl -sLu "$MY_GH_CREDS" "https://api.github.com/users/$1" | jq -r '.public_repos'
+}
