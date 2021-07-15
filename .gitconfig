@@ -40,9 +40,7 @@
     lg = log --pretty=graph --color --graph --abbrev-commit
     dl = ll -1
 
-    ignore = !([ ! -e .gitignore ] && touch .gitignore) | echo $1 >>.gitignore
-
-
+    ignore = !git-ignore $@
     tig = !tig $@
 
 [advice]
