@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -Eeuo pipefail
+
 # When adding target, add to `all` as well as single command.
 
 function run_setup() {
@@ -14,7 +16,7 @@ function set_colors() {
 }
 
 function display_start() {
-	echo "   $1  $2 ... "
+	echo "   $1   $2 ... "
 }
 
 function display_done() {
@@ -32,15 +34,8 @@ function display_message() {
 	echo ""
 }
 
-function backup_batman() {
-	display_start "🦇️" "batman"
-	ssh batman "rclone copy --fast-list --progress --copy-links --checkers 20 --transfers 20 /etc/apache2 b2:parbs-batman/etc/apache2"
-	ssh batman "rclone copy --fast-list --progress --copy-links --checkers 20 --transfers 20 /var/www b2:parbs-batman/var/www"
-	display_done
-}
-
 function backup_xavier() {
-	display_start "🦽" "xavier"
+	display_start "" "xavier"
 	ssh xavier "rclone copy --fast-list --progress --copy-links --checkers 20 --transfers 20 /etc/caddy b2:parbs-xavier/etc/caddy"
 	ssh xavier "rclone copy --fast-list --progress --copy-links --checkers 20 --transfers 20 /var/www b2:parbs-xavier/var/www"
 	ssh xavier "rclone copy --fast-list --progress --copy-links --checkers 20 --transfers 20 /root/docker b2:parbs-xavier/docker"
@@ -48,52 +43,52 @@ function backup_xavier() {
 }
 
 function backup_pihole() {
-	display_start "🍓" "pihole"
+	display_start "" "pihole"
 	ssh pihole "rclone copy --fast-list --progress --copy-links --exclude '.git/**' --checkers 50 --transfers 50 /var/www b2:parbs-pihole/var/www"
 	ssh pihole "rclone copy --fast-list --progress --copy-links --exclude '.git/**' --exclude 'wp-gen/**' --exclude '.cache/**' --checkers 50 --transfers 50 /home/pi b2:parbs-pihole/home/pi"
 	display_done
 }
 
 function backup_dropbox() {
-	display_start "🗄️ " "dropbox"
+	display_start "" "dropbox"
 	# rclone copy --fast-list --progress --copy-links --checkers 8 --transfers 10 dropbox: b2:parbs-dropbox
 	display_done
 }
 
 function backup_dropbox_local() {
-	display_start "📁️" "dropbox-local"
+	display_start "" "dropbox-local"
 	rclone copy --fast-list --progress --copy-links --exclude '.git/**' --exclude 'node_modules/**' --exclude '.dropbox.cache/**' --checkers 50 --transfers 50 /Users/brad/Dropbox b2:parbs-dropbox
 	display_done
 }
 
 function backup_sdr() {
-	display_start "📡" "sdr"
+	display_start "殺" "sdr"
 	display_done error "not configured"
 }
 
 function backup_screen() {
-	display_start "🖥️ " "screen"
+	display_start "" "screen"
 	display_done error "not configured"
 }
 
 function backup_github() {
-	display_start "💽️" "github"
+	display_start "" "github"
 
-	./gh-backup user bradp
+	gh-backup user bradp
 
 	display_done
 }
 
 function backup_github_stars() {
-	display_start "⭐️ " "github-stars"
+	display_start "" "github-stars"
 
-	./gh-backup starred bradp
+	gh-backup starred bradp
 
 	display_done
 }
 
 function backup_media_hdd() {
-	display_start "📀️" "media-hdd"
+	display_start "" "media-hdd"
 
 	if [[ -d /Volumes/Small/Media ]]; then
 		rclone copy --fast-list --progress --copy-links --checkers 50 --transfers 100 /Volumes/Small/Media b2:parbs-media
@@ -105,7 +100,9 @@ function backup_media_hdd() {
 }
 
 function backup_pocket() {
-	cd "/Users/brad/Dropbox/Working/backups/pocket" || exit
+	display_start "" "pocket"
+
+	cd "$HOME/Dropbox/Working/backups/pocket" || exit
 
 	items=$( bash api pocket /get | jq -r ".list[].resolved_url")
 
@@ -136,10 +133,26 @@ function backup_pocket() {
 
 	rm -rf youtube.com 2> /dev/null
 	rm -rf www.youtube.com 2> /dev/null
+}
 
+function backup_wayback() {
+	display_start "" "wayback"
+
+	wayback bradparbs.com
+	wayback advanced.rocks
+	wayback beginner.rocks
+	wayback brad.cash
+	wayback bradparbs.com
+	wayback butts.tech
+	# wayback gifsb.in
+	wayback horror.watch
+	wayback isitsnowinginmilwaukee.com
+	wayback sax.cat
 }
 
 function backup_all() {
+	display_start " " "wayback"
+
 	backup_xavier
 	backup_pihole
 	backup_sdr
@@ -152,19 +165,31 @@ function backup_all() {
 }
 
 function display_help() {
-	echo "${red} Please include a target. ${reset}"
-	echo ""
 	echo "${red} Available targets: ${reset}"
-	echo "  • xavier"
-	echo "  • pihole"
-	echo "  • sdr"
-	echo "  • screen"
-	echo "  • dropbox"
-	echo "  • dropbox-local"
-	echo "  • github"
-	echo "  • github-stars"
-	echo "  • media-hdd"
-	echo "  • pocket"
+	echo ""
+	echo "${green}  •   all${reset}"
+	echo ""
+	echo "  •   xavier"
+	echo ""
+	echo "  •   pihole"
+	echo ""
+	echo "  • 殺 sdr"
+	echo ""
+	echo "  •    screen"
+	echo ""
+	echo "  •   dropbox"
+	echo ""
+	echo "  •   dropbox-local"
+	echo ""
+	echo "  •   github"
+	echo ""
+	echo "  •   github-stars"
+	echo ""
+	echo "  •   pocket"
+	echo ""
+	echo "  •   wayback"
+	echo ""
+	echo "  •   media-hdd (not run with 'all')"
 	echo ""
 
 	exit
@@ -172,38 +197,24 @@ function display_help() {
 
 run_setup
 
-if [[ -z "$1" ]];then
-	display_help
-fi
+while :; do
+	case "${1-}" in
+		-v | --verbose) set -x ;;
+		-h | --help) display_help ;;
+		all) backup_all ;;
+		xavier) backup_xavier ;;
+		pihole) backup_pihole ;;
+		sdr) backup_sdr ;;
+		screen) backup_screen ;;
+		dropbox) backup_dropbox ;;
+		dropbox-local) backup_dropbox_local ;;
+		github) backup_github ;;
+		github-stars) backup_github_stars ;;
+		media-hdd) backup_media_hdd ;;
+		pocket) backup_pocket ;;
+		wayback) backup_wayback ;;
+	esac
+	shift
+done
 
-display_message "🚚 Starting backup ..."
-
-if [[ "$1" == "all" ]]; then
-	backup_all
-elif [[ "$1" == "xavier" ]]; then
-	backup_xavier
-elif [[ "$1" == "pihole" ]]; then
-	backup_pihole
-elif [[ "$1" == "sdr" ]]; then
-	backup_sdr
-elif [[ "$1" == "screen" ]]; then
-	backup_screen
-elif [[ "$1" == "dropbox" ]]; then
-	backup_dropbox
-elif [[ "$1" == "dropbox-local" ]]; then
-	backup_dropbox_local
-elif [[ "$1" == "github" ]]; then
-	backup_github
-elif [[ "$1" == "github-stars" ]]; then
-	backup_github_stars
-elif [[ "$1" == "media-hdd" ]]; then
-	backup_media_hdd
-elif [[ "$1" == "pocket" ]]; then
-	backup_pocket
-else
-
-	display_message "🔴️ Backup failed"
-	display_help
-fi
-
-display_message "✅️ Completed backup!"
+display_message " Completed backup!"
