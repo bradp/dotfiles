@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+
 function github() {
 
   # Set default of page 1, 100 per page
