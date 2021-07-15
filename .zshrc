@@ -25,9 +25,6 @@ ZSH_CUSTOM=$HOME/dotfiles/zsh-custom
 ZSH_THEME="brad-muse"
 
 plugins=(
-	alias-tips
-	artisan
-	colored-man-pages
 	composer
 	dash
 	fzf

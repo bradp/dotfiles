@@ -1,18 +1,9 @@
 [submodule ".oh-my-zsh"]
 	path = .oh-my-zsh
 	url = https://github.com/robbyrussell/oh-my-zsh.git
-[submodule "zsh-custom/plugins/alias-tips"]
-	path = zsh-custom/plugins/alias-tips
-	url = https://github.com/djui/alias-tips.git
-[submodule "zsh-custom/plugins/colored-man-pages"]
-	path = zsh-custom/plugins/colored-man-pages
-	url = https://github.com/zuxfoucault/colored-man-pages_mod.git
 [submodule "zsh-custom/plugins/zsh-syntax-highlighting"]
 	path = zsh-custom/plugins/zsh-syntax-highlighting
 	url = https://github.com/zsh-users/zsh-syntax-highlighting.git
-[submodule "zsh-custom/plugins/artisan"]
-	path = zsh-custom/plugins/artisan
-	url = git@github.com:jessarcher/zsh-artisan.git
 [submodule "zsh-custom/plugins/forgit"]
 	path = zsh-custom/plugins/forgit
 	url = git@github.com:wfxr/forgit.git
