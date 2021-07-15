@@ -61,7 +61,6 @@
 	excludesfile = /Users/brad/dotfiles/.global_ignore
     preloadindex = true
     abbrev = 12
-    pager = diff-so-fancy | less --tabs=4 -RFX
 
 [color "branch"]
     current = red reverse
@@ -86,6 +85,44 @@
 [credential]
 	helper = osxkeychain
 
+[delta]
+    features     = syntax line-numbers
+    syntax-theme = "Monokai (SL)"
+
+    commit-decoration-style = bold yellow box ul
+
+    file-style            = bold yellow ul
+    file-decoration-style = none
+
+    hunk-header-style            = bold purple
+    hunk-header-decoration-style = cyan box ul
+
+    line-numbers-left-style  = cyan
+    line-numbers-right-style = cyan
+    line-numbers-minus-style = 124
+    line-numbers-plus-style  = 28
+    line-numbers-left-format = "{nm:^4}│"
+
+    minus-style                   = bright-red
+    minus-non-emph-style          = bright-red
+    minus-emph-style              = bold ul brightred "#901011"
+    minus-empty-line-marker-style = red brightred
+    ; minus-style = brightred
+    ; minus-empty-line-marker-style = red brightred
+    ; minus-emph-style = brightred bold ul auto
+
+    plus-style                   = brightgreen
+    plus-non-emph-style          = brightgreen
+    plus-emph-style              = bold ul brightgreen "#006000"
+    plus-empty-line-marker-style = green brightgreen
+    whitespace-error-style       = reverse purple
+    ; plus-empty-line-marker-style = green brightgreen
+    ; plus-emph-style = brightgreen bold ul auto
+
+    true-color = true
+
+    whitespace-error-style = 22 reverse
+
 [diff]
 	tool = Kaleidoscope
 
@@ -105,6 +142,9 @@
 [init]
 	defaultBranch = main
 
+[interactive]
+    diffFilter = delta --color-only
+
 [merge]
 	tool = Kaleidoscope
 
@@ -118,6 +158,11 @@
 [mergetool "sourcetree"]
 	cmd = /usr/local/bin/ksdiff --merge --output \"$MERGED\" --base \"$BASE\" -- \"$LOCAL\" --snapshot \"$REMOTE\" --snapshot
 	trustExitCode = true
+
+[pager]
+    diff = delta
+    reflog = delta
+    show = delta
 
 [pretty]
 	log = "%C(yellow)%h%Cred%d %Creset%s%Cblue [%cn]"
