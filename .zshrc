@@ -37,22 +37,20 @@ plugins=(
 	zsh-syntax-highlighting
 )
 
-PATH=${PATH}:/usr/local/bin
-PATH=${PATH}:/usr/bin:/bin
-PATH=${PATH}:/usr/sbin:/sbin
-PATH=${PATH}:/opt/sm/bin
-PATH=${PATH}:/opt/sm/pkg/active/bin
-PATH=${PATH}:/opt/sm/pkg/active/sbin
-
-PATH=${PATH}:/usr/local/git/bin
-PATH=${PATH}:/usr/local/share/npm/bin
-PATH=${PATH}:"$HOME"/go/bin
-PATH=${PATH}:"$HOME"/.yarn/bin
-PATH=${PATH}:/usr/local/MacGPG2/bin
-
-PATH=${PATH}:"$HOME"/dotfiles/misc
-PATH=${PATH}:"$HOME"/dotfiles/bin
-
-PATH=${PATH}
 source $HOME/dotfiles/.oh-my-zsh/oh-my-zsh.sh
 
+path+=(/usr/bin)
+path+=(/bin)
+path+=(/usr/sbin)
+path+=(/sbin)
+path+=(/usr/local/bin)
+path+=(/usr/local/git/bin)
+path+=(/usr/local/share/npm/bin)
+path+=(/usr/local/MacGPG2/bin)
+path+=("$HOME"/go/bin)
+path+=("$HOME"/.cargo/bin)
+path+=("$HOME"/.yarn/bin)
+path+=("$HOME"/dotfiles/bin)
+path+=("$HOME"/dotfiles/misc)
+
+export PATH
