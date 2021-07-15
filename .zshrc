@@ -37,8 +37,6 @@ plugins=(
 	zsh-syntax-highlighting
 )
 
-source $ZSH/oh-my-zsh.sh
-
 PATH=${PATH}:/usr/local/bin
 PATH=${PATH}:/usr/bin:/bin
 PATH=${PATH}:/usr/sbin:/sbin
@@ -56,5 +54,5 @@ PATH=${PATH}:"$HOME"/dotfiles/misc
 PATH=${PATH}:"$HOME"/dotfiles/bin
 
 PATH=${PATH}
-source "$HOME"/dotfiles/.oh-my-zsh/oh-my-zsh.sh
+source $HOME/dotfiles/.oh-my-zsh/oh-my-zsh.sh
 
