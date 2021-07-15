@@ -1,4 +1,8 @@
 .netrwhist
+
+.config/gh/*
+!.config/gh/config.yml
+
 .vim/tmp/
 .vim/plugged/*
 
