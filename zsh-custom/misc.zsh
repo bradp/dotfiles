@@ -34,3 +34,9 @@ function htrack() {
 function how-many-repos() {
     curl -sLu "$MY_GH_CREDS" "https://api.github.com/users/$1" | jq -r '.public_repos'
 }
+
+# Add a spacer to the Dock
+function add-dock-spacer() {
+	defaults write com.apple.dock persistent-apps -array-add '{"tile-type"="spacer-tile";}'
+	killall Dock
+}
