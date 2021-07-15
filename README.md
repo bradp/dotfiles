@@ -14,6 +14,8 @@
 
 ## Installation
 
+Before installing, make sure you grab your favorite font from [nerd-fonts](https://github.com/ryanoasis/nerd-fonts) and install it, otherwise things won't look right.
+
 ```sh
 # Clone the repo to ~/dotfiles
 $ git clone --recursive git@github.com:bradp/dotfiles.git ~/dotfiles
