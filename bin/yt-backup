@@ -15,6 +15,12 @@ for f in *.mp4; do
 	rm "$f"
 done
 
+for f in *.mkv; do
+	echo "$f"
+	tar czf "$f".tar.gz "$f"
+	rm "$f"
+done
+
 cd ../ || exit
 
 rclone copy --fast-list --progress "/tmp/media-saving-$randome/" "b2:parbs-media/YT/"
