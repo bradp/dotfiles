@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+
+#
+#  ██                    ██              ██  ██
+#  ░░                    ░██             ░██ ░██
+#   ██ ███████   ██████ ██████  ██████   ░██ ░██
+#  ░██░░██░░░██ ██░░░░ ░░░██░  ░░░░░░██  ░██ ░██
+#  ░██ ░██  ░██░░█████   ░██    ███████  ░██ ░██
+#  ░██ ░██  ░██ ░░░░░██  ░██   ██░░░░██  ░██ ░██
+#  ░██ ███  ░██ ██████   ░░██ ░░████████ ███ ███
+#  ░░ ░░░   ░░ ░░░░░░     ░░   ░░░░░░░░ ░░░ ░░░
+#
+
+set -Eeuo pipefail
+
+# All the files that will be symlinked to ~.
+home_dir_files="
+.curlrc
+.gitconfig
+.gvimrc
+.hushlogin
+.npmrc
+.nuxtrc
+.vim
+.vimrc
+.zshrc"
+
+# Symlink them up
+for f in $home_dir_files; do
+	ln -nfsv "$HOME"/dotfiles/"$f" "$HOME"/"$f"
+done
+
+# Files that will be symlinked to the ~/.config/ folder.
+config_dirs="
+amfora
+bat
+gh
+htop
+youtube-dl"
+
+for f in $config_dirs; do
+	ln -nfsv "$HOME"/dotfiles/.config/"$f" "$HOME"/.config/"$f"
+done

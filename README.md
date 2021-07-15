@@ -12,31 +12,19 @@
 
 ![](http://gifsb.in/codes/floppy-discs.gif)
 
-## Quick installation
+## Installation
 
-```php
-$ cd ~
-$ git clone --recursive git@github.com:bradp/dotfiles.git
-$ rake
+```sh
+# Clone the repo to ~/dotfiles
+$ git clone --recursive git@github.com:bradp/dotfiles.git ~/dotfiles
+
+# Run the install command
+$ bash ~/dotfiles/misc/install
 ```
 
-OR
-
-``curl https://raw.githubusercontent.com/bradp/dotfiles/master/misc/bootstrap | sudo bash`` to also install all requirments (Zsh, and friends, etc.)
-
-## How to use
-
-This repo contains a Rakefile that does some magic things.
-
-``` $ rake ``` - Will overwrite your existing dotfiles and symlink ours to your home directory.
-
-``` $ rake setup_file[ .filename .file2 ] ``` - Symlink new files that you've added to the dotfiles/ directory.
-
-## Curious about my setup?
-
-Check out [my blog post](http://webdevstudios.com/2015/02/10/a-beginners-guide-to-the-best-command-line-tools/) on getting started.
-
 ## What it includes
+
+  note: *this is out of date*
 
 * **`bin/`** Miscellaneous scripts. This is also added to your path. Contains:
   * `$` for when you accidently copy a command from the internet.
