@@ -7,23 +7,22 @@
 #	 ██████ ██████ ░██  ░██░███   ░░█████
 #	░░░░░░ ░░░░░░  ░░   ░░ ░░░     ░░░░░
 
-ZSH=$HOME/dotfiles/.oh-my-zsh
-ZSH_THEME="brad-muse"
-ZSH_CUSTOM=$HOME/dotfiles/zsh-custom
-
 COMPLETION_WAITING_DOTS=true
 DISABLE_AUTO_UPDATE=true
 HYPHEN_INSENSITIVE=true
-
-typeset -A ZSH_HIGHLIGHT_PATTERNS
-ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern cursor)
-ZSH_HIGHLIGHT_PATTERNS=('rm -rf *' 'fg=white,bold,bg=red' 'trash' 'underline,fg=red')
 
 unsetopt nomatch
 
 setopt APPEND_HISTORY
 setopt HIST_FIND_NO_DUPS
 setopt INTERACTIVE_COMMENTS
+
+typeset -A ZSH_HIGHLIGHT_PATTERNS
+ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern cursor)
+ZSH_HIGHLIGHT_PATTERNS=('rm -rf *' 'fg=white,bold,bg=red' 'trash' 'underline,fg=red')
+
+ZSH_CUSTOM=$HOME/dotfiles/zsh-custom
+ZSH_THEME="brad-muse"
 
 plugins=(
 	alias-tips
@@ -57,3 +56,5 @@ PATH=${PATH}:"$HOME"/dotfiles/misc
 PATH=${PATH}:"$HOME"/dotfiles/bin
 
 PATH=${PATH}
+source "$HOME"/dotfiles/.oh-my-zsh/oh-my-zsh.sh
+
