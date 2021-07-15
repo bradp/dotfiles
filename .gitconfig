@@ -31,9 +31,12 @@
     br = branch
 
     cp = cherry-pick
+
     diff = diff --word-diff
 
     unstage = reset HEAD --
+
+    undo = reset --soft HEAD^
 
     ls = log --pretty=log --decorate
     ll = log --pretty=log --decorate --numstat
