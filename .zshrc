@@ -27,7 +27,9 @@ ZSH_THEME="brad-muse"
 plugins=(
 	composer
 	dash
+	forgit
 	fzf
+	git-extras
 	rsync
 	z
 	zf
