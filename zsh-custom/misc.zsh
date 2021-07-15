@@ -1,3 +1,13 @@
+#              ██
+#             ░░
+#  ██████████  ██  ██████  █████
+# ░░██░░██░░██░██ ██░░░░  ██░░░██
+#  ░██ ░██ ░██░██░░█████ ░██  ░░
+#  ░██ ░██ ░██░██ ░░░░░██░██   ██
+#  ███ ░██ ░██░██ ██████ ░░█████
+# ░░░  ░░  ░░ ░░ ░░░░░░   ░░░░░
+#
+
 # Runs `git pull` on every directory within the current directory
 function gitupdateall() {
 	find . -type d -print -maxdepth 1 -execdir git --git-dir={}/.git --work-tree=$PWD/{} pull \;
