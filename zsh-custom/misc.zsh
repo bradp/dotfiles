@@ -20,3 +20,10 @@ function newchassis() {
 	trash .git;
 	vagrant up --provision;
 }
+
+# Run httrack on a website
+# Example:
+#   $ htrack fffff.at
+function htrack() {
+    httrack "https://$1/" -O "${1//\//-}" "+*.$1/*" --depth=1000 --display --disable-security-limits --max-rate=10000000000 -c256 -I0;
+}
