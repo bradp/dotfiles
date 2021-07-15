@@ -1,0 +1,183 @@
+#!/usr/bin/env bash
+#
+# get keys here https://archive.org/account/s3.php
+# set $ARCHIVE_ACCESS and $ARCHIVE_SECRET
+#
+# API docs: https://docs.google.com/document/d/1Nsv52MvSjbLb2PCpHlat0gkzw0EvtSgpKHu4mk0MnrA/edit
+
+script_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)
+
+_usage() {
+	cat <<EOF
+Save items to the wayback machine.
+
+Usage:
+
+Save a single URL:
+	 $(basename "${BASH_SOURCE[0]}") <url>
+
+Save urls from text file list:
+	 $(basename "${BASH_SOURCE[0]}") file <file>
+
+ Save a full site:
+	 $(basename "${BASH_SOURCE[0]}") <example.com>
+	 $(basename "${BASH_SOURCE[0]}") <http://example.com>
+
+ Save urls from Pocket list:
+	$(basename "${BASH_SOURCE[0]}") pocket
+
+ See API usage status:
+	 $(basename "${BASH_SOURCE[0]}") status
+Usage:
+ [url]
+EOF
+	exit
+}
+
+__urlizeit() {
+	if [[ "$1" == *"http:"* ]]; then
+		site="$1"
+	elif [[ "$1" == *"https:"* ]]; then
+		site="$1"
+	else
+		site="https://$1"
+	fi
+}
+
+__maketmp() {
+	tmpdir=$(mktemp -d /tmp/wayback_links.XXXXXXX)
+}
+
+__checkavailable() {
+	userstatus=$(curl --silent --location \
+	--header 'Accept: application/json' \
+	--header "Authorization: LOW $ARCHIVE_ACCESS:$ARCHIVE_SECRET" \
+	"https://web.archive.org/save/status/user?_t=$RANDOM")
+
+	available=$(echo $userstatus | jq -r ".available")
+	processing=$(echo $userstatus | jq -r ".processing")
+}
+
+__archivethempages() {
+	echo "► Found $(cat "$tmpdir"/found_urls | wc -l | tr -d ' ') pages to archive"
+
+	for url in $(cat "$tmpdir"/found_urls); do
+		echo -n "  →  $url "
+
+		__checkavailable
+		numtries=0
+		while (( $available == 0 )); do
+			numtries=$(( numtries + 1 ))
+
+			if (( $numtries == 10 )); then
+				break 2
+			fi
+
+			echo -n " ᙮"
+			sleep "$processing"
+			__checkavailable
+		done
+
+		curl --silent --location \
+		--request POST 'https://web.archive.org/save' \
+		--header 'Accept: application/json' \
+		--header "Authorization: LOW $ARCHIVE_ACCESS:$ARCHIVE_SECRET" \
+		--header 'Content-Type: application/x-www-form-urlencoded' \
+		--data-urlencode "url=$url" \
+		--data-urlencode 'capture_all=1' \
+		--data-urlencode 'capture_screenshot=1' \
+		--data-urlencode 'skip_first_archive=1' \
+		--data-urlencode 'delay_wb_availability=1' \
+		> /dev/null
+
+		echo " ✓"
+	done
+
+	__checkavailable
+	echo "► Done!"
+	echo ""
+	echo "    You've sent $(echo "$userstatus" | jq -r ".daily_captures") urls to archive.org today  "
+}
+
+_runurl() {
+	__urlizeit $1
+	__maketmp
+
+	echo "$site" > "$tmpdir"/found_urls
+
+	__archivethempages
+	exit
+}
+
+_runfile() {
+	if [ -z "$1" ]; then
+		echo "Please provide a path to a file"
+		exit
+	fi
+
+	if [[ ! -f "$1" ]]; then
+		echo "$1 not found, exiting."
+		exit
+	fi
+
+	echo -n "► Grabbing urls from file  "
+
+	__maketmp
+	cp "$1" "$tmpdir"/found_urls || exit
+
+	echo "✓"
+
+	__archivethempages
+	exit
+}
+
+_runsite() {
+	__urlizeit $1
+
+	echo -n "► Crawling internal links on $site  "
+
+	__maketmp
+
+	wget --spider --recursive --no-directories --max-redirect=30 "$site" 2>&1 \
+	| grep '^--' \
+	| awk '{ print $3 }' \
+	| grep -E -v '\.(css|doc|docx|gif|ico|jpeg|jpg|js|map|pdf|png|ppt|pptx|svg|ts|txt|xls|xlsx|xml)(\?.*)?$' \
+	| sort -u \
+	> "$tmpdir"/found_urls
+
+	echo "✓"
+
+	__archivethempages
+	exit
+}
+
+_runpocket () {
+	echo -n "► Grabbing Pocket list  "
+
+	__maketmp
+	bash api pocket /get | jq -r ".list[].resolved_url" > "$tmpdir"/found_urls
+
+	echo "✓"
+
+	__archivethempages
+	exit
+}
+
+_runstatus() {
+	curl --silent --location --request GET --header 'Accept: application/json' --header "Authorization: LOW $ARCHIVE_ACCESS:$ARCHIVE_SECRET" "https://web.archive.org/save/status/user?_t=$RANDOM" | jq
+	exit
+}
+
+
+while :; do
+	case "${1-}" in
+		-v | --verbose) set -x ;;
+		-h | --help) _usage ;;
+		file) _runfile "${2-}" ;;
+		site) _runsite "${2-}" ;;
+		pocket) _runpocket ;;
+		status) _runstatus ;;
+		*) _runurl "$1" ;;
+	esac
+	shift
+done
