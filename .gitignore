@@ -1,5 +1,6 @@
 .netrwhist
 .vim/tmp/
 .vim/plugged/*
-_secret.zsh
-_deploy.zsh
+
+zsh-custom/_*.zsh
+
