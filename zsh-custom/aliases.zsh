@@ -27,9 +27,10 @@ alias gemini="amfora"
 alias hub="gh"
 alias imgcat="catimg"
 alias lynx="lynx -accept_all_cookies -use_mouse -vikeys $@"
-alias fzf="fzf --preview 'bat --color=always --style=numbers --line-range=:500 {}'"
 alias x="exa -Flam --git --color-scale"
+alias ls="x"
 alias hist="history"
+alias tree="tree -C"
 
 #########################################
 # Hide / Show files                     #
@@ -113,7 +114,6 @@ alias yt="youtube-dl --mark-watched $@"
 alias dyt="cd ~/Desktop/; yt $@"
 alias myt="cd ~/Documents/Media/YT; yt $@"
 
-alias please="sudo $@"
 alias e="$EDITOR ."
 alias lss="ls -Gal"
 
@@ -121,3 +121,7 @@ alias dc="docker compose"
 alias ctop="docker run --rm -ti -v /var/run/docker.sock:/var/run/docker.sock quay.io/vektorlab/ctop:latest"
 
 alias qlook="qlmanage -p 2>/dev/null"
+alias st='open -a "Sublime Text"'
+alias stt="st ."
+
+alias f="fzf --preview 'bat --color=always --style=numbers --line-range=:500 {}'"
