@@ -38,20 +38,21 @@ plugins=(
 
 source $HOME/dotfiles/.oh-my-zsh/oh-my-zsh.sh
 
+path+=(/usr/local/bin)
 path+=("$HOME"/dotfiles/misc)
 path+=("$HOME"/dotfiles/bin)
 path+=("$HOME"/.yarn/bin)
 path+=("$HOME"/.cargo/bin)
 path+=("$HOME"/go/bin)
+path+=(/usr/local/opt)
 path+=(/usr/local/MacGPG2/bin)
 path+=(/usr/local/share/npm/bin)
 path+=(/usr/local/git/bin)
-path+=(/usr/local/sbin)
 path+=(/usr/local/bin)
-path+=(/sbin)
-path+=(/usr/sbin)
-path+=(/bin)
 path+=(/usr/bin)
-
+path+=(/bin)
+path+=(/usr/local/sbin)
+path+=(/usr/sbin)
+path+=(/sbin)
 
 export PATH
