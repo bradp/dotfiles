@@ -70,11 +70,18 @@ alias ip="curl ipinfo.io/ip"
 #########################################
 # PHPCS                                 #
 #########################################
-alias pc='phpcs --standard="WordPress" $@'
-alias pcf='phpcbf --standard="WordPress" $@'
-alias pcbfall='find . | grep .php | xargs phpcbf --standard="WordPress" --ignore=node_modules/'
-alias pcsall='find . | grep .php | xargs phpcs --standard="WordPress" --ignore=node_modules/'
-alias pcsalle='find . | grep .php | xargs phpcs -n --standard="WordPress" --ignore=node_modules/'
+alias php7="/usr/local/opt/php@7.4/bin/php"
+
+alias pc='phpcs --standard=parbs $@'
+alias pcf='phpcbf --standard=parbs $@'
+alias pcbfall='find . | grep .php | xargs phpcbf --standard=parbs --ignore=node_modules/'
+alias pcsall='find . | grep .php | xargs phpcs --standard=parbs --ignore=node_modules/'
+alias pcsalle='find . | grep .php | xargs phpcs -n --standard=parbs --ignore=node_modules/'
+alias lint="phpcs -s -p -n . --standard=parbs --extensions=php -n --colors"
+
+alias phpfixer="php-cs-fixer --config=$HOME/dotfiles/.php-cs-fixer.php --allow-risky=yes --show-progress=dots"
+alias phpinsights="phpinsights --config-path=$HOME/dotfiles/.phpinsights-config.php"
+alias phpi="phpinsights"
 
 #########################################
 # Git                                   #
