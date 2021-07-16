@@ -6,7 +6,7 @@ function github() {
   page="${3:-1}"
   per_page="${4:-100}"
 
-  curl -sLu "$GITHUB_TOKEN" "https://api.github.com$2?per_page=$per_page&page=$page"
+  curl -sLu "$GH_TOKEN" "https://api.github.com$2?per_page=$per_page&page=$page"
 }
 
 function pocket() {
