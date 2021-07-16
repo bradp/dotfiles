@@ -45,7 +45,7 @@ function get_page_count_from_metadata_file() {
 
 function gh_api() {
 	page="${2:-1}"
-	curl -sLu "$MY_GH_CREDS" "https://api.github.com/$1?per_page=100&page=$page" | jq
+	curl -sLu "$GITHUB_TOKEN" "https://api.github.com/$1?per_page=100&page=$page" | jq
 }
 
 function gh_api_get() {

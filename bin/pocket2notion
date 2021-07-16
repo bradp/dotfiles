@@ -9,7 +9,7 @@ function send() {
   		"object": "page",
 		"parent": {
 			"type": "database_id",
-			"database_id": "$NOTION_POCKET"
+			"database_id": "'"$NOTION_POCKET_ID"'"
 		},
 		"archived": false,
 		"properties": {

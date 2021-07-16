@@ -5,8 +5,6 @@
 #
 # API docs: https://docs.google.com/document/d/1Nsv52MvSjbLb2PCpHlat0gkzw0EvtSgpKHu4mk0MnrA/edit
 
-script_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)
-
 _usage() {
 	cat <<EOF
 Save items to the wayback machine.
