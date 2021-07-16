@@ -14,7 +14,14 @@
 set -Eeuo pipefail
 
 # All the files that will be symlinked to ~.
-home_dir_files="
+files_to_symlink="
+.config/amfora
+.config/bat
+.config/gh
+.config/htop
+.config/youtube-dl
+.gnupg/gpg.conf
+.gnupg/gpg-agent.conf
 .curlrc
 .gitconfig
 .gvimrc
@@ -26,18 +33,6 @@ home_dir_files="
 .zshrc"
 
 # Symlink them up
-for f in $home_dir_files; do
-	ln -nfsv "$HOME"/dotfiles/"$f" "$HOME"/"$f"
-done
-
-# Files that will be symlinked to the ~/.config/ folder.
-config_dirs="
-amfora
-bat
-gh
-htop
-youtube-dl"
-
-for f in $config_dirs; do
-	ln -nfsv "$HOME"/dotfiles/.config/"$f" "$HOME"/.config/"$f"
+for f in $files_to_symlink; do
+	ln -nfsv "$HOME/dotfiles/$f" "$HOME/$f"
 done
