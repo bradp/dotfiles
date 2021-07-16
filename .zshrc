@@ -24,7 +24,7 @@ ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern cursor)
 ZSH_HIGHLIGHT_PATTERNS=('rm -rf *' 'fg=white,bold,bg=red' 'trash' 'underline,fg=red')
 
 ZSH_CUSTOM="$DOTFILES_PATH"/zsh-custom
-ZSH_THEME="brad-muse"
+ZSH_THEME="parbs"
 
 plugins=(
 	composer
