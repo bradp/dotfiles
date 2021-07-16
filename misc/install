@@ -13,13 +13,52 @@
 
 set -Eeuo pipefail
 
-# All the files that will be symlinked to ~.
-files_to_symlink="
-.config/amfora
-.config/bat
-.config/gh
-.config/htop
-.config/youtube-dl
+# Set up colors.
+_colors_bold=$(tput bold)
+_colors_red=$(tput setaf 1)
+_colors_green=$(tput setaf 2)
+_colors_cyan=$(tput setaf 6)
+_colors_reset=$(tput sgr0)
+
+# Get the dotfiles dir in case it's named something else.
+_script_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )";
+_dotfiles_dir="${_script_dir%/*}"
+
+# Confirm the path.
+echo ""
+echo -e "The dotfiles folder is set as ${_colors_bold}${_colors_cyan}${_dotfiles_dir}${_colors_reset}. Is this correct?"
+read -r -p  "(press enter to confirm or type in a new path)  " confirm
+
+# If a new path is passed in, confirm it.
+if [ -n "$confirm" ]; then
+	if [[ ! -d "$confirm" ]]; then
+		echo -e "${_colors_red}Could not find ${_colors_bold}${confirm}${_colors_reset}, please re-run the script.${_colors_reset}"
+		exit 1
+	fi
+
+	# set to the new dir.
+	_dotfiles_dir="$confirm"
+
+	# Confirm the new path.
+	echo -e "The dotfiles folder is now set as ${_colors_bold}${_colors_cyan}${_dotfiles_dir}${_colors_reset}. Is this correct?"
+	read -r -p  "(press enter to confirm)  " confirm
+
+	if [ -n "$confirm" ]; then
+		echo -e "${_colors_red}Quitting, please re-run the script.${_colors_reset}"
+		exit 1
+	fi
+fi
+
+echo ""
+echo -e "${_colors_green}Setting up dotfiles in ${_colors_bold}${_dotfiles_dir}${_colors_reset}..."
+echo ""
+
+_files_to_symlink="
+.config/amfora/
+.config/bat/
+.config/gh/
+.config/htop/
+.config/youtube-dl/
 .gnupg/gpg.conf
 .gnupg/gpg-agent.conf
 .curlrc
@@ -28,11 +67,25 @@ files_to_symlink="
 .hushlogin
 .npmrc
 .nuxtrc
-.vim
+.vim/
 .vimrc
 .zshrc"
 
 # Symlink them up
-for f in $files_to_symlink; do
-	ln -nfsv "$HOME/dotfiles/$f" "$HOME/$f"
+for f in $_files_to_symlink; do
+	echo "${_colors_cyan}${_dotfiles_dir}/${f}${_colors_reset} ${_colors_bold}→${_colors_reset} ${_colors_cyan}$HOME/${f}${_colors_reset}"
+	ln -nfsv "${_dotfiles_dir}/$f" "$HOME/$f"
 done
+
+echo ""
+echo "${_colors_green}Dotfiles symlinked.${_colors_reset}"
+echo ""
+
+if [[ $_dotfiles_dir != "$HOME/dotfiles" ]]; then
+	echo "${_colors_red}HEY YOU GOTTA DO THIS TO NOT BREAK STUFF!${_colors_reset}"
+	echo ""
+	echo "You need to modify ${_colors_cyan}.zshrc${_colors_reset} to point to the correct folder."
+	echo ""
+	echo "Replace ${_colors_bold}${_colors_cyan}export DOTFILES_PATH=\"\$HOME/dotfiles${_colors_reset}\" with: ${_colors_bold}${_colors_cyan}export DOTFILES_PATH=\"${_dotfiles_dir}\""
+	echo ""
+fi
