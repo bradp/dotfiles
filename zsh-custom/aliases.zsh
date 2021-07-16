@@ -31,6 +31,7 @@ alias x="exa -Flam --git --color-scale --icons"
 alias ls="x"
 alias hist="history"
 alias tree="tree -C"
+alias kdiff="git difftool -y -t Kaleidoscope"
 
 #########################################
 # Hide / Show files                     #
