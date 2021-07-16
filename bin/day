@@ -1,24 +1,105 @@
 #!/usr/bin/env bash
 
-function run_start() {
+function _show_weather() {
+    local weather
+    local current
+    local feels_like
+
+    weather=$(curl --silent "https://api.openweathermap.org/data/2.5/weather?zip=53132&units=imperial&APPID=${OPENWEATHER_API_KEY}" )
+    current=$(echo "$weather" | jq -r ".weather[0].main")
+    feels_like=$(echo "$weather" | jq -r '.main.feels_like' )
+    feels_like=${feels_like%.*}
+
+    case $(echo "$weather" | jq -r '.weather[0].icon') in
+        "01d") icon="" ;;
+        "01n") icon="" ;;
+        "02d") icon="" ;;
+        "02n") icon="" ;;
+        "03d") icon="" ;;
+        "03n") icon="" ;;
+        "04d") icon=" " ;;
+        "04n") icon=" " ;;
+        "09d") icon="" ;;
+        "09n") icon="" ;;
+        "10d") icon="" ;;
+        "10n") icon="" ;;
+        "11d") icon="" ;;
+        "11n") icon="" ;;
+        "13d") icon="" ;;
+        "13n") icon="" ;;
+        "50d") icon="" ;;
+        "50n") icon="" ;;
+    esac
+
+    echo "${icon}  ${current}  ${feels_like}° "
+}
+
+function _show_cow() {
+    local cows
+    local random_cow
+    local cow
+
+    cows=(bunny default moose small stegosaurus www owl snail llama)
+    random_cow=$(($RANDOM % ${#cows[@]}))
+    cow=${cows["$random_cow"]}
+
+    fortune -s | cowsay -f "$cow"
+}
+
+function _run_start() {
+    clear
+
+    echo ""
+    echo ""
+    echo ""
+    echo ""
+
+    _show_cow
+
+    echo ""
+    echo ""
+    echo "Good morning! Today's weather is: $(_show_weather)"
+    echo ""
+    echo "Starting up  Airmail,  Slack,  VSCode,  Notion,  Pocket, and  Stream Deck ... "
+    echo ""
+    echo ""
+    echo "                       "
+    echo ""
+    echo ""
+
 
     osascript -e 'tell application "Airmail 3" to activate'
     osascript -e 'tell application "Slack" to activate'
     osascript -e 'tell application "Visual Studio Code" to activate'
+    osascript -e 'tell application "Notion" to activate'
+    osascript -e 'tell application "Pocket" to activate'
     osascript -e 'tell application "Stream Deck" to activate'
     osascript -e 'tell application "System Events" to tell process "Stream Deck" to tell window 1 to click (first button whose subrole = "AXCloseButton")'
 }
 
-function run_end() {
+function _run_end() {
+    local confirm
 
-    # Generate a random number between 1-10 so that our verify command can't be muscle-memory typed in
-    confirm_val=$(( RANDOM % 10 ))
+    echo ""
+    echo "Done for the day?"
+    read -r -p "(press enter to confirm) " confirm
+    echo ""
+    echo ""
 
-    read -r -p "To confirm type '$confirm_val':  " confirm
-
-    if [ "$confirm" != "$confirm_val" ]; then
+    if [ -n "$confirm" ]; then
         exit
     fi
+
+    clear
+
+    echo ""
+    echo ""
+    echo "晴 Quitting time!"
+    echo ""
+    echo "Closing  Airmail,  Slack,  VSCode,  Notion,  Pocket, and  Stream Deck ... "
+    echo ""
+    echo "Ejecting external drives ... "
+    echo ""
 
     osascript -e 'tell application "Airmail 3" to quit'
     osascript -e 'tell application "Slack" to quit'
@@ -28,17 +109,17 @@ function run_end() {
     osascript -e 'tell application "Finder" to eject disk "Small"'
     osascript -e 'tell application "Finder" to eject disk "Backup 1"'
     osascript -e 'tell application "Finder" to eject disk "Backup 2"'
+
+    echo ""
+    echo "Current weather is: $(_show_weather)"
+    echo ""
+    echo ""
+    echo "  Time to relax  "
+    echo ""
 }
 
-function run_help() {
-    echo "Usage: day start|end" 1>&2;
-	exit
-}
-
-if [[ "${1}" == "start" ]]; then
-	run_start "$2"
-elif [[ "${1}" == "end" ]]; then
-	run_end "$2"
+if [[ "${1}" == "end" ]]; then
+	_run_end
 else
-	run_help "$2"
+	_run_start
 fi
