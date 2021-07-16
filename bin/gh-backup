@@ -7,7 +7,7 @@ function goto_temp_dir() {
 }
 
 function clone_and_compress_from_api() {
-	curl -sLu "$GH_TOKEN" "$1" |  jq -r '.[] | select(.fork == false) | .ssh_url' | xargs -L1 -P10 git clone --depth 1
+	curl -sLu "$MY_GH_TOKEN" "$1" |  jq -r '.[] | select(.fork == false) | .ssh_url' | xargs -L1 -P10 git clone --depth 1
 
 	for d in */ ; do
 		echo "Compressing ${d%/} ..."
@@ -45,7 +45,7 @@ function gh_end() {
 function backup_user() {
 	gh_start "$1" "all"
 
-	repos=$(curl -sLu "$GH_TOKEN" "https://api.github.com/users/$1" | jq -r '.public_repos' )
+	repos=$(curl -sLu "$MY_GH_TOKEN" "https://api.github.com/users/$1" | jq -r '.public_repos' )
 	count=$(( $repos / 100 + 1))
 
 	for (( i = $count ; i > 0 ; i--)); do
@@ -60,7 +60,7 @@ function backup_stars() {
 
 	# set for 10 pages of 100, so default to assuming 1000 stars max
 	for (( i = 1 ; i <= 10 ; i++)); do
-		starred_repos=$(curl -sLu "$GH_TOKEN" "https://api.github.com/users/$1/starred?per_page=100&page=$i" | jq -r length)
+		starred_repos=$(curl -sLu "$MY_GH_TOKEN" "https://api.github.com/users/$1/starred?per_page=100&page=$i" | jq -r length)
 
 		if [[ $starred_repos == 0 ]]; then
 			break

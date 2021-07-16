@@ -32,7 +32,7 @@ function htrack() {
 # Example:
 #   $ how-many-repos bradp
 function how-many-repos() {
-    curl -sLu "$GH_TOKEN" "https://api.github.com/users/$1" | jq -r '.public_repos'
+    curl -sLu "$MY_GH_TOKEN" "https://api.github.com/users/$1" | jq -r '.public_repos'
 }
 
 # Add a spacer to the Dock
