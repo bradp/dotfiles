@@ -100,3 +100,18 @@ function bookmarks() {
         | cut -d$'\t' -f2 \
         | xargs open
 }
+
+function srht() {
+    local name
+    local repo
+
+    name=$(basename "$PWD")
+
+    git remote rm origin
+    git remote add origin git@github.com:bradp/"${name}".git
+    git remote set-url --add --push origin git@github.com:bradp/"${name}".git
+	git remote set-url --add --push origin git@git.sr.ht:\~bp/"${name}"
+
+    git push origin --all
+    git push origin --tags
+}
