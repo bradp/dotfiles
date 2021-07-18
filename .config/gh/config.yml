@@ -9,3 +9,6 @@ pager: !!null delta -s
 # Aliases allow you to create nicknames for gh commands
 aliases:
     co: pr checkout
+    issues: issue list
+    prs: pr list
+    repos: repo list
