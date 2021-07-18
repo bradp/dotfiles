@@ -32,9 +32,11 @@ plugins=(
 	forgit
 	fzf
 	git-extras
+	nvm-settings
 	rsync
 	z
 	zf
+	zsh-nvm
 	zsh-syntax-highlighting
 )
 
