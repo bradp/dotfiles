@@ -1,0 +1,53 @@
+#!/usr/bin/env bash
+
+function send() {
+	curl -sL 'https://api.notion.com/v1/pages' \
+	-H 'Authorization: Bearer '"$NOTION_API_KEY"'' \
+	-H "Content-Type: application/json" \
+	-H "Notion-Version: 2021-05-13" \
+	--data '{
+  		"object": "page",
+		"parent": {
+			"type": "database_id",
+			"database_id": "'"$NOTION_POCKET_ID"'"
+		},
+		"archived": false,
+		"properties": {
+			"Read": {
+				"id": "^\\]i",
+				"type": "checkbox",
+				"checkbox": true
+			},
+			"URL": {
+				"id": "ltG`",
+				"type": "url",
+				"url": "'"$1"'"
+			},
+			"Name": {
+				"id": "title",
+				"type": "title",
+				"title": [
+					{
+						"type": "text",
+						"text": {
+							"content": "'"$2"'",
+							"link": null
+						}
+					}
+				]
+			}
+		}
+	}' > /dev/null
+}
+
+items=$( curl -sL "https://getpocket.com/v3/get?consumer_key=$POCKET_CONSUMER_KEY&access_token=$POCKET_ACCESS_TOKEN" | jq -r ".list[] |  \"\(.resolved_url)====\(.resolved_title)\"")
+# items=$( curl -sL "https://getpocket.com/v3/get?consumer_key=$POCKET_CONSUMER_KEY&access_token=$POCKET_ACCESS_TOKEN&state=archive" | jq -r ".list[] |  \"\(.resolved_url)====\(.resolved_title)\"")
+
+
+echo "$items" | while IFS="" read -r i || [ -n "$i" ]; do
+  	url="${i%====*}"
+	title="${i#*====*}"
+
+	echo "$title  $url"
+	send "$url" "$title"
+done

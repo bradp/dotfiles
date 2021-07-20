@@ -1,0 +1,220 @@
+#!/usr/bin/env bash
+
+set -Eeuo pipefail
+
+# When adding target, add to `all` as well as single command.
+
+function run_setup() {
+	set_colors
+	echo ""
+}
+
+function set_colors() {
+	red=$(tput setaf 1)
+	green=$(tput setaf 2)
+	reset=$(tput sgr0)
+}
+
+function display_start() {
+	echo "   $1   $2 ... "
+}
+
+function display_done() {
+	if [[ "$1" == "error" ]];then
+		echo "${red}${2}${reset}"
+	else
+		echo "${green}done.${reset}"
+	fi
+}
+
+function display_message() {
+	echo ""
+	tput bold
+	echo "  $1${reset} "
+	echo ""
+}
+
+function backup_xavier() {
+	display_start "" "xavier"
+	ssh xavier "rclone copy --fast-list --progress --copy-links --checkers 20 --transfers 20 /etc/caddy b2:parbs-xavier/etc/caddy"
+	ssh xavier "rclone copy --fast-list --progress --copy-links --checkers 20 --transfers 20 /var/www b2:parbs-xavier/var/www"
+	ssh xavier "rclone copy --fast-list --progress --copy-links --checkers 20 --transfers 20 /root/docker b2:parbs-xavier/docker"
+	display_done
+}
+
+function backup_pihole() {
+	display_start "" "pihole"
+	ssh pihole "rclone copy --fast-list --progress --copy-links --exclude '.git/**' --checkers 50 --transfers 50 /var/www b2:parbs-pihole/var/www"
+	ssh pihole "rclone copy --fast-list --progress --copy-links --exclude '.git/**' --exclude 'wp-gen/**' --exclude '.cache/**' --checkers 50 --transfers 50 /home/pi b2:parbs-pihole/home/pi"
+	display_done
+}
+
+function backup_dropbox() {
+	display_start "" "dropbox"
+	# rclone copy --fast-list --progress --copy-links --checkers 8 --transfers 10 dropbox: b2:parbs-dropbox
+	display_done
+}
+
+function backup_dropbox_local() {
+	display_start "" "dropbox-local"
+	rclone copy --fast-list --progress --copy-links --exclude '.git/**' --exclude 'node_modules/**' --exclude '.dropbox.cache/**' --checkers 50 --transfers 50 /Users/brad/Dropbox b2:parbs-dropbox
+	display_done
+}
+
+function backup_sdr() {
+	display_start "殺" "sdr"
+	display_done error "not configured"
+}
+
+function backup_screen() {
+	display_start "" "screen"
+	display_done error "not configured"
+}
+
+function backup_github() {
+	display_start "" "github"
+
+	gh-backup user bradp
+
+	display_done
+}
+
+function backup_github_stars() {
+	display_start "" "github-stars"
+
+	gh-backup starred bradp
+
+	display_done
+}
+
+function backup_media_hdd() {
+	display_start "" "media-hdd"
+
+	if [[ -d /Volumes/Small/Media ]]; then
+		rclone copy --fast-list --progress --copy-links --checkers 50 --transfers 100 /Volumes/Small/Media b2:parbs-media
+
+		display_done
+	else
+		display_done error "hard drive not found"
+	fi
+}
+
+function backup_pocket() {
+	display_start "" "pocket"
+
+	cd "$HOME/Dropbox/Working/backups/pocket" || exit
+
+	items=$( bash api pocket /get | jq -r ".list[].resolved_url")
+
+	date=$(date +"%Y-%m-%d")
+	mkdir "$date" 2> /dev/null
+	cd "$date" || exit
+
+	for i in $items; do
+		echo ""
+		echo "$i"
+		wget --quiet --show-progress --progress=bar:force:noscroll --page-requisites "$i"
+	done
+
+	yt=$(ls www.youtube.com/watch*)
+	yt2=$(ls youtube.com/watch*)
+
+	mkdir youtube 2> /dev/null
+	cd youtube || exit
+
+	for vid in $yt $yt2; do
+		vid="${vid#www.youtube.com/watch?v=}"
+		vid="${vid#youtube.com/watch?v=}"
+		vid="${vid::11}"
+		youtube-dl "$vid"
+		echo "$vid"
+	done
+	cd ../ || exit
+
+	rm -rf youtube.com 2> /dev/null
+	rm -rf www.youtube.com 2> /dev/null
+}
+
+function backup_wayback() {
+	display_start "" "wayback"
+
+	wayback bradparbs.com
+	wayback advanced.rocks
+	wayback beginner.rocks
+	wayback brad.cash
+	wayback bradparbs.com
+	wayback butts.tech
+	# wayback gifsb.in
+	wayback horror.watch
+	wayback isitsnowinginmilwaukee.com
+	wayback sax.cat
+}
+
+function backup_all() {
+	display_start " " "wayback"
+
+	backup_xavier
+	backup_pihole
+	backup_sdr
+	backup_screen
+	backup_dropbox
+	backup_dropbox_local
+	backup_github
+	backup_github_stars
+	backup_pocket
+}
+
+function display_help() {
+	echo "${red} Available targets: ${reset}"
+	echo ""
+	echo "${green}  •   all${reset}"
+	echo ""
+	echo "  •   xavier"
+	echo ""
+	echo "  •   pihole"
+	echo ""
+	echo "  • 殺 sdr"
+	echo ""
+	echo "  •    screen"
+	echo ""
+	echo "  •   dropbox"
+	echo ""
+	echo "  •   dropbox-local"
+	echo ""
+	echo "  •   github"
+	echo ""
+	echo "  •   github-stars"
+	echo ""
+	echo "  •   pocket"
+	echo ""
+	echo "  •   wayback"
+	echo ""
+	echo "  •   media-hdd (not run with 'all')"
+	echo ""
+
+	exit
+}
+
+run_setup
+
+while :; do
+	case "${1-}" in
+		-v | --verbose) set -x ;;
+		-h | --help) display_help ;;
+		all) backup_all ;;
+		xavier) backup_xavier ;;
+		pihole) backup_pihole ;;
+		sdr) backup_sdr ;;
+		screen) backup_screen ;;
+		dropbox) backup_dropbox ;;
+		dropbox-local) backup_dropbox_local ;;
+		github) backup_github ;;
+		github-stars) backup_github_stars ;;
+		media-hdd) backup_media_hdd ;;
+		pocket) backup_pocket ;;
+		wayback) backup_wayback ;;
+	esac
+	shift
+done
+
+display_message " Completed backup!"

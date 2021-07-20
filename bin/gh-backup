@@ -1,0 +1,84 @@
+#!/usr/bin/env bash
+
+function goto_temp_dir() {
+	tempfolder="$RANDOM"
+	mkdir -p "/tmp/$tempfolder" 2> /dev/null
+	cd "/tmp/$tempfolder" || exit
+}
+
+function clone_and_compress_from_api() {
+	curl -sLu "$MY_GH_TOKEN" "$1" |  jq -r '.[] | select(.fork == false) | .ssh_url' | xargs -L1 -P10 git clone --depth 1
+
+	for d in */ ; do
+		echo "Compressing ${d%/} ..."
+
+	    tar czf "${d%/}".tar.gz "$d"
+
+		rm -rf "$d"
+	done
+}
+
+function backup_user_page() {
+	clone_and_compress_from_api "https://api.github.com/users/$1/repos?per_page=100&page=$2"
+}
+
+function backup_stars_page() {
+	clone_and_compress_from_api "https://api.github.com/users/$1/starred?per_page=100&page=$2"
+}
+
+function gh_start() {
+	echo "Cloning & backing up $2 repos for $1 ..."
+
+	mkdir "$1" 2> /dev/null
+	cd "$1" || exit
+}
+
+function gh_end() {
+	cd ../ || exit
+	echo "Sending to b2 ..."
+
+	rclone copy --fast-list --progress --exclude '.git/**' --checkers 50 --transfers 50 "$1" "$2"
+
+	rm -rf "$1"
+}
+
+function backup_user() {
+	gh_start "$1" "all"
+
+	repos=$(curl -sLu "$MY_GH_TOKEN" "https://api.github.com/users/$1" | jq -r '.public_repos' )
+	count=$(( $repos / 100 + 1))
+
+	for (( i = $count ; i > 0 ; i--)); do
+		backup_user_page "$1" "$i"
+	done
+
+	gh_end "$1" "b2:parbs-github/$1"
+}
+
+function backup_stars() {
+	gh_start "$1" "starred"
+
+	# set for 10 pages of 100, so default to assuming 1000 stars max
+	for (( i = 1 ; i <= 10 ; i++)); do
+		starred_repos=$(curl -sLu "$MY_GH_TOKEN" "https://api.github.com/users/$1/starred?per_page=100&page=$i" | jq -r length)
+
+		if [[ $starred_repos == 0 ]]; then
+			break
+		fi
+
+		backup_stars_page "$1" "$i"
+	done
+
+
+	gh_end "$1" "b2:parbs-github/$1/__starred"
+}
+
+goto_temp_dir
+
+if [[ "${1}" == "user" ]] || [[ "${1}" == "org" ]]; then
+	backup_user "$2"
+elif [[ "${1}" == "stars" ]] || [[ "${1}" == 'starred' ]]; then
+	backup_stars "$2"
+else
+	gh-backup-repo "$2"
+fi

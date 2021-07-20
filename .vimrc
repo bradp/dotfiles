@@ -21,32 +21,29 @@ syntax on
 "
 call plug#begin('~/dotfiles/.vim/plugged')
 
-Plug 'rking/ag.vim'
-Plug 'kien/ctrlp.vim'
-Plug 'myusuf3/numbers.vim'
-Plug 'shawncplus/phpcomplete.vim'
-Plug 'ervandew/supertab'
-Plug 'scrooloose/syntastic'
-Plug 'tomtom/tcomment_vim'
-Plug 'bling/vim-airline'
-Plug 'altercation/vim-colors-solarized'
-Plug 'tpope/vim-fugitive'
 Plug 'airblade/vim-gitgutter'
-Plug 'nathanaelkane/vim-indent-guides'
-Plug 'tpope/vim-sensible'
-Plug 'mhinz/vim-startify'
-Plug 'tpope/vim-surround'
-Plug 'tpope/vim-vinegar'
-Plug 'tpope/vim-unimpaired'
-Plug 'tpope/vim-fugitive'
+Plug 'altercation/vim-colors-solarized'
 Plug 'ap/vim-css-color'
-Plug 'scrooloose/nerdcommenter'
-Plug 'ludovicchabant/vim-gutentags'
-Plug 'terryma/vim-multiple-cursors'
-Plug 'fatih/vim-go'
-Plug 'majutsushi/tagbar'
+Plug 'bling/vim-airline'
 Plug 'bronson/vim-trailing-whitespace'
-Plug 'junegunn/goyo.vim'
+Plug 'ervandew/supertab'
+Plug 'fatih/vim-go'
+Plug 'kien/ctrlp.vim'
+Plug 'mhinz/vim-startify'
+Plug 'myusuf3/numbers.vim'
+Plug 'nathanaelkane/vim-indent-guides'
+Plug 'preservim/nerdtree'
+Plug 'rking/ag.vim'
+Plug 'ryanoasis/vim-devicons'
+Plug 'scrooloose/nerdcommenter'
+Plug 'scrooloose/syntastic'
+Plug 'shawncplus/phpcomplete.vim'
+Plug 'tomtom/tcomment_vim'
+Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-sensible'
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-unimpaired'
+Plug 'tpope/vim-vinegar'
 
 call plug#end()
 
@@ -125,8 +122,7 @@ let g:syntastic_php_phpcs_args="--report=csv --standard=WordPress"
 
 let g:phpcomplete_parse_docblock_comments = 1
 
-let g:go_fmt_command = "goimports"
-
+let g:go_fmt_command = "gofumpt"
 
 "
 " ==============================
@@ -164,3 +160,5 @@ let g:UltiSnipsJumpForwardTrigger="<c-b>"
 let g:UltiSnipsJumpBackwardTrigger="<c-z>"
 
 nmap q :nohlsearch<CR>
+
+nnoremap = :NERDTreeToggle<CR>

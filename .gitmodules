@@ -1,20 +1,12 @@
-[submodule "zsh-custom/plugins/zsh-syntax-highlighting"]
-	path = zsh-custom/plugins/zsh-syntax-highlighting
-	url = https://github.com/zsh-users/zsh-syntax-highlighting.git
 [submodule ".oh-my-zsh"]
 	path = .oh-my-zsh
 	url = https://github.com/robbyrussell/oh-my-zsh.git
-[submodule "bin/vv"]
-	path = bin/vv
-	url = https://github.com/bradp/vv.git
-[submodule "misc/wpcs"]
-	path = misc/wpcs
-	url = https://github.com/WordPress-Coding-Standards/WordPress-Coding-Standards.git
-[submodule "bin/t"]
-	path = bin/t
-	url = https://github.com/bradp/t.git
-[submodule "misc/hmcs"]
-	path = misc/hmcs
-	url = https://github.com/humanmade/coding-standards.git
-[submodule "oh-my-zsh"]
-	branch = master
+[submodule "zsh-custom/plugins/zsh-syntax-highlighting"]
+	path = zsh-custom/plugins/zsh-syntax-highlighting
+	url = https://github.com/zsh-users/zsh-syntax-highlighting.git
+[submodule "zsh-custom/plugins/forgit"]
+	path = zsh-custom/plugins/forgit
+	url = git@github.com:wfxr/forgit.git
+[submodule "zsh-custom/plugins/fzf-tab"]
+	path = zsh-custom/plugins/fzf-tab
+	url = https://github.com/Aloxaf/fzf-tab.git

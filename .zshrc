@@ -7,64 +7,54 @@
 #	 ██████ ██████ ░██  ░██░███   ░░█████
 #	░░░░░░ ░░░░░░  ░░   ░░ ░░░     ░░░░░
 
-ZSH=$HOME/dotfiles/.oh-my-zsh # Path to your oh-my-zsh configuration.
-ZSH_THEME="brad-muse" # Set name of the theme to load.
+export DOTFILES_PATH="$HOME/dotfiles"
 
-DEFAULT_USER="wenglish@wenglish"
-COMPLETION_WAITING_DOTS="true"
+COMPLETION_WAITING_DOTS=true
 DISABLE_AUTO_UPDATE=true
-ZSH_CUSTOM=$HOME/dotfiles/zsh-custom
-ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern cursor)
-ZSH_HIGHLIGHT_PATTERNS=('rm -rf *' 'fg=white,bold,bg=red')
+HYPHEN_INSENSITIVE=true
 
 unsetopt nomatch
+
 setopt APPEND_HISTORY
+setopt HIST_FIND_NO_DUPS
 setopt INTERACTIVE_COMMENTS
 
+typeset -A ZSH_HIGHLIGHT_PATTERNS
+ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern cursor)
+ZSH_HIGHLIGHT_PATTERNS=('rm -rf *' 'fg=white,bold,bg=red' 'trash' 'underline,fg=red')
+
+ZSH_CUSTOM="$DOTFILES_PATH"/zsh-custom
+ZSH_THEME="parbs"
+
 plugins=(
-	brew
-	brew-cask
-	git
+	composer
+	dash
+	forgit
+	fzf
 	git-extras
-	github
-	lol
-	nyan
-	osx
-	parbs-sites
-	sublime
-	vagrant
+	rsync
 	z
+	zf
 	zsh-syntax-highlighting
 )
 
-source $ZSH/oh-my-zsh.sh
-for file in $HOME/dotfiles/sourced/*; do
-   source "$file"
-done
+source "$DOTFILES_PATH"/.oh-my-zsh/oh-my-zsh.sh
 
-if (( $+commands[tag] )); then
-	tag() { command tag "$@"; source ${TAG_ALIAS_FILE:-/tmp/tag_aliases} 2>/dev/null }
-	alias ag=tag
-fi
+path+=(/usr/local/bin)
+path+=("$DOTFILES_PATH"/misc)
+path+=("$DOTFILES_PATH"/bin)
+path+=("$HOME"/.yarn/bin)
+path+=("$HOME"/.cargo/bin)
+path+=("$HOME"/go/bin)
+path+=(/usr/local/opt)
+path+=(/usr/local/MacGPG2/bin)
+path+=(/usr/local/share/npm/bin)
+path+=(/usr/local/git/bin)
+path+=(/usr/local/bin)
+path+=(/usr/bin)
+path+=(/bin)
+path+=(/usr/local/sbin)
+path+=(/usr/sbin)
+path+=(/sbin)
 
-PATH=${PATH}:/usr/local/bin
-PATH=${PATH}:/usr/bin
-PATH=${PATH}:/bin
-PATH=${PATH}:/usr/sbin
-PATH=${PATH}:/sbin
-PATH=${PATH}:/usr/local/git/bin
-PATH=${PATH}:/opt/sm/bin
-PATH=${PATH}:/opt/sm/pkg/active/bin
-PATH=${PATH}:/opt/sm/pkg/active/sbin
-PATH=${PATH}:/usr/local/heroku/bin
-PATH=${PATH}:"$HOME"/dotfiles/misc
-PATH=${PATH}:"$HOME"/dotfiles/bin
-PATH=${PATH}:"$HOME"/dotfiles/bin/t
-PATH=${PATH}:"$HOME"/.composer/vendor/bin
-PATH=${PATH}:"$HOME"/go/bin
-PATH=${PATH}:"$HOME"/.yarn/bin
-PATH=${PATH}:"/usr/local/sbin"
-PATH=${PATH}:"usr/local/share/npm/bin"
-PATH=${PATH}:"$HOME"/Dropbox/Working/chassis
-
-export PATH=${PATH}
+export PATH

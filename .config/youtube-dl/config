@@ -1,0 +1,8 @@
+--ignore-errors
+--mark-watched
+--no-mtime
+--restrict-filenames
+--no-call-home
+--embed-subs
+--embed-thumbnail
+--add-metadata
