@@ -8,29 +8,59 @@
 #    ░░░░░  ░░    ░░   ░░░░░   ░░░░░░  ░░░   ░░   ░░   ░░  ░░░░░
 
 [user]
-    # name = Will English IV
-    # email = willenglishiv@gmail.com
-    # github = willenglishiv
+    name = Will English IV
+    email = willenglishiv@gmail.com
+    github = willenglishiv
+    # signingKey = 2C161DEC802F4922
+
+[alias]
+    a = add
+    aa = !git add -u && git add . && git status
+
+    s = status
+    st = status -sb
+
+    c = commit
+    ci = commit
+
+    cl = clone
+
+    co = checkout
+    cob = checkout -b
+
+    br = branch
+
+    cp = cherry-pick
+
+    diff = diff --word-diff
+
+    unstage = reset HEAD --
+
+    undo = reset --soft HEAD^
+
+    ls = log --pretty=log --decorate
+    ll = log --pretty=log --decorate --numstat
+    lg = log --pretty=graph --color --graph --abbrev-commit
+    dl = ll -1
+
+    ignore = !git-ignore $@
+    tig = !tig $@
+
+[advice]
+    statusAheadBehind = fals
+    statusHints = false
+    detachedHead = false
+    waitingForEditor = false
+    addEmptyPathspec = false
+
+[branch]
+	autosetupmerge = true
+
 [core]
 	editor = vim
-	excludesfile = ~/dotfiles/.global_ignore
-
-    # Enable parallel I/O for operations like "git diff".
+	excludesfile = /Users/brad/dotfiles/.global_ignore
     preloadindex = true
-
-    # Use 12 characters for the abbreviated commit hash. I can currently make
-    # do with 10, but this should provide a certain level of safety for the
-    # near-ish future. See the interesting and well-researched article at
-    # http://blog.cuviper.com/2013/11/10/how-short-can-git-abbreviate/
     abbrev = 12
-[mergetool]
-	keepBackup = true
-
-[color]
-    branch = auto
-    diff = auto
-    status = auto
-	ui = auto
 
 [color "branch"]
     current = red reverse
@@ -48,65 +78,100 @@
     changed = green
     untracked = cyan
 
-[alias]
-    ls = log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate
-    ll = log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --numstat
-    filelog = log -u
-    dlc = diff --cached HEAD^
-    dl = "!git ll -1"
-    la = "!git config -l | grep alias | cut -c 7-"
-    cp = cherry-pick
-    st = status -s
-    cl = clone
-    ci = commit
-    co = checkout
-    br = branch
-    a = add
-    s = status
-    c = commit
-    d = !sh ~/dotfiles/bin/git-diff
-    diff = diff --word-diff
-    dc = diff --cached
-    aa= !git add -u && git add . && git status
-    cob = checkout -b
-    up = !git fetch origin && git rebase origin/master
-    ir = !git rebase -i origin/master
-    done = !git fetch && git rebase origin/master && git checkout master && git merge @{-1}  && git push
-    lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
-    st = status -sb
-    gg = log --oneline --abbrev-commit --all --graph --decorate --color
-    unstage = reset HEAD --
-    switch = !legit switch \"$@\"
-    branches = !legit branches
-    sprout = !legit sprout \"$@\"
-    unpublish = !legit unpublish \"$@\"
-    harvest = !legit harvest \"$@\"
-    sync = !legit sync \"$@\"
-    publish = !legit publish \"$@\"
-    graft = !legit graft \"$@\"
-
-    go = checkout -B
-
-    tig = !tig
-    ctags = !.git/hooks/ctags
-
-    changelog = "!_() { t=$(git describe --abbrev=0 --tags); git log ${t}..HEAD --no-merges --pretty=format:'* %s'; }; _"
+[commit]
+	gpgSign = true
 
 [credential]
 	helper = osxkeychain
 
-[core]
-	editor = vim
-	exludesfile = ~/.global_ignore
+[delta]
+    features     = syntax line-numbers
+    syntax-theme = "Monokai (SL)"
+
+    commit-decoration-style = bold yellow box ul
+
+    file-style            = bold yellow ul
+    file-decoration-style = none
+
+    hunk-header-style            = bold purple
+    hunk-header-decoration-style = cyan box ul
+
+    line-numbers-left-style  = cyan
+    line-numbers-right-style = cyan
+    line-numbers-minus-style = 124
+    line-numbers-plus-style  = 28
+    line-numbers-left-format = "{nm:^4}│"
+
+    minus-style                   = bright-red
+    minus-non-emph-style          = bright-red
+    minus-emph-style              = bold ul brightred "#901011"
+    minus-empty-line-marker-style = red brightred
+    ; minus-style = brightred
+    ; minus-empty-line-marker-style = red brightred
+    ; minus-emph-style = brightred bold ul auto
+
+    plus-style                   = brightgreen
+    plus-non-emph-style          = brightgreen
+    plus-emph-style              = bold ul brightgreen "#006000"
+    plus-empty-line-marker-style = green brightgreen
+    whitespace-error-style       = reverse purple
+    ; plus-empty-line-marker-style = green brightgreen
+    ; plus-emph-style = brightgreen bold ul auto
+
+    true-color = true
+
+    whitespace-error-style = 22 reverse
+
+[diff]
+	tool = Kaleidoscope
+
+[difftool]
+	prompt = false
+
+[difftool "Kaleidoscope"]
+	cmd = ksdiff --partial-changeset --relative-path \"$MERGED\" -- \"$LOCAL\" \"$REMOTE\"
+
+[gitcvs]
+    commitMsgAnnotation = ""
 
 [help]
 	autocorrect = 1
+    format = html
+
+[init]
+	defaultBranch = main
+
+[interactive]
+    diffFilter = delta --color-only
+
+[merge]
+	tool = Kaleidoscope
+
+[mergetool]
+	prompt = false
+
+[mergetool "Kaleidoscope"]
+	cmd = ksdiff --merge --output \"$MERGED\" --base \"$BASE\" -- \"$LOCAL\" --snapshot \"$REMOTE\" --snapshot
+	trustExitCode = true
+
+[pager]
+    diff = delta
+    reflog = delta
+    show = delta
+
+[pretty]
+	log = "%C(yellow)%h%Cred%d %Creset%s%Cblue [%cn]"
+    graph = "%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset"
+
+[pull]
+	rebase = true
 
 [push]
-	default = matching
+	default = current
 
-[branch]
-	autosetupmerge = true
+[status]
+    showUntrackedFiles = all
 
-[advice]
-	statusHints = false
+[tag]
+    forceSignAnnotated = true
+	gpgSign = true

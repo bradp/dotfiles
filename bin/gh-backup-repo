@@ -1,0 +1,167 @@
+#!/usr/bin/env bash
+
+function error_bad_usage() {
+	echo "Usage: ghback <user>/<repo> [--keep, --meta]" 1>&2;
+	exit
+}
+
+function get_vars() {
+
+	if [ -z "$1" ]; then
+		error_bad_usage
+	fi
+
+	target="$1"
+
+	IFS='/'
+	read -r -a strarr <<< "$1"
+
+	user_raw=${strarr[0]}
+	repo_raw=${strarr[1]}
+
+	user=$( echo "$user_raw" | tr '[:upper:]' '[:lower:]')
+	repo=$( echo "$repo_raw" | tr '[:upper:]' '[:lower:]')
+
+	if [ -z "$user" ] || [ -z "$repo" ]; then
+		error_bad_usage
+	fi
+}
+
+function goto_temp_dir() {
+	tempfolder="$RANDOM"
+	mkdir -p "/tmp/$tempfolder" 2> /dev/null
+	cd "/tmp/$tempfolder" || exit
+}
+
+function get_repo_metadata() {
+	mkdir -p "$repo/.github-meta" 2> /dev/null
+
+	gh_api "repos/$user/$repo" > "$repo/.github-meta/metadata.json"
+}
+
+function get_page_count_from_metadata_file() {
+	echo $(($(jq "$1" "$repo/.github-meta/metadata.json")+99)) / 100 | bc
+}
+
+function gh_api() {
+	page="${2:-1}"
+	curl -sLu "$MY_GH_TOKEN" "https://api.github.com/$1?per_page=100&page=$page" | jq
+}
+
+function gh_api_get() {
+	gh_api "repos/$user/$repo/$1" | jq > "$repo/.github-meta/$1.json"
+
+	echo -n "."
+}
+
+function get_paginated() {
+	pages=$(get_page_count_from_metadata_file ".open_issues")
+
+	mkdir ".$1" 2> /dev/null
+
+	for (( i="$pages"; i > 0; i-- )); do
+		echo -n "."
+		gh_api "repos/$user/$repo/$1" "$i" > ".$1/$i.json"
+    done
+	echo ""
+
+	jq -n "[ inputs[] ]" ".$1"/*.json > "$repo/.github-meta/$1.json"
+
+	rm ".$1"/*.json
+	rmdir ".$1"
+}
+
+function get_comments() {
+	count=$(jq -r ".[] | select(.comments != 0) | .number" "$repo/.github-meta/$1.json")
+
+	if [[ "$count" ]]; then
+		mkdir -p "$repo/.github-meta/$1_comments" 2> /dev/null
+
+		echo "$count" | while IFS= read -r number ; do
+			echo -n "."
+    		response=$(gh_api "repos/$user/$repo/$1/$number/comments" | jq )
+			data=$(echo "$response" | jq ".[]")
+
+			if [[ "$data" ]]; then
+				echo "$response" > "$repo/.github-meta/$1_comments/$number.json"
+			fi
+		done
+		echo ""
+	fi
+}
+
+function clone_repo() {
+	git clone "git@github.com:$user/$repo.git" "$repo" || exit
+}
+
+function get_other_metadata_for_repo() {
+	echo " - getting repo metadata"
+	get_repo_metadata
+
+	echo -n " - getting issues "
+	get_paginated "issues"
+
+	echo -n " - getting issue comments "
+	get_comments "issues"
+
+	echo -n " - getting PRs "
+	get_paginated "pulls"
+
+	echo -n " - getting PR comments "
+	get_comments "pulls"
+
+	echo -n " - getting other metadata "
+	gh_api_get "releases"
+	gh_api_get "contributors"
+	gh_api_get "downloads"
+	gh_api_get "labels"
+	gh_api_get "languages"
+	gh_api_get "milestones"
+	echo ""
+}
+
+function compress_data() {
+	tar czf "$repo".tar.gz "$repo"
+}
+
+function send_to_b2() {
+	rclone copy --fast-list --progress "$repo".tar.gz "b2:parbs-github/$user/"
+}
+
+function clean_up() {
+	if [[ $* != *--keep* ]]; then
+		echo '   - removing cloned repo'
+		rm -rf "$repo"
+	fi
+	echo '   - removing compressed file'
+	rm "$repo".tar.gz
+}
+
+echo ""
+get_vars "$@"
+
+echo "Backing up $target"
+echo ""
+
+if [[ $* != *--keep* ]]; then
+	echo " - building temp dir"
+	goto_temp_dir
+fi
+
+echo " - cloning repo"
+clone_repo
+
+if [[ $* == *--meta* ]]; then
+	get_other_metadata_for_repo
+fi
+
+echo " - compressing files"
+compress_data
+
+echo " - sending to b2"
+send_to_b2
+
+echo " - cleaning up"
+clean_up "$@"
+
+echo "done!"
