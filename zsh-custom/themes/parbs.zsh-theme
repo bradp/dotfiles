@@ -78,7 +78,7 @@ __write_protected_icon() {
 
 __find_vagrantfile() {
 	dir=.
-	until [ $dir -ef "$HOME" ]; do
+	until [ $dir -ef / ]; do
 		if [ -f "$dir/Vagrantfile" ]; then
 			echo "$dir/Vagrantfile"
 			return 0
