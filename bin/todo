@@ -2,7 +2,7 @@
 
 text="$@"
 
-curl -sL 'https://api.notion.com/v1/pages' \
+status=$(curl -sL 'https://api.notion.com/v1/pages' \
 	-H 'Authorization: Bearer '"$NOTION_API_KEY"'' \
 	-H "Content-Type: application/json" \
 	-H "Notion-Version: 2021-05-13" \
@@ -28,4 +28,11 @@ curl -sL 'https://api.notion.com/v1/pages' \
         ]
       }
     }
-  }'
+  }' | jq -r ".object" )
+
+if [ "error" = "$status" ]; then
+	echo "Error adding todo."
+	exit 1
+fi
+
+
