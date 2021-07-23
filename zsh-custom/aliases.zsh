@@ -103,7 +103,6 @@ alias kill9="afplay ~/dotfiles/misc/kill-9.wav && kill -9 $1"
 #########################################
 # Misc                                  #
 #########################################
-alias pubkey="more ~/.ssh/id_rsa.pub | pbcopy | printf '=> Public key copied to pasteboard.\n'";
 alias bell='echo "\a"'
 
 alias caff="caffeinate -dis"

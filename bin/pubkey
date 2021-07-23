@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+ident=${1:-id_rsa}
+
+if [[ ! -f $HOME/.ssh/"$ident".pub ]]; then
+	echo "Key not found for $ident"
+	exit 1
+fi
+
+key=$( cat $HOME/.ssh/"$ident".pub )
+
+echo ""
+echo "$key"
+echo ""
+
+echo "$key" | pbcopy
+
+echo "$(tput setaf 2)Public key copied to clipboard.$(tput sgr0)"
