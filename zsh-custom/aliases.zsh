@@ -9,12 +9,14 @@
 #
 
 #########################################
-# Quick config                          #
+# Paths                                 #
 #########################################
-alias zshconfig="$EDITOR ~/.zshrc"
-alias ohmyzsh="$EDITOR ~/.oh-my-zsh"
-alias ssource="source ~/.zshrc"
-alias hosts="sudo $EDITOR /etc/hosts"
+alias box="cd ~/Dropbox"
+alias dot="cd ~/dotfiles"
+alias goo="cd ~/go/src/github.com/bradp"
+alias sites="cd ~/Sites"
+alias ww="cd ~/Dropbox/Working"
+alias ws="cd ~/Dropbox/Working/sites"
 
 #########################################
 # Replace commands                      #
@@ -34,7 +36,6 @@ alias v=vim
 alias vi=vim
 alias x="exa -Flam --git --color-scale --icons"
 
-
 alias f="fzf --preview 'bat --color=always --style=numbers --line-range=:500 {}'"
 alias kdiff="git difftool -y -t Kaleidoscope"
 alias lss="ls -Gal"
@@ -48,7 +49,6 @@ alias gs="git status"
 alias gc="git commit -m"
 alias gcb="git fetch && git checkout -b $@ origin/$@"
 alias gpre="git pull --rebase origin $1"
-
 
 #########################################
 # Hide / Show files                     #
@@ -105,7 +105,10 @@ alias kill9="afplay $DOTFILES_PATH/misc/kill-9.wav && kill -9 $1"
 #########################################
 # Misc                                  #
 #########################################
+alias ssource="source $DOTFILES_PATH/.zshrc"
+
 alias 3d="figlet -f 3d $1"
+alias 3dfonts="showfigfonts"
 alias bell='echo "\a"'
 alias caff="caffeinate -dis"
 alias tailf="less +F $0"
@@ -113,5 +116,3 @@ alias sha256="shasum -a 256 "$1" "
 
 alias st='open -a "Sublime Text"'
 alias stt="st ."
-
-
