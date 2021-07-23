@@ -27,7 +27,6 @@ ZSH_CUSTOM="$DOTFILES_PATH"/zsh-custom
 ZSH_THEME="parbs"
 
 plugins=(
-	composer
 	dash
 	forgit
 	fzf
