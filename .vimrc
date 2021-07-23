@@ -161,4 +161,6 @@ let g:UltiSnipsJumpBackwardTrigger="<c-z>"
 
 nmap q :nohlsearch<CR>
 
+let g:NERDTreeShowHidden=1
+
 nnoremap = :NERDTreeToggle<CR>
