@@ -32,6 +32,7 @@ plugins=(
 	forgit
 	fzf
 	git-extras
+	lights
 	nvm-settings
 	rsync
 	z
