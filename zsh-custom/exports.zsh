@@ -10,6 +10,8 @@
 
 export BAT_CONFIG_PATH="$HOME/dotfiles/.config/bat/.bat"
 
+export HOMEBREW_BREWFILE="$DOTFILES_PATH/Brewfile"
+
 export CARGOPATH="$HOME/.cargo"
 
 export COWPATH="/usr/local/Cellar/cowsay/3.04_1/share/cows:$DOTFILES_PATH/misc/cows"
