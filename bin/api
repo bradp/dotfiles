@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
 function github() {
-
   # Set default of page 1, 100 per page
   page="${3:-1}"
   per_page="${4:-100}"
@@ -10,30 +9,20 @@ function github() {
 }
 
 function pocket() {
-
   curl -sL "https://getpocket.com/v3$2?consumer_key=$POCKET_CONSUMER_KEY&access_token=$POCKET_ACCESS_TOKEN"
 }
 
 function movie() {
-
   curl -sL "https://api.themoviedb.org/3/$2?api_key=$MOVIEDB_KEY&language=en-US"
 }
 
 case $1 in
-
-  github | gh)
-    github "$@"
-    ;;
-  pocket)
-    pocket "$@"
-    ;;
-  movie)
-    movie "$@"
-    ;;
-
+  github | gh) github "$@" ;;
+  pocket) pocket "$@" ;;
+  movie) movie "$@" ;;
   *)
     echo "usage: api github [page] [per_page]"
     echo "  api gh /repos/user/repo/commits 3 40"
-	exit
+    exit
     ;;
 esac
