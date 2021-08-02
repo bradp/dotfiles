@@ -50,6 +50,28 @@ function checkout() {
     git checkout $(git branch | grep -v $(git rev-parse --abbrev-ref HEAD) | fzf)
 }
 
+########################################
+# Make scratch directory               #
+########################################
+alias newdir="scratch"
+alias scrath="scratch"
+
+function scratch() {
+	newdir="${1}"
+
+	cd "$HOME/Dropbox/Working/scratch" || exit 1
+
+	if [[ -d "${newdir}" ]]; then
+
+		echo "${newdir} already exists"
+		exit 1
+	fi
+
+	mkdir "${newdir}"
+
+	cd "${newdir}"
+}
+
 #########################################
 # Go up N directories                   #
 #                                       #
