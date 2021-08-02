@@ -172,6 +172,10 @@ __file_icon() {
 }
 
 __icons() {
+	if [[ $HOME == ${PWD}] ]]; then
+		return
+	fi
+
 	local display_icons
 
 	icons=$(__file_icon)
