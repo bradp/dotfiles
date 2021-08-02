@@ -11,12 +11,12 @@
 #########################################
 # Paths                                 #
 #########################################
-alias box="cd ~/Dropbox"
-alias dot="cd ~/dotfiles"
-alias goo="cd ~/go/src/github.com/bradp"
-alias sites="cd ~/Sites"
-alias ww="cd ~/Dropbox/Working"
-alias ws="cd ~/Dropbox/Working/sites"
+alias box="cd $HOME/Dropbox"
+alias goo="cd $HOME/go/src/github.com/bradp"
+alias scr="cd $HOME/Dropbox/Working/scratch"
+alias sites="cd $HOME/Sites"
+alias ww="cd $HOME/Dropbox/Working"
+alias ws="cd $HOME/Dropbox/Working/sites"
 
 #########################################
 # Replace commands                      #
