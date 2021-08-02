@@ -44,6 +44,13 @@ function htrack() {  httrack "https://${1}/" -O "${1//\//-}" "+*.${1}/*" --depth
 function dirdate() { mkdir $(date +%F); }
 
 #########################################
+# Git checkout w/ fzf                   #
+#########################################
+function checkout() {
+    git checkout $(git branch | grep -v $(git rev-parse --abbrev-ref HEAD) | fzf)
+}
+
+#########################################
 # Go up N directories                   #
 #                                       #
 # taken from https://git.io/updir       #
