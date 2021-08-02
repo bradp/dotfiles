@@ -39,3 +39,17 @@ function oalert() {
 	sleep 1;
 	office white;
 }
+
+function lightsrandom() {
+	while true; do
+		color=$((1 + $RANDOM % 65535))
+		light=$((1 + $RANDOM % 7))
+
+		curl --silent --location --request PUT \
+		"http://$LIGHTS_IP/api/$LIGHTS_TOKEN/lights/$light/state" \
+		--header 'Content-Type: application/json' \
+		--data-raw '{ "on":true, "sat":254, "bri":254, "hue":'"$color"'}' > /dev/null
+
+		sleep 1
+	done
+}
