@@ -73,6 +73,7 @@ alias lscleanup="/System/Library/Frameworks/CoreServices.framework/Frameworks/La
 # Vagrant                               #
 #########################################
 alias vag="vagrant"
+alias vu="vagrant up; vagrant ssh"
 alias vup="vagrant up; vagrant provision; vagrant ssh"
 alias vp="vagrant provision"
 
