@@ -1,16 +1,31 @@
 #!/usr/bin/env bash
+#
+# Add a todo to Notion.
+#
+# needs these environment variables set:
+# NOTION_API_KEY
+# NOTION_TODO_ID
+# NOTION_WORK_TODO_ID
+
+# if "todo w this is a task" is called, then add it to the work todo db & remove the w.
+if [[ 'w' == "${1}" ]]; then
+	db_id="${NOTION_WORK_TODO_ID}"
+	shift
+else
+	db_id="${NOTION_TODO_ID}"
+fi
 
 text="$@"
 
 status=$(curl -sL 'https://api.notion.com/v1/pages' \
-	-H 'Authorization: Bearer '"$NOTION_API_KEY"'' \
+	-H 'Authorization: Bearer '"${NOTION_API_KEY}"'' \
 	-H "Content-Type: application/json" \
 	-H "Notion-Version: 2021-05-13" \
 	--data '{
 		"object": "page",
 		"parent": {
 			"type": "database_id",
-			"database_id": "'"$NOTION_TODO_ID"'"
+			"database_id": "'"${db_id}"'"
 		},
 		"archived": false,
 		"properties": {
@@ -21,7 +36,7 @@ status=$(curl -sL 'https://api.notion.com/v1/pages' \
 					{
 						"type": "text",
 						"text": {
-							"content": "'"$text"'",
+							"content": "'"${text}"'",
 							"link": null
             }
           }
@@ -34,5 +49,3 @@ if [ "error" = "$status" ]; then
 	echo "Error adding todo."
 	exit 1
 fi
-
-
