@@ -9,11 +9,13 @@
 
 export DOTFILES_PATH="$HOME/dotfiles"
 
+
 COMPLETION_WAITING_DOTS=true
 DISABLE_AUTO_UPDATE=true
 HYPHEN_INSENSITIVE=true
 
 unsetopt nomatch
+unsetopt flowcontrol
 
 setopt APPEND_HISTORY
 setopt HIST_FIND_NO_DUPS
@@ -34,6 +36,7 @@ plugins=(
 	lights
 	nvm-settings
 	rsync
+	speedycompinit
 	z
 	zf
 	zsh-nvm
