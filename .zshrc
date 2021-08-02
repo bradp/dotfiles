@@ -45,6 +45,7 @@ source "$DOTFILES_PATH"/.oh-my-zsh/oh-my-zsh.sh
 path+=(/usr/local/bin)
 path+=("$DOTFILES_PATH"/misc)
 path+=("$DOTFILES_PATH"/bin)
+path+=("$HOME"/.composer/vendor/bin)
 path+=("$HOME"/.yarn/bin)
 path+=("$HOME"/.cargo/bin)
 path+=("$HOME"/go/bin)
