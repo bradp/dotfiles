@@ -23,8 +23,8 @@ Save urls from text file list:
 	 $(basename "${BASH_SOURCE[0]}") file <file>
 
  Save a full site:
-	 $(basename "${BASH_SOURCE[0]}") <example.com>
-	 $(basename "${BASH_SOURCE[0]}") <http://example.com>
+	 $(basename "${BASH_SOURCE[0]}") site <example.com>
+	 $(basename "${BASH_SOURCE[0]}") site <http://example.com>
 
  Save urls from Pocket list:
 	$(basename "${BASH_SOURCE[0]}") pocket
@@ -35,6 +35,20 @@ Usage:
  [url]
 EOF
 	exit
+}
+
+function doarchive() {
+	curl --silent --location \
+	--request POST 'https://web.archive.org/save' \
+	--header 'Accept: application/json' \
+	--header "Authorization: LOW $ARCHIVE_ACCESS:$ARCHIVE_SECRET" \
+	--header 'Content-Type: application/x-www-form-urlencoded' \
+	--data-urlencode "url=$1" \
+	--data-urlencode 'capture_all=1' \
+	--data-urlencode 'capture_screenshot=1' \
+	--data-urlencode 'skip_first_archive=1' \
+	--data-urlencode 'delay_wb_availability=1' \
+	> /dev/null
 }
 
 __urlizeit() {
@@ -57,8 +71,8 @@ __checkavailable() {
 	--header "Authorization: LOW $ARCHIVE_ACCESS:$ARCHIVE_SECRET" \
 	"https://web.archive.org/save/status/user?_t=$RANDOM")
 
-	available=$(echo $userstatus | jq -r ".available")
-	processing=$(echo $userstatus | jq -r ".processing")
+	available=$(echo "$userstatus" | jq -r ".available")
+	processing=$(echo "$userstatus" | jq -r ".processing")
 }
 
 __archivethempages() {
@@ -81,17 +95,7 @@ __archivethempages() {
 			__checkavailable
 		done
 
-		curl --silent --location \
-		--request POST 'https://web.archive.org/save' \
-		--header 'Accept: application/json' \
-		--header "Authorization: LOW $ARCHIVE_ACCESS:$ARCHIVE_SECRET" \
-		--header 'Content-Type: application/x-www-form-urlencoded' \
-		--data-urlencode "url=$url" \
-		--data-urlencode 'capture_all=1' \
-		--data-urlencode 'capture_screenshot=1' \
-		--data-urlencode 'skip_first_archive=1' \
-		--data-urlencode 'delay_wb_availability=1' \
-		> /dev/null
+		doarchive $url
 
 		echo " ✓"
 	done
@@ -103,7 +107,7 @@ __archivethempages() {
 }
 
 _runurl() {
-	__urlizeit $1
+	__urlizeit "$1"
 	__maketmp
 
 	echo "$site" > "$tmpdir"/found_urls
@@ -135,9 +139,11 @@ _runfile() {
 }
 
 _runsite() {
-	__urlizeit $1
+	__urlizeit "$1"
 
 	echo -n "► Crawling internal links on $site  "
+
+	doarchive "$site"
 
 	__maketmp
 
@@ -156,12 +162,23 @@ _runsite() {
 
 _runpocket () {
 	echo -n "► Grabbing Pocket list  "
-
 	__maketmp
-	bash api pocket /get | jq -r ".list[].resolved_url" > "$tmpdir"/found_urls
+	bash api pocket /get | jq -r ".list[].resolved_url" > "$tmpdir"/found_urls && echo "✓"
+	__archivethempages
+	exit
+}
 
-	echo "✓"
+_runtabs () {
+	echo -n "► Grabbing Chrome tabs  "
+	__maketmp
+	bash ctabs > "$tmpdir"/found_urls && echo "✓"
+	__archivethempages
+	exit
+}
 
+_runbookmarks () {
+	echo -n "► Grabbing Chrome Bookmarks  "
+	bash cmarks > "$tmpdir"/found_urls && echo "✓"
 	__archivethempages
 	exit
 }
@@ -173,12 +190,14 @@ _runstatus() {
 
 
 while :; do
-	case "${1-}" in
+	case "${1-help}" in
 		-v | --verbose) set -x ;;
-		-h | --help) _usage ;;
+		-h | --help|help) _usage ;;
 		file) _runfile "${2-}" ;;
 		site) _runsite "${2-}" ;;
 		pocket) _runpocket ;;
+		tabs) _runtabs ;;
+		bookmarks) _runbookmarks ;;
 		status) _runstatus ;;
 		*) _runurl "$1" ;;
 	esac
