@@ -50,6 +50,8 @@ alias gc="git commit -m"
 alias gcb="git fetch && git checkout -b $@ origin/$@"
 alias gpre="git pull --rebase origin $1"
 
+alias current-branch="git rev-parse --abbrev-ref HEAD | tr -d '\n' | tr -d ' '"
+
 #########################################
 # Hide / Show files                     #
 #########################################
