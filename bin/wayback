@@ -1,7 +1,12 @@
 #!/usr/bin/env bash
 #
+# Save items to the wayback machine.
+#
+# needs these environment variables set:
+# ARCHIVE_ACCESS
+# ARCHIVE_SECRET
+#
 # get keys here https://archive.org/account/s3.php
-# set $ARCHIVE_ACCESS and $ARCHIVE_SECRET
 #
 # API docs: https://docs.google.com/document/d/1Nsv52MvSjbLb2PCpHlat0gkzw0EvtSgpKHu4mk0MnrA/edit
 

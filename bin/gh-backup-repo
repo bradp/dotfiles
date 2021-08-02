@@ -1,4 +1,9 @@
 #!/usr/bin/env bash
+#
+# Backup a github repo.
+#
+# needs these environment variables set:
+# MY_GH_TOKEN
 
 function error_bad_usage() {
 	echo "Usage: ghback <user>/<repo> [--keep, --meta]" 1>&2;
