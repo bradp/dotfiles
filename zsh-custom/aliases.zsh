@@ -17,6 +17,7 @@ alias scr="cd $HOME/Dropbox/Working/scratch"
 alias sites="cd $HOME/Sites"
 alias ww="cd $HOME/Dropbox/Working"
 alias ws="cd $HOME/Dropbox/Working/sites"
+alias vvv="cd $HOME/Dropbox/Working/vvv/www"
 
 #########################################
 # Replace commands                      #
