@@ -51,6 +51,12 @@ function checkout() {
 }
 
 ########################################
+# Backup pocket repos                  #
+########################################
+function backup-pocket-repos() {
+	api pocket /get | jq -r '.list | .[].resolved_url' | ag 'https://github' | sed 's/https:\/\/github.com\///g' | xargs -L 1 gh-backup-repo
+}
+########################################
 # Make scratch directory               #
 ########################################
 alias newdir="scratch"
