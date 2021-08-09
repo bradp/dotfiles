@@ -72,8 +72,8 @@ _files_to_symlink="
 .zshrc"
 
 
-mkdir -p .config
-mkdir -p .gnupg
+mkdir -p "$HOME/.config"
+mkdir -p "$HOME/.gnupg"
 
 # Symlink them up
 for f in $_files_to_symlink; do
