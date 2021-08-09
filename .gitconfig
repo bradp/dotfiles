@@ -175,3 +175,5 @@
 [tag]
     forceSignAnnotated = true
 	gpgSign = true
+[url "ssh://git@github.com/"]
+	insteadOf = https://github.com/

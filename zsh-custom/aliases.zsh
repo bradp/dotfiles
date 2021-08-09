@@ -17,7 +17,7 @@ alias scr="cd $HOME/Dropbox/Working/scratch"
 alias sites="cd $HOME/Sites"
 alias ww="cd $HOME/Dropbox/Working"
 alias ws="cd $HOME/Dropbox/Working/sites"
-alias vvv="cd $HOME/Dropbox/Working/vvv/www"
+alias vvv="cd $HOME/vvv/www"
 
 #########################################
 # Replace commands                      #
@@ -91,7 +91,7 @@ alias pcbf='phpcbf --standard=parbs $@'
 alias pcbfall='find . | grep .php | xargs phpcbf --standard=parbs --ignore=node_modules/'
 
 alias phpfixer="php-cs-fixer --config=$DOTFILES_PATH/.php-cs-fixer.php --allow-risky=yes --show-progress=dots"
-alias phpinsights="mv .phpcs.xml.dist phpcs.tmp; phpinsights --config-path=$DOTFILES_PATH/.phpinsights-config.php; mvphpcs.tmp .phpcs.xml.dist"
+alias phpinsights="phpinsights --config-path=$DOTFILES_PATH/.phpinsights-config.php"
 alias phpi="phpinsights"
 
 #########################################

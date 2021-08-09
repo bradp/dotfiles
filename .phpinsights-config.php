@@ -14,6 +14,11 @@ return [
         ],
     ],
     'remove' => [
+        PhpCsFixer\Fixer\Basic\BracesFixer::class,
+
+        PhpCsFixer\Fixer\Whitespace\NoSpacesInsideParenthesisFixer::class,
+        PhpCsFixer\Fixer\FunctionNotation\MethodArgumentSpaceFixer::class,
+        PhpCsFixer\Fixer\ArrayNotation\NoWhitespaceBeforeCommaInArrayFixer::class,
         PhpCsFixer\Fixer\FunctionNotation\VoidReturnFixerL::class,
         SlevomatCodingStandard\Sniffs\TypeHints\ReturnTypeHintSniff::class,
         SlevomatCodingStandard\Sniffs\TypeHints\ParameterTypeHintSniff::class,
