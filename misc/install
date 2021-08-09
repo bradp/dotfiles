@@ -71,6 +71,10 @@ _files_to_symlink="
 .vimrc
 .zshrc"
 
+
+mkdir -p .config
+mkdir -p .gnupg
+
 # Symlink them up
 for f in $_files_to_symlink; do
 	echo "${_colors_cyan}${_dotfiles_dir}/${f}${_colors_reset} ${_colors_bold}→${_colors_reset} ${_colors_cyan}$HOME/${f}${_colors_reset}"
