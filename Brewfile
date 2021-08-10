@@ -51,17 +51,14 @@ cask 'alfred'
 cask 'backblaze'
 cask "google-chrome"
 cask 'bettertouchtool'
-cask 'cleanmymac'
 cask 'dash'
 cask 'docker'
 cask 'dropbox'
 cask 'fantastical'
 cask 'firefox'
-cask 'firefox-developer-edition'
 cask 'imageoptim'
 cask 'kaleidoscope'
 cask 'kap'
-cask 'macdown'
 cask 'moom'
 cask 'netnewswire'
 cask 'notion'
@@ -105,6 +102,5 @@ mas "Pixelmator", id: 407963104
 mas "Pocket", id: 568494494
 mas "Poolsuite FM", id: 1514817810
 mas "Slack", id: 803453959
-mas "Textual IRC Client", id: 1262957439
 mas "The Unarchiver", id: 425424353
 mas "Xcode", id: 497799835
