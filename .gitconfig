@@ -11,7 +11,7 @@
 	name = Brad Parbs
 	email = brad@bradparbs.com
 	github = bradp
-    signingKey = 2C161DEC802F4922
+    signingKey = 1C711FC4DC10B17E
 
 [alias]
     a = add
