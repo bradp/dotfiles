@@ -45,6 +45,7 @@ plugins=(
 
 source "$DOTFILES_PATH"/.oh-my-zsh/oh-my-zsh.sh
 
+PATH="/bin"
 path+=(/usr/local/bin)
 path+=("$DOTFILES_PATH"/misc)
 path+=("$DOTFILES_PATH"/bin)
