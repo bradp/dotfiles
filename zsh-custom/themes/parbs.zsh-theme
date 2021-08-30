@@ -200,7 +200,8 @@ __prompt_path() {
 }
 
 __git_remote_warning() {
-	if __git_prompt_git rev-parse --git-dir &> /dev/null; then
+	return
+	if __git_prompt_git rev-parse --max-count=1 --git-dir &> /dev/null; then
 		echo "$(git_prompt_remote) "
 	fi
 }
@@ -211,6 +212,10 @@ __git_info() {
 
 __prompt_color() {
 	echo "%{%(?.%{$FG[082]%}.%{$FG[196]%})%}"
+}
+
+__() {
+	echo ""
 }
 
 PROMPT='$(__prompt_path) $(__icons) %{$reset_color%}

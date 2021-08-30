@@ -11,37 +11,53 @@
 #########################################
 # Make a directory and cd into it       #
 #########################################
-function mkd()  { mkdir -p -- "$@" && cd -- "$@" }
+function mkd()  {
+	mkdir -p -- "$@" && cd -- "$@"
+}
 
 #########################################
 # cd to the root of git directory       #
 #########################################
-function root() { while ! [ -d .git ]; do cd ..; done }
+function root() {
+	while ! [ -d .git ]; do
+		cd ..
+	done
+}
 
 #########################################
 # Grep for a running process            #
 #########################################
-function pa() { ps aux | ag "$*"; }
+function pa() {
+	ps aux | ag "$*"
+}
 
 #########################################
 # Grep for a history entry              #
 #########################################
-function ha() { history | ag "$*"; }
+function ha() {
+	history | ag "$*"
+}
 
 #########################################
 # Add a spacer to the Dock              #
 #########################################
-function add-dock-spacer() { defaults write com.apple.dock persistent-apps -array-add '{"tile-type"="spacer-tile";}'; killall Dock; }
+function add-dock-spacer() {
+	defaults write com.apple.dock persistent-apps -array-add '{"tile-type"="spacer-tile";}'; killall Dock
+}
 
 #########################################
 # Run httrack on a website              #
 #########################################
-function htrack() {  httrack "https://${1}/" -O "${1//\//-}" "+*.${1}/*" --depth=1000 --display --disable-security-limits --max-rate=10000000000 -c256 -I0; }
+function htrack() {
+	httrack "https://${1}/" -O "${1//\//-}" "+*.${1}/*" --depth=1000 --display --disable-security-limits --max-rate=10000000000 -c256 -I0
+}
 
 #########################################
 # Create a directory like  2021-07-18   #
 #########################################
-function dirdate() { mkdir $(date +%F); }
+function dirdate() {
+	mkdir $(date +%F)
+}
 
 #########################################
 # Git checkout w/ fzf                   #
@@ -128,6 +144,12 @@ function unbak() {
         echo "No .bak extension, ignoring: $target"
     fi
 }
+
+function _unbak() {
+    compadd "${(@)$(ls *.bak)}"
+}
+
+compdef _unbak unbak
 
 #########################################
 # Get battery percent                   #
