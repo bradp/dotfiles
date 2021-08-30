@@ -18,7 +18,7 @@ function send() {
 	local url
 
 	url=${1}
-	title=${2:''}
+	title=${2}
 
 	echo "Sending to Notion: ${title} - ${url}"
 
