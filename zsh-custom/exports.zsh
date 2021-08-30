@@ -66,4 +66,3 @@ sys  : $fg[blue]%S$reset_color
 real : $fg[blue]%E$reset_color
 CPU  : $fg[blue]%P$reset_color"
 
-export VVV_SKIP_LOGO=1

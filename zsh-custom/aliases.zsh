@@ -18,6 +18,7 @@ alias sites="cd $HOME/Sites"
 alias ww="cd $HOME/Dropbox/Working"
 alias ws="cd $HOME/Dropbox/Working/sites"
 alias vvv="cd $HOME/Sites/www"
+alias www="cd $HOME/Sites/www"
 
 #########################################
 # Replace commands                      #
