@@ -88,6 +88,14 @@ function _hook() {
 compdef _hook hook
 
 ########################################
+# git commit -m "" --no-verify         #
+########################################
+function gcom() {
+    message=$@
+    git commit -m "$message" --no-verify
+}
+
+########################################
 # Backup pocket repos                  #
 ########################################
 function backup-pocket-repos() {
