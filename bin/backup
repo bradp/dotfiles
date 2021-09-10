@@ -155,6 +155,16 @@ function backup_pocket() {
 }
 
 #######################################
+# Backup ~/Sites
+#######################################
+function backup_www() {
+	display_start "" "www"
+
+	rclone copy --fast-list --progress --copy-links --checkers 50 --transfers 100 "$HOME/Sites" b2:parbs-www
+
+	display_done
+}
+#######################################
 # Backup sites to the wayback machine.
 #######################################
 function backup_wayback() {
@@ -198,6 +208,8 @@ function display_help() {
 	echo ""
 	echo "${green}  •   all${reset}"
 	echo ""
+	echo "  •   www"
+	echo ""
 	echo "  •   xavier"
 	echo ""
 	echo "  •   pihole"
@@ -237,6 +249,7 @@ case "${1-help}" in
 	-h | --help) display_help ;;
 	all) backup_all ;;
 	xavier) backup_xavier ;;
+	www) backup_www ;;
 	pihole) backup_pihole ;;
 	sdr) backup_sdr ;;
 	screen) backup_screen ;;
