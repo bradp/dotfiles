@@ -95,6 +95,7 @@ alias phpfixer="php-cs-fixer --config=$DOTFILES_PATH/.php-cs-fixer.php --allow-r
 alias phpinsights="phpinsights --config-path=$DOTFILES_PATH/.phpinsights-config.php"
 alias phpi="phpinsights"
 
+alias artisan="php artisan"
 #########################################
 # youtube-dl                             #
 #########################################
