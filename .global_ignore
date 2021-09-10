@@ -85,6 +85,7 @@ ___*
 *.patch
 *.diff
 .php-cs-fixer.cache
+.php_cs.cache
 
 # error logs
 npm-debug.log
