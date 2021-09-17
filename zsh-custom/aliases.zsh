@@ -98,10 +98,6 @@ alias pcsall='find . | grep .php | xargs phpcs --standard=parbs --ignore=node_mo
 alias pcbf='phpcbf --standard=parbs $@'
 alias pcbfall='find . | grep .php | xargs phpcbf --standard=parbs --ignore=node_modules/'
 
-alias phpfixer="php-cs-fixer --config=$DOTFILES_PATH/.php-cs-fixer.php --allow-risky=yes --show-progress=dots"
-alias phpinsights="phpinsights --config-path=$DOTFILES_PATH/.phpinsights-config.php"
-alias phpi="phpinsights"
-
 #########################################
 # youtube-dl                             #
 #########################################
