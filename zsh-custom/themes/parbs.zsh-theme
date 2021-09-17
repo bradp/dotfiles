@@ -148,7 +148,7 @@ __file_icon() {
 		pkgjson=$(jq -r '.version' package.json 2>/dev/null)
 
 		if [[ "$pkgjson" != "null" && "$pkgjson" != "" ]]; then
-			js_icon="${js_icon}%{$FG[234]%}${pkgjson} "
+			js_icon="${js_icon}%{$FG[250]%}${pkgjson} "
 		fi
 
 		display="${display}${js_icon}"
@@ -161,7 +161,7 @@ __file_icon() {
 			composer_ver=$(jq -r '.version' composer.json 2>/dev/null)
 
 			if [[ "$composer_ver" != "null" ]]; then
-				php_icon="${php_icon}%{$FG[234]%}${composer_ver} "
+				php_icon="${php_icon}%{$FG[250]%}${composer_ver} "
 			fi
 		fi
 
