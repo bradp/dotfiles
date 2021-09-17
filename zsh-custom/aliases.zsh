@@ -39,10 +39,16 @@ alias v=vim
 alias vi=vim
 alias x="exa -Flam --git --color-scale --icons"
 
+########################################
+# Misc                                 #
+########################################
+
 alias f="fzf --preview 'bat --color=always --style=numbers --line-range=:500 {}'"
 alias kdiff="git difftool -y -t Kaleidoscope"
 alias lss="ls -Gal"
 alias qlook="qlmanage -p 2>/dev/null"
+alias artisan="php artisan"
+alias comprun="composer run"
 
 #########################################
 # Git                                   #
@@ -96,7 +102,6 @@ alias phpfixer="php-cs-fixer --config=$DOTFILES_PATH/.php-cs-fixer.php --allow-r
 alias phpinsights="phpinsights --config-path=$DOTFILES_PATH/.phpinsights-config.php"
 alias phpi="phpinsights"
 
-alias artisan="php artisan"
 #########################################
 # youtube-dl                             #
 #########################################
