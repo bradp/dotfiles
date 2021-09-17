@@ -82,7 +82,7 @@ function _run_start() {
     echo ""
 
 
-    osascript -e 'tell application "Chrome" to activate' > /dev/null
+    osascript -e 'tell application "Google Chrome" to activate' > /dev/null
     osascript -e 'tell application "Airmail" to activate' > /dev/null
     osascript -e 'tell application "Slack" to activate' > /dev/null
     osascript -e 'tell application "Visual Studio Code" to activate' > /dev/null
