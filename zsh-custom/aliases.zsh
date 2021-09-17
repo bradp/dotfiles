@@ -14,6 +14,7 @@
 alias box="cd $HOME/Dropbox"
 alias goo="cd $HOME/go/src/github.com/bradp"
 alias scr="cd $HOME/Dropbox/Working/scratch"
+alias scrw="cd $HOME/Dropbox/Working/scratch-wp"
 alias sites="cd $HOME/Sites"
 alias ww="cd $HOME/Dropbox/Working"
 alias ws="cd $HOME/Dropbox/Working/sites"
