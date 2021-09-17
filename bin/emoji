@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+curl -sSL https://raw.githubusercontent.com/b4b4r07/emoji-cli/master/dict/emoji.json | \
+	jq -r '.[] | [ .emoji, .description, "\(.aliases | @csv)", "\(.tags | @csv)" ] | @tsv ' | \
+	fzf | \
+	cut -c 1 | tr -d '\n' | \
+	pbcopy
