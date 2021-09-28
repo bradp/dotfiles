@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+#
+# Download a youtube video and push it to b2
+#
 
 cd /tmp || exit
 

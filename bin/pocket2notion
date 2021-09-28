@@ -1,14 +1,17 @@
 #!/usr/bin/env bash
 #
 # Export all pocket items to a notion DB.
-# $ pocket2notion - all current items in list
-# $ pocket2notion archive - all items in archive.
+#
+# Usage:
+#   pocket2notion - all current items in list
+#   pocket2notion archive - all items in archive.
 #
 # needs these environment variables set:
 # POCKET_CONSUMER_KEY
 # POCKET_ACCESS_TOKEN
 # NOTION_API_KEY
 # NOTION_POCKET_ID
+#
 
 #######################################
 # Send a url to Notion Pocket DB

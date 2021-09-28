@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 #
-# Add sr.ht remote repo to origin push for a repo & push everything to it.
+# Add sr.ht as a secondary origin remote to a repo, to allow for pushing to both at once.
+#
 
 if [[ -z "$1" ]]; then
 	name=$(basename "$PWD")

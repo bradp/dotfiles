@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 #
 # Display public key and copy to clipboard.
+#
 # Defaults to id_rsa.pub, but can pass in others.
+#
 
 ident=${1:-id_rsa}
 

@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 #
+# If a command starts with `$`, just run it.
+#
 # props https://github.com/cowboy/dotfiles/blob/master/bin/%24
 
 echo '# stop copying and pasting from the internet'

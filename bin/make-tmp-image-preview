@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+#
+# Convert an image to a png and return the tmp path.
+#
 
 name="/tmp/i_$(date -u +"%d")_$(md5 -q -s "$1").png"
 

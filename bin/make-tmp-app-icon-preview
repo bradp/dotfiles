@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+#
+# Generate a png of an app icon and return the path.
+#
 
 customIconName="$(echo "${1}".png | sed 's#System##' | sed 's#Applications##' | sed 's#.app##' | sed 's# #-#g' | sed 's#/##g' | tr '[:upper:]' '[:lower:]')"
 customIconPath="$DOTFILES_PATH/misc/icons/${customIconName}"

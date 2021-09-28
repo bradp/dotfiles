@@ -2,12 +2,18 @@
 #
 # API helper.
 #
-# needs these environment variables set:
+# Usage:
+#   api <target> <method>
+#   api github /repos
+#   api pocket /get
+#
+# Needs these environment variables set:
 # MY_GH_TOKEN
 # POCKET_CONSUMER_KEY
 # POCKET_ACCESS_TOKEN
 # MOVIEDB_KEY
 # OPENWEATHER_API_KEY
+#
 
 
 function __api_github() {

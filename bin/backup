@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 #
 # Run a variety of backups for different targets.
-
+#
 # When adding target, add to `all` as well as single command.
+#
 
 #######################################
 # Set color helpers for output.

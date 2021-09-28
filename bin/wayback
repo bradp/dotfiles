@@ -6,9 +6,10 @@
 # ARCHIVE_ACCESS
 # ARCHIVE_SECRET
 #
-# get keys here https://archive.org/account/s3.php
+# Get keys here https://archive.org/account/s3.php
 #
 # API docs: https://docs.google.com/document/d/1Nsv52MvSjbLb2PCpHlat0gkzw0EvtSgpKHu4mk0MnrA/edit
+#
 
 _usage() {
 	cat <<EOF

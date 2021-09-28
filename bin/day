@@ -4,6 +4,7 @@
 #
 # needs these enviroment variables to be set:
 # OPENWEATHER_API_KEY
+#
 
 #######################################
 # Output the weather for a given day.

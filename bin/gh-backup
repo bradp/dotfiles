@@ -4,6 +4,7 @@
 #
 # needs these environment variables set:
 # MY_GH_TOKEN
+#
 
 function goto_temp_dir() {
 	tempfolder="$RANDOM"
