@@ -1,6 +1,0 @@
-#!/usr/bin/env bash
-#
-# Grab all Chrome booksmarks and output as a json file.
-
-jq -r 'def ancestors: while(. | length >= 2; del(.[-1,-2]));
-	. as $in | paths(.url?) as $key | $in | getpath($key) | {name,url, path: [$key[0:-2] | ancestors as $a | $in | getpath($a) | .name?] | reverse | join("/") } | .url' "$HOME/Library/Application Support/Google/Chrome/Default/Bookmarks"
