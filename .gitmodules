@@ -4,9 +4,6 @@
 [submodule "zsh-custom/plugins/forgit"]
 	path = zsh-custom/plugins/forgit
 	url = https://github.com/wfxr/forgit.git
-[submodule "zsh-custom/plugins/fzf-tab"]
-	path = zsh-custom/plugins/fzf-tab
-	url = https://github.com/Aloxaf/fzf-tab.git
 [submodule "zsh-custom/plugins/zsh-nvm"]
 	path = zsh-custom/plugins/zsh-nvm
 	url = https://github.com/lukechilds/zsh-nvm
