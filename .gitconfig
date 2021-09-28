@@ -55,12 +55,6 @@
 [branch]
 	autosetupmerge = true
 
-[core]
-	editor = vim
-	excludesfile = /Users/brad/dotfiles/.global_ignore
-    preloadindex = true
-    abbrev = 12
-
 [color "branch"]
     current = red reverse
     local = blue
@@ -79,6 +73,12 @@
 
 [commit]
 	gpgSign = true
+
+[core]
+	editor = vim
+	excludesfile = /Users/brad/dotfiles/.global_ignore
+    preloadindex = true
+    abbrev = 12
 
 [credential]
 	helper = osxkeychain
@@ -177,5 +177,6 @@
 [tag]
     forceSignAnnotated = true
 	gpgSign = true
+
 [url "ssh://git@github.com/"]
 	insteadOf = https://github.com/
