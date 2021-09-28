@@ -46,9 +46,8 @@ alias x="exa -Flam --git --color-scale --icons"
 alias f="fzf --preview 'bat --color=always --style=numbers --line-range=:500 {}'"
 alias kdiff="git difftool -y -t Kaleidoscope"
 alias lss="ls -Gal"
-alias qlook="qlmanage -p 2>/dev/null"
+alias ql="qlmanage -p 2>/dev/null"
 alias artisan="php artisan"
-alias comprun="composer run"
 
 #########################################
 # Git                                   #
@@ -61,6 +60,8 @@ alias gpre="git pull --rebase origin $1"
 alias gcm="git commit -m $@"
 
 alias current-branch="git rev-parse --abbrev-ref HEAD | tr -d '\n' | tr -d ' '"
+
+alias forgit_checkout_branch="gco"
 
 #########################################
 # Hide / Show files                     #
@@ -101,10 +102,8 @@ alias pcbfall='find . | grep .php | xargs phpcbf --standard=parbs --ignore=node_
 #########################################
 # youtube-dl                             #
 #########################################
-
-alias yt="youtube-dl --mark-watched $@"
-alias dyt="cd ~/Desktop/; yt $@"
-alias myt="cd ~/Documents/Media/YT; yt $@"
+alias dyt="ytdl '$HOME/Desktop'"
+alias myt="ytdl $HOME/Dropbox/Documents/Backups/Media"
 
 #########################################
 # Fun                                   #

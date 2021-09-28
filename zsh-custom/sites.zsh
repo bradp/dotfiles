@@ -13,20 +13,20 @@
 # site <site name>
 # s <site name>
 
-site() {
-    cd ~/Sites/$1/;
+function site() {
+    cd "$HOME/Sites/www/$1/content/";
 }
 
 _site() {
-    _files -W ~/Sites/ -/;
+    _files -W ~/Sites/www -/;
 }
 
-s() {
-    cd ~/Dropbox/Working/sites/$1/;
+function s() {
+    cd "$HOME/Dropbox/Working/sites/$1/";
 }
 
 _s() {
-    _files -W ~/Dropbox/Working/sites/ -/;
+    _files -W "$HOME/Dropbox/Working/sites/" -/;
 }
 
 compdef _site site

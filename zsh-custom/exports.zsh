@@ -23,7 +23,12 @@ export EDITOR="vim";
 export FZF_COMPLETION_OPTS='--border --info=inline'
 export FZF_COMPLETION_TRIGGER=',,'
 export FZF_DEFAULT_COMMAND='ag -l --nocolor --hidden -g ""'
-export FZF_DEFAULT_OPTS="--height=90% --info=inline --border --margin=1 --padding=1 --prompt='▶ ' --pointer='▶' --color 'fg:#665c54,fg+:#ebdbb2,hl:#fe8019,bg:#282828,bg+:#3c3836,preview-bg:#223344,border:#fbf1c7'"
+export FZF_DEFAULT_OPTS="--height=90% --info=inline --border --margin=1 --padding=1 --prompt='▶ ' --pointer='▶' --marker='→ ' --cycle --layout=reverse"
+export FZF_DEFAULT_OPTS=$FZF_DEFAULT_OPTS'
+ --color=fg:#cbccc6,bg:#1f2430,hl:#707a8c
+ --color=fg+:#707a8c,bg+:#191e2a,hl+:#ffcc66
+ --color=info:#73d0ff,prompt:#707a8c,pointer:#cbccc6
+ --color=marker:#73d0ff,spinner:#73d0ff,header:#d4bfff'
 
 export GATSBY_TELEMETRY_DISABLED=1
 
@@ -65,4 +70,3 @@ user : $fg[blue]%U$reset_color
 sys  : $fg[blue]%S$reset_color
 real : $fg[blue]%E$reset_color
 CPU  : $fg[blue]%P$reset_color"
-

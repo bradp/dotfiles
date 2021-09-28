@@ -11,16 +11,23 @@
 #########################################
 # Make a directory and cd into it       #
 #########################################
-function mkd()  {
+function mkd() {
 	mkdir -p -- "$@" && cd -- "$@"
+}
+
+#########################################
+# Create a directory like  2021-07-18   #
+#########################################
+function dirdate() {
+	mkdir $(date +%F)
 }
 
 #########################################
 # cd to the root of git directory       #
 #########################################
 function root() {
-	while ! [ -d .git ]; do
-		cd ..
+	while ! [ -d .git ];
+		do cd ..
 	done
 }
 
@@ -42,7 +49,8 @@ function ha() {
 # Add a spacer to the Dock              #
 #########################################
 function add-dock-spacer() {
-	defaults write com.apple.dock persistent-apps -array-add '{"tile-type"="spacer-tile";}'; killall Dock
+	defaults write com.apple.dock persistent-apps -array-add '{"tile-type"="spacer-tile";}'
+	killall Dock
 }
 
 #########################################
@@ -52,47 +60,18 @@ function htrack() {
 	httrack "https://${1}/" -O "${1//\//-}" "+*.${1}/*" --depth=1000 --display --disable-security-limits --max-rate=10000000000 -c256 -I0
 }
 
-#########################################
-# Create a directory like  2021-07-18   #
-#########################################
-function dirdate() {
-	mkdir $(date +%F)
-}
-
-#########################################
-# Git checkout w/ fzf                   #
-#########################################
-function checkout() {
-    git checkout $(git branch | grep -v $(git rev-parse --abbrev-ref HEAD) | fzf)
-}
-
 ########################################
 # Run a git hook                       #
 ########################################
 function hook() {
-    CURRENT_DIR=$(pwd)
-    root
+	local current_dir=$(pwd)
+	root
 
-    if [ -f .git/hooks/$1 ]; then
-        . .git/hooks/$1
-    fi
+	if [ -f .git/hooks/$1 ]; then
+		. .git/hooks/$1
+	fi
 
-    cd $CURRENT_DIR
-}
-
-function _hook() {
-    root
-    compadd "${(@)${(f)$(ls .git/hooks | grep -v "\.sample")}}"
-}
-
-compdef _hook hook
-
-########################################
-# git commit -m "" --no-verify         #
-########################################
-function gcom() {
-    message=$@
-    git commit -m "$message" --no-verify
+	cd $current_dir
 }
 
 ########################################
@@ -100,28 +79,6 @@ function gcom() {
 ########################################
 function backup-pocket-repos() {
 	api pocket /get | jq -r '.list | .[].resolved_url' | ag 'https://github' | sed 's/https:\/\/github.com\///g' | xargs -L 1 gh-backup-repo
-}
-
-########################################
-# Make scratch directory               #
-########################################
-alias newdir="scratch"
-alias scrath="scratch"
-
-function scratch() {
-	newdir="${1}"
-
-	cd "$HOME/Dropbox/Working/scratch" || exit 1
-
-	if [[ -d "${newdir}" ]]; then
-
-		echo "${newdir} already exists"
-		exit 1
-	fi
-
-	mkdir "${newdir}"
-
-	cd "${newdir}"
 }
 
 #########################################
@@ -149,11 +106,11 @@ function up() {
 # https://github.com/shazow/dotfiles/   #
 #########################################
 function bak() {
-    declare target=$1;
-    if [[ "${target:0-1}" = "/" ]]; then
-        target=${target%%/}; # Strip trailing / of directories
-    fi
-    mv -v $target{,.bak}
+	declare target=$1;
+	if [[ "${target:0-1}" = "/" ]]; then
+		target=${target%%/}; # Strip trailing / of directories
+	fi
+	mv -v $target{,.bak}
 }
 
 #########################################
@@ -162,30 +119,24 @@ function bak() {
 # https://github.com/shazow/dotfiles/   #
 #########################################
 function unbak() {
-    declare target=$1;
-    if [[ "${target:0-1}" = "/" ]]; then
-        # Strip trailing / of directories
-        target="${target%%/}"
-    fi
+	declare target=$1;
+	if [[ "${target:0-1}" = "/" ]]; then
+		# Strip trailing / of directories
+		target="${target%%/}"
+	fi
 
-    if [[ "${target:0-4}" = ".bak" ]]; then
-        mv -v "$target" "${target%%.bak}"
-    else
-        echo "No .bak extension, ignoring: $target"
-    fi
+	if [[ "${target:0-4}" = ".bak" ]]; then
+		mv -v "$target" "${target%%.bak}"
+	else
+		echo "No .bak extension, ignoring: $target"
+	fi
 }
-
-function _unbak() {
-    compadd "${(@)$(ls *.bak)}"
-}
-
-compdef _unbak unbak
 
 #########################################
 # Get battery percent                   #
 #########################################
 function battery() {
-	batt=$(pmset -g batt)
+	local batt=$(pmset -g batt)
 	batt=($(echo "${batt}" | tr '	' '\n'))
 	percent="${batt[8]}"
 	percent=${percent//\;/}
@@ -194,64 +145,89 @@ function battery() {
 }
 
 #########################################
-# Create a new chassis site             #
+# Output a horizontal line              #
 #########################################
-function newchassis() {
-    target="${HOME}/Sites/${1}"
+function hr() {
+	echo ""
+	echo -ne "  \033[34m\033[0m"
 
-    if [[ -d "${target}" ]]; then
-        echo "$(tput setaf 1)${target} already exists, exiting.$(tput gr0)"
-        exit 1
-    fi
+	echo -ne "\033[44m"
+	for i in $(seq 1 $(echo $(tput cols) - 6 | bc)); do
+		echo -n " "
+	done
+	echo -ne "\033[0m"
 
-    git clone --recursive --single-branch --depth 1 https://github.com/Chassis/Chassis "${target}"
-    cd "${target}" || exit
-    rm -rf ./git/
+	echo -ne "\033[34m  \033[0m"
+}
 
-    vagrant up --provision
+#########################################
+# youtube-dl helpers                    #
+#########################################
+function ytdl() {
+	local current_dir=$(pwd)
+	local video_url="$1"
+
+	if [ ! -z "$2" ]; then
+		video_url="$2"
+
+		cd "$1" || return
+	fi
+
+	yt-dlp --mark-watched --embed-subs --embed-metadata --sponsorblock-remove sponsor,selfpromo -o '%(title)s.%(id)s.%(ext)s' "$video_url"
+
+	cd "$current_dir"
+}
+
+#########################################
+# Clean filenames                       #
+# Removes spaces and lowercases it      #
+#########################################
+function clean-filename() {
+	local new_name="${1// /-}"
+	new_name="$( echo "$new_name" | tr '[:upper:]' '[:lower:]' )"
+
+	if [ "$new_name" != "$1" ]; then
+		mv -v "$1" "${new_name}"
+	else
+		echo "Skipping $1 → $new_name"
+	fi
 }
 
 #########################################
 # Purge Cloudflare cache                #
 #########################################
 function purge-cloudflare-cache() {
-    curl -X POST "https://api.cloudflare.com/client/v4/zones/$1/purge_cache" \
-    -H "Authorization: Bearer $CLOUDFLARE_TOKEN" \
-    -H "Content-Type:application/json" \
-    --data '{"purge_everything":true}'
+	curl -X POST "https://api.cloudflare.com/client/v4/zones/$1/purge_cache" \
+	-H "Authorization: Bearer $CLOUDFLARE_TOKEN" \
+	-H "Content-Type:application/json" \
+	--data '{"purge_everything":true}'
 }
 
 #########################################
 # Deployments for hugo sites            #
 #########################################
 function deploy() {
-    site=${1:-$(basename $(pwd))}
+	local site=${1:-$(basename $(pwd))}
 
-    # go to the site dir, or use the one we're in
-    cd "$HOME/Dropbox/Working/sites/${site}" || exit
+	# go to the site dir, or use the one we're in
+	cd "$HOME/Dropbox/Working/sites/${site}" || exit
 
-    # clean up files
-    rm .DS_Store 2> /dev/null
+	# clean up files
+	rm .DS_Store 2> /dev/null
 
-    # build the site
-    hugo --gc --minify --environment production
+	# build the site
+	hugo --gc --minify --environment production
 
-    # fix hugo's breaking of timestamps
-    if [[ -d "public" ]]; then
-        touch public
-    fi
+	# fix hugo's breaking of timestamps
+	if [[ -d "public" ]]; then
+		touch public
+	fi
 
-    # push it up
-    rsync -avz --verbose --human-readable --progress --delete public/ root@"$XAVIER":/var/www/"$1"/html/
+	# push it up
+	rsync -avz --verbose --human-readable --progress --delete public/ root@"$XAVIER":/var/www/"$1"/html/
 
-    # bust the cache
-    if [ "$SITE" = "bradparbs.com" ]; then
-        purge-cloudflare-cache "$BP_CLOUD_FLARE_ZONE";
-    fi
+	# bust the cache
+	if [ "$SITE" = "bradparbs.com" ]; then
+		purge-cloudflare-cache "$BP_CLOUD_FLARE_ZONE";
+	fi
 }
-
-_deploy() {
-    _files -W $HOME/Dropbox/Working/sites/ -/;
-}
-
-compdef _deploy deploy
