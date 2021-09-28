@@ -20,7 +20,12 @@ function __api_github() {
 }
 
 function __api_pocket() {
-  curl -sL "https://getpocket.com/v3${2}?consumer_key=${POCKET_CONSUMER_KEY}&access_token=${POCKET_ACCESS_TOKEN}"
+  args="${3}"
+  if [[ ! -z "${args}" ]]; then
+    args="&${args}"
+  fi
+
+  curl -sL "https://getpocket.com/v3/${2}?consumer_key=${POCKET_CONSUMER_KEY}&access_token=${POCKET_ACCESS_TOKEN}${args}"
 }
 
 function __api_movie() {
