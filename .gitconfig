@@ -133,6 +133,9 @@
 [gitcvs]
     commitMsgAnnotation = ""
 
+[gpg]
+	program = /usr/local/MacGPG2/bin/gpg
+
 [help]
 	autocorrect = 1
     format = html
