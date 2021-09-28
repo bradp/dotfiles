@@ -16,7 +16,7 @@
 #######################################
 # Send a url to Notion Pocket DB
 #######################################
-function send() {
+function _send() {
 	local title
 	local url
 
@@ -74,5 +74,5 @@ echo "$items" | while IFS="" read -r i || [ -n "$i" ]; do
   	url="${i%====*}"
 	title="${i#*====*}"
 
-	send "${url}" "${title}"
+	_send "${url}" "${title}"
 done
