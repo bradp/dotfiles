@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+name="/tmp/i_$(date -u +"%d")_$(md5 -q -s "$1").png"
+
+convert -background white "$1" "/tmp/i_$(date -u +"%d")_$(md5 -q -s "$1").png" && echo "/tmp/i_$(date -u +"%d")_$(md5 -q -s "$1").png"
+
+echo "$name"

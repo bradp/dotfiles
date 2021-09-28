@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+customIconName="$(echo "${1}".png | sed 's#System##' | sed 's#Applications##' | sed 's#.app##' | sed 's# #-#g' | sed 's#/##g' | tr '[:upper:]' '[:lower:]')"
+customIconPath="$DOTFILES_PATH/misc/icons/${customIconName}"
+
+if [ -f "$customIconPath" ]; then
+	echo "$customIconPath"
+	exit
+fi
+
+iname=$(defaults read "${1}/Contents/Info" CFBundleIconFile | sed 's#.icns##')
+iname="${1}/Contents/Resources/${iname}.icns"
+
+if [ ! -f "/tmp/${customIconName}" ]; then
+	sips -s format png --resampleHeightWidthMax 150 "${iname}" --out "/tmp/${customIconName}" > /dev/null 2>&1
+fi
+
+echo "/tmp/${customIconName}"
