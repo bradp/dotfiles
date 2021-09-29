@@ -43,11 +43,19 @@ function _api_weather() {
   curl -sl "https://api.openweathermap.org/data/2.5/weather?${2}&APPID=${OPENWEATHER_API_KEY}"
 }
 
+function _list() {
+  echo "github"
+  echo "pocket"
+  echo "movie"
+  echo "weather"
+}
+
 case $1 in
   github | gh) _api_github "$@" ;;
   pocket) _api_pocket "$@" ;;
   movie) _api_movie "$@" ;;
   weather) _api_weather "$@" ;;
+  --list) _list ;;
   *)
     echo "usage: api github [page] [per_page]"
     echo "  api gh /repos/user/repo/commits 3 40"
