@@ -22,6 +22,8 @@ typeset -A ZSH_HIGHLIGHT_PATTERNS
 ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern cursor)
 ZSH_HIGHLIGHT_PATTERNS=('rm -rf *' 'fg=white,bold,bg=red' 'trash' 'underline,fg=red')
 
+zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
+zstyle ':completion:*:git-checkout:*' sort false
 
 DOTFILES_PATH=$HOME/dotfiles
 ZSH_CUSTOM=$DOTFILES_PATH/zsh-custom
@@ -33,6 +35,7 @@ plugins=(
 	fzf
 	git-extras
 	rsync
+	parbs-completions
 	parbs-nvm-settings
 	parbs-lights
 	speedycompinit
