@@ -29,7 +29,9 @@ function gtag() {
 	local current=$(git describe --tags --abbrev=0 | sed 's#v##')
 	local new=$(echo "$current" | awk -F '.' '{FS="."; OFS="."; $3++; print $0; $2++; $3=0; print $0; $1++; $2=0; print $0}' | fzf --height=5 --color=16 --border=none --info=hidden --header="Current Version: $current" --print-query)
 
-	print -z git tag -a "${new}" -m \"Version "${new}"\"
+	new=${new//$'\n'/}
+	
+	print -z git tag -a ${new} -m \"Version ${new}\"
 }
 
 
