@@ -163,5 +163,55 @@ function falias() {
 # Run a function                        #
 #########################################
 function ffunc() {
-	print -z "$(functions | grep -E -e "^([^_^$(printf '\t')^\s])+? (?:\(\) {)" | cut -d ' ' -f1 | fzf --query="${1}" --select-1 --prompt="   function: " --color=dark --color='gutter:black,bg+:black,prompt:gray,info:black' --preview-window=right,70% --preview 'if [ -z $ZSH_CUSTOM ]; then source .zshrc; fi; which {1} | bat --color=always --style=numbers -l zsh') "
+	local func=$(functions | \
+	grep -E -e "^([^_^$(printf '\t')^\s])+? (?:\(\) {)" | \
+	cut -d ' ' -f1 | \
+	fzf --prompt="   function: " --color=dark
+	--color='gutter:black,bg+:black,prompt:gray,info:black'
+	--preview-window=right,70%
+	--preview 'source .zshrc; which {1} | bat --color=always --style=numbers -l zsh')
+
+	print -z "${func} "
+}
+
+#########################################
+# Run a function or script			    #
+#########################################
+function run() {
+	local current_dir=$(pwd)
+	local query="$@"
+
+	local funcs=$(cat "${ZSH_CUSTOM}"/*.zsh | grep '^function' | cut -d' ' -f2 | sed 's/(//g' | sed 's/)//g')
+
+	cd "$DOTFILES_PATH/bin" && bins=$(fd . --type f) && cd "$current_dir"
+
+
+	runit=$(echo "$funcs $bins" | \
+	sed -n '/util\//!p' | \
+	sed -n '/\$/!p' | \
+	sed -n '/^hr$/!p' | \
+	sed -n '/^starter$/!p' | \
+	fzf --query=$query --prompt="   run: " --color=dark \
+	--color='gutter:black,bg+:black,prompt:gray,info:black' \
+	--preview-window=right,80% \
+	--preview '
+	if [ -z $ZSH_CUSTOM ]; then
+		source .zshrc
+	fi
+
+	src=$(which {})
+	if [ $(echo $src | wc -l | tr -d "[[:space:]]") = 1 ]; then
+		src=$(command cat $src)
+	else
+		cmd={};
+		desc=$(rg -F "function ${cmd}()" --glob $ZSH_CUSTOM/*.zsh -B 5 --no-filename | sed -n "/^# /p" | rev | cut -c2- | rev)
+		if [ ! -z $desc ]; then
+			src="$desc \n$src"
+		fi
+	fi
+
+	echo $src | bat --color=always --terminal-width $FZF_PREVIEW_COLUMNS --style=numbers --language zsh
+	')
+
+	print -z "${runit} "
 }
