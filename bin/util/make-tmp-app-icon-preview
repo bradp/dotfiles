@@ -2,12 +2,15 @@
 #
 # Generate a png of an app icon and return the path.
 #
+# Usage:
+#   make-tmp-app-icon-preview <app-icon-path>
+#   make-tmp-app-icon-preview /System/Applications/App Store.app
 
 customIconName="$(echo "${1}".png | sed 's#System##' | sed 's#Applications##' | sed 's#.app##' | sed 's# #-#g' | sed 's#/##g' | tr '[:upper:]' '[:lower:]')"
 customIconPath="$DOTFILES_PATH/misc/icons/${customIconName}"
 
-if [ -f "$customIconPath" ]; then
-	echo "$customIconPath"
+if [ -f "${customIconPath}" ]; then
+	echo "${customIconPath}"
 	exit
 fi
 

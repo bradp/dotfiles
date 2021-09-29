@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+#
+# Convert an image to a png and return the tmp path.
+#
+# Usage:
+#   make-tmp-image-preview <image-path>
+
+name="/tmp/i_$(date -u +"%d")_$(md5 -q -s "${1}").png"
+
+if [[ ! -f "${name}" ]]; then
+	convert -background white "${1}" "${name}"
+fi
+
+echo "${name}"

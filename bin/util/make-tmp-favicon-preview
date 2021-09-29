@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+#
+# Get a preview of the favicon.
+#
+# Usage:
+#   make-tmp-favicon-preview https://example.com
+#   make-tmp-favicon-preview https://example.com/this-is-a-long-link?okay=yes
+
+site=$(echo "${1}" | grep -Eo "http(?:s?)://[^ >]+" | sed -e "s|^[^/]*//||" -e "s|/.*$||");
+url="https://besticon-demo.herokuapp.com/icon?size=80&url=$site"
+
+name="/tmp/i_$(date -u +"%d")_$(md5 -q -s "${site}").png"
+
+if [[ ! -f "${name}" ]]; then
+	curl -sSL "${url}" -o "${name}"
+fi
+
+echo "${name}"
