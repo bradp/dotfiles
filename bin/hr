@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+#
+# Output a horizontal line
+#
+
+echo ""
+echo -ne "  \033[34m\033[0m"
+echo -ne "\033[44m"
+
+for i in $(seq 1 $(echo $(tput cols) - 6 | bc)); do
+	echo -n " "
+done
+
+echo -ne "\033[0m"
+echo -ne "\033[34m  \033[0m"

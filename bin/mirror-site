@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+#
+#  Run httrack on a full website.
+#
+
+if [[ "${1}" == *"http:"* ]]; then
+	site="${1}"
+elif [[ "${1}" == *"https:"* ]]; then
+	site="${1}"
+else
+	site="https://${1}"
+fi
+
+httrack "${site}" -O "${1//\//-}" "+*.${1}/*" --depth=1000 --display --disable-security-limits --max-rate=10000000000 -c256 -I0

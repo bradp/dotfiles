@@ -16,48 +16,31 @@ function mkd() {
 }
 
 #########################################
-# Create a directory like  2021-07-18   #
-#########################################
-function dirdate() {
-	mkdir $(date +%F)
-}
-
-#########################################
 # cd to the root of git directory       #
 #########################################
 function root() {
-	while ! [ -d .git ];
-		do cd ..
-	done
+	while ! [ -d .git ]; do cd ..; done
 }
 
 #########################################
 # Grep for a running process            #
 #########################################
 function pa() {
-	ps aux | ag "$*"
+	ps aux | rg "$*"
 }
 
 #########################################
 # Grep for a history entry              #
 #########################################
 function ha() {
-	history | ag "$*"
+	history | rg "$*"
 }
 
 #########################################
-# Add a spacer to the Dock              #
+# 1Password 						    #
 #########################################
-function add-dock-spacer() {
-	defaults write com.apple.dock persistent-apps -array-add '{"tile-type"="spacer-tile";}'
-	killall Dock
-}
-
-#########################################
-# Run httrack on a website              #
-#########################################
-function htrack() {
-	httrack "https://${1}/" -O "${1//\//-}" "+*.${1}/*" --depth=1000 --display --disable-security-limits --max-rate=10000000000 -c256 -I0
+function 1p() {
+	eval $(op signin my)
 }
 
 ########################################
@@ -65,39 +48,29 @@ function htrack() {
 ########################################
 function hook() {
 	local current_dir=$(pwd)
+
 	root
 
-	if [ -f .git/hooks/$1 ]; then
-		. .git/hooks/$1
+	if [ -f ".git/hooks/${1}" ]; then
+		. ".git/hooks/${1}"
 	fi
 
-	cd $current_dir
+	cd "${current_dir}"
 }
+
+_hook() { root && compadd "${(@)${(f)$(ls .git/hooks | grep -v "\.sample")}}"; }
+compdef _hook hook
+compdef _hook git-hook
 
 ########################################
 # Backup pocket repos                  #
 ########################################
 function backup-pocket-repos() {
-	api pocket /get | jq -r '.list | .[].resolved_url' | ag 'https://github' | sed 's/https:\/\/github.com\///g' | xargs -L 1 gh-backup-repo
-}
-
-#########################################
-# Go up N directories                   #
-#                                       #
-# taken from https://git.io/updir       #
-#########################################
-function up() {
-	if [[ "${1}" == "" ]]; then
-		cd ..
-			elif ! [[ "${1}" =~ ^[0-9]+$ ]]; then
-			echo "Error: argument must be a number"
-			elif ! [[ "${1}" -gt "0" ]]; then
-			echo "Error: argument must be positive"
-	else
-		for i in {1..${1}}; do
-			cd ..
-		done
-	fi
+	api pocket /get | \
+	jq -r '.list | .[].resolved_url' | \
+	ag 'https://github' | \
+	sed 's/https:\/\/github.com\///g' | \
+	xargs -L 1 gh-backup-repo
 }
 
 #########################################
@@ -132,75 +105,46 @@ function unbak() {
 	fi
 }
 
+_unbak() { compadd "${(@)$(ls *.bak)}" }
+compdef _unbak unbak
+
+
 #########################################
 # Get battery percent                   #
 #########################################
 function battery() {
 	local batt=$(pmset -g batt)
 	batt=($(echo "${batt}" | tr '	' '\n'))
-	percent="${batt[8]}"
+	local percent="${batt[8]}"
 	percent=${percent//\;/}
 
 	echo "${percent}"
 }
 
 #########################################
-# Output a horizontal line              #
-#########################################
-function hr() {
-	echo ""
-	echo -ne "  \033[34m\033[0m"
-
-	echo -ne "\033[44m"
-	for i in $(seq 1 $(echo $(tput cols) - 6 | bc)); do
-		echo -n " "
-	done
-	echo -ne "\033[0m"
-
-	echo -ne "\033[34m  \033[0m"
-}
-
-#########################################
-# youtube-dl helpers                    #
-#########################################
-function ytdl() {
-	local current_dir=$(pwd)
-	local video_url="$1"
-
-	if [ ! -z "$2" ]; then
-		video_url="$2"
-
-		cd "$1" || return
-	fi
-
-	yt-dlp --mark-watched --embed-subs --embed-metadata --sponsorblock-remove sponsor,selfpromo -o '%(title)s.%(id)s.%(ext)s' "$video_url"
-
-	cd "$current_dir"
-}
-
-#########################################
-# Clean filenames                       #
-# Removes spaces and lowercases it      #
-#########################################
-function clean-filename() {
-	local new_name="${1// /-}"
-	new_name="$( echo "$new_name" | tr '[:upper:]' '[:lower:]' )"
-
-	if [ "$new_name" != "$1" ]; then
-		mv -v "$1" "${new_name}"
-	else
-		echo "Skipping $1 → $new_name"
-	fi
-}
-
-#########################################
 # Purge Cloudflare cache                #
 #########################################
 function purge-cloudflare-cache() {
-	curl -X POST "https://api.cloudflare.com/client/v4/zones/$1/purge_cache" \
-	-H "Authorization: Bearer $CLOUDFLARE_TOKEN" \
+	local zone=$(api cf zones | \
+	jq -r '.result[] | [.name, .id] | flatten | @csv' | \
+	sed 's/"//g' | \
+	sed 's/,/ /g' | \
+	fzf --query="${1}" --select-1 --no-multi --cycle --layout=reverse --height=25 --prompt='' --with-nth 1 --delimiter=" " --border=none --color=dark --color="gutter:-1")
+
+	local zone_id=$(echo "${zone}" | cut -d' ' -f2)
+	local zone_name=$(echo "${zone}" | cut -d' ' -f1)
+
+	local diditwork=$(curl -X -sSL POST "https://api.cloudflare.com/client/v4/zones/${zone_id}/purge_cache" \
+	-H "Authorization: Bearer ${CLOUDFLARE_TOKEN}" \
 	-H "Content-Type:application/json" \
-	--data '{"purge_everything":true}'
+	--data '{"purge_everything":true}' | \
+	jq -r '.success')
+
+	if [[ "${diditwork}" = "true" ]]; then
+		echo "$(tput setaf 2)✓ Purged Cloudflare cache for ${zone_name} (${zone_id})$(tput sgr0)"
+	else
+		echo "᙮ Failed to purge Cloudflare cache for ${zone_name} (${zone_id})"
+	fi
 }
 
 #########################################
@@ -209,25 +153,36 @@ function purge-cloudflare-cache() {
 function deploy() {
 	local site=${1:-$(basename $(pwd))}
 
-	# go to the site dir, or use the one we're in
-	cd "$HOME/Dropbox/Working/sites/${site}" || exit
+	cd "${HOME}/Dropbox/Working/sites/${site}" || exit
 
-	# clean up files
-	rm .DS_Store 2> /dev/null
-
-	# build the site
 	hugo --gc --minify --environment production
 
-	# fix hugo's breaking of timestamps
-	if [[ -d "public" ]]; then
-		touch public
-	fi
+	# Fix hugo's breaking of timestamps.
+	if [[ -d "public" ]]; then touch public; fi
 
-	# push it up
-	rsync -avz --verbose --human-readable --progress --delete public/ root@"$XAVIER":/var/www/"$1"/html/
+	rm .DS_Store 2> /dev/null
 
-	# bust the cache
-	if [ "$SITE" = "bradparbs.com" ]; then
-		purge-cloudflare-cache "$BP_CLOUD_FLARE_ZONE";
-	fi
+	rsync -avz --verbose --human-readable --progress --delete public/ root@"${XAVIER}":/var/www/"${1}"/html/
 }
+_deploy() { _files -W ${HOME}/Dropbox/Working/sites/ -/ }
+compdef _deploy deploy
+
+#########################################
+# Quickly jump to Sites/www/site        #
+#########################################
+function site() {
+    cd "${HOME}/Sites/www/${1}/content/"
+}
+
+_site() { _files -W ${HOME}/Sites/www -/ }
+compdef _site site
+
+#########################################
+# Quickly jump to site directory        #
+#########################################
+function s() {
+    cd "${HOME}/Dropbox/Working/sites/${1}/"
+}
+
+_s() { _files -W "${HOME}/Dropbox/Working/sites/" -/ }
+compdef _s s

@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+#
+# Add a spacer to the Dock.
+#
+
+defaults write com.apple.dock persistent-apps -array-add '{"tile-type"="spacer-tile";}'
+
+killall Dock
