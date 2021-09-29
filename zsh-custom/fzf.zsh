@@ -72,13 +72,6 @@ function ffh() {
 }
 
 #########################################
-# Bin 								    #
-#########################################
-function bin() {
-	print -z $(command ls $DOTFILES_PATH/bin | fzf --query="${1}" --select-1 --cycle --color=dark --color='gutter:black,bg+:black,prompt:gray,info:black' --preview-window=right,70% --preview='bat --color=always --style=numbers $(which {})')" "
-}
-
-#########################################
 # Bookmarks			       			    #
 #########################################
 function bookmarks() {
@@ -123,6 +116,15 @@ function icon-picker() {
 	--preview='echo -e "\n\n\n";catimg -w 50 $(make-tmp-image-preview {})' |  xargs -I{} cp -v {} "${HOME}/Desktop/"
 
 	cd "${current_dir}"
+}
+
+#########################################
+# Bin 								    #
+#########################################
+function bin() {
+	local commands=$(command ls $DOTFILES_PATH/bin)
+	local cmd=$( echo "$commands" | fzf --query="${1}" --select-1 --cycle --color=dark --color='gutter:black,bg+:black,prompt:gray,info:black' --preview-window=right,70% --preview='bat --color=always --style=numbers $(which {})')" "
+	print -z "$cmd"
 }
 
 #########################################
