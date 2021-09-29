@@ -43,6 +43,7 @@ plugins=(
 )
 
 source $DOTFILES_PATH/.oh-my-zsh/oh-my-zsh.sh
+source $ZSH_CUSTOM/zshrc-loaded
 
 PATH="/bin"
 path+=(/usr/local/bin)
