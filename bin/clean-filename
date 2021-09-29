@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+#
+# Clean a filename by removing spaces and lowercasing it.
+#
+# Usage:
+#   To get the clean filename:
+#   clean-filename <filename>
+#
+#   To write the new file:
+#   clean-filename -mv <filename>
+#
+
+name=${1// /-}
+name="$( echo "${name}" | tr '[:upper:]' '[:lower:]' | tr -cd "[:alnum:]._-" )"
+
+if [[ $* == *-mv* ]]; then
+	if [ "${name}" != "${1}" ]; then
+		mv -v "${1}" "${name}"
+	else
+		echo "Skipping ${1}"
+	fi
+else
+	echo "${name}"
+fi
