@@ -30,11 +30,8 @@ ZSH_CUSTOM=$DOTFILES_PATH/zsh-custom
 ZSH_THEME="parbs"
 
 plugins=(
-	dash
 	forgit
 	fzf
-	git-extras
-	rsync
 	parbs-completions
 	parbs-nvm-settings
 	parbs-lights
