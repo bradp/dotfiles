@@ -75,7 +75,7 @@ function ffh() {
 # Bin 								    #
 #########################################
 function bin() {
-	print -z $(command ls "${DOTFILES_PATH}/bin" | fzf --query="${1}" --select-1 --cycle --preview-window=top --preview 'bat --color=always --style=numbers "$DOTFILES_PATH/bin/"{}')" "
+	print -z $(command ls $DOTFILES_PATH/bin | fzf --query="${1}" --select-1 --cycle --color=dark --color='gutter:black,bg+:black,prompt:gray,info:black' --preview-window=right,70% --preview='bat --color=always --style=numbers $(which {})')" "
 }
 
 #########################################
@@ -103,7 +103,7 @@ function bookmarks() {
 function app() {
 	print -l /System/Applications/*.app /Applications/*.app | fzf \
 	--query="${1}" --select-1 --delimiter="Applications/" --with-nth=-1 --multi \
-	--no-info --prompt='' --pointer=" →" --reverse --border=none --black --margin=2,20%,2,10% \
+	--no-info --prompt='' --reverse --border=none --black --margin=2,20%,2,10% \
 	--preview-window=right --preview='catimg -H "$FZF_PREVIEW_COLUMNS" "$(make-tmp-app-icon-preview {+})"' \
 	--color="gutter:black,bg:black,pointer:cyan,fg+:cyan,fg+:bold,border:black" | sed 's/ /\\ /' | xargs open
 }
@@ -114,23 +114,13 @@ function app() {
 function icon-picker() {
 	local current_dir=$(pwd)
 
-	cd $HOME/Dropbox/Photos/Icons || return
+	cd "${HOME}/Dropbox/Photos/Icons/" || { echo "Could not find icons folder"; return; }
 
- 	icon=$(fd --type file --extension svg --extension png | \
-	fzf --query="${1}" --select-1 -e --border=none --filepath-word --pointer=" →" --prompt="    " \
+ 	fd --type file --extension svg --extension png | \
+	fzf --query="${1}" --select-1 -e --border=none --multi --filepath-word --prompt="    " \
 	--color=16 --color="preview-bg:white,gutter:-1,border:-1,preview-fg:-1" \
 	--preview-window left,26,border-rounded \
-	--preview='echo -e "\n\n\n";catimg -w 50 $(make-tmp-image-preview {})')
-
-	if [ -z "${icon}" ]; then
-		cd "${current_dir}"
-		return
-	fi
-
-	cp "${icon}" "${HOME}/Desktop/$(basename "${icon}")"
-
-	echo "${icon}" | pbcopy
-	echo -e "$(tput setaf 2)Copied path to clipboard and copied image to desktop.$(tput sgr0)"
+	--preview='echo -e "\n\n\n";catimg -w 50 $(make-tmp-image-preview {})' |  xargs -I{} cp -v {} "${HOME}/Desktop/"
 
 	cd "${current_dir}"
 }
