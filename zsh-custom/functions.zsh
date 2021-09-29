@@ -16,7 +16,7 @@ function mkd() {
 }
 
 #########################################
-# cd to the root of git directory       #
+# Go to the root of git directory       #
 #########################################
 function root() {
 	while ! [ -d .git ]; do cd ..; done
