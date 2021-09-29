@@ -32,8 +32,8 @@ plugins=(
 	forgit
 	fzf
 	git-extras
-	nvm-settings
 	rsync
+	parbs-nvm-settings
 	parbs-lights
 	speedycompinit
 	z
