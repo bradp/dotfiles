@@ -133,6 +133,7 @@ function falias() {
 
 #########################################
 # Pick an icon 						    #
+# Run a function                        #
 #########################################
 function icon-picker() {
 	local current_dir=$(pwd)
@@ -155,4 +156,6 @@ function icon-picker() {
 	echo "Copied path to clipboard. Copied image to desktop."
 
 	cd "$current_dir"
+function ffunc() {
+	print -z "$(functions | grep -E -e "^([^_^$(printf '\t')^\s])+? (?:\(\) {)" | cut -d ' ' -f1 | fzf --query="${1}" --select-1 --prompt="   function: " --color=dark --color='gutter:black,bg+:black,prompt:gray,info:black' --preview-window=right,70% --preview 'if [ -z $ZSH_CUSTOM ]; then source .zshrc; fi; which {1} | bat --color=always --style=numbers -l zsh') "
 }
