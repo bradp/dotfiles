@@ -1,7 +1,17 @@
 #!/usr/bin/env bash
+#
+# Emoji picker, copies to clipboard.
+#
+if [ ! -f "${TMPDIR}emoji.txt" ]; then
+	curl -sSL https://raw.githubusercontent.com/b4b4r07/emoji-cli/master/dict/emoji.json > "${TMPDIR}emoji.txt"
+fi
 
-curl -sSL https://raw.githubusercontent.com/b4b4r07/emoji-cli/master/dict/emoji.json | \
-	jq -r '.[] | [ .emoji, .description, "\(.aliases | @csv)", "\(.tags | @csv)" ] | @tsv ' | \
-	fzf | \
-	cut -c 1 | tr -d '\n' | \
-	pbcopy
+emoji=$(jq -r '.[] | [ .emoji, .description, "\(.aliases | @tsv)", "\(.tags | @tsv)" ] | @csv ' "${TMPDIR}emoji.txt" | \
+sed 's/\"//g' | sed 's/,/ /g' | sed "s/$(printf '\t')/ /g" | \
+fzf --query="${1}" --select-1 --no-info --cycle --height=20 --border=none --padding=1,0,0,2 --margin=0 --no-multi --color=dark --color='gutter:-1,fg:dim' --no-bold --prompt=" " | \
+cut -c 1 | \
+tr -d '\n')
+
+echo "${emoji}" | pbcopy
+
+echo -e "\n$(tput setaf 2)Copied ${emoji} to clipboard.$(tput sgr0)\n"
