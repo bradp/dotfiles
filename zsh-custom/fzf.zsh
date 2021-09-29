@@ -109,6 +109,33 @@ function app() {
 }
 
 #########################################
+# Icon picker 						    #
+#########################################
+function icon-picker() {
+	local current_dir=$(pwd)
+
+	cd $HOME/Dropbox/Photos/Icons || return
+
+ 	icon=$(fd --type file --extension svg --extension png | \
+	fzf --query="${1}" --select-1 -e --border=none --filepath-word --pointer=" →" --prompt="    " \
+	--color=16 --color="preview-bg:white,gutter:-1,border:-1,preview-fg:-1" \
+	--preview-window left,26,border-rounded \
+	--preview='echo -e "\n\n\n";catimg -w 50 $(make-tmp-image-preview {})')
+
+	if [ -z "${icon}" ]; then
+		cd "${current_dir}"
+		return
+	fi
+
+	cp "${icon}" "${HOME}/Desktop/$(basename "${icon}")"
+
+	echo "${icon}" | pbcopy
+	echo -e "$(tput setaf 2)Copied path to clipboard and copied image to desktop.$(tput sgr0)"
+
+	cd "${current_dir}"
+}
+
+#########################################
 # Run an alias                          #
 #########################################
 function falias() {
@@ -132,30 +159,8 @@ function falias() {
 }
 
 #########################################
-# Pick an icon 						    #
 # Run a function                        #
 #########################################
-function icon-picker() {
-	local current_dir=$(pwd)
-
-	cd $HOME/Dropbox/Photos/Icons || return
-
- 	icon=$(fd --type file --extension svg --extension png | \
-	fzf --query="$1" -e --no-multi --border=none --filepath-word --pointer=" →" --prompt="    " \
-	--color=16 --color="preview-bg:white,gutter:-1,border:-1,preview-fg:-1" \
-	--preview-window left,26,border-rounded \
-	--preview='echo -e "\n\n\n";catimg -w 50 $(make-tmp-image-preview {})')
-
-	if [ -z "$icon" ]; then
-		cd "$current_dir"
-		return
-	fi
-
-	cp "$icon" "$HOME/Desktop/$(basename "$icon")"
-	echo "$icon" | pbcopy
-	echo "Copied path to clipboard. Copied image to desktop."
-
-	cd "$current_dir"
 function ffunc() {
 	print -z "$(functions | grep -E -e "^([^_^$(printf '\t')^\s])+? (?:\(\) {)" | cut -d ' ' -f1 | fzf --query="${1}" --select-1 --prompt="   function: " --color=dark --color='gutter:black,bg+:black,prompt:gray,info:black' --preview-window=right,70% --preview 'if [ -z $ZSH_CUSTOM ]; then source .zshrc; fi; which {1} | bat --color=always --style=numbers -l zsh') "
 }
