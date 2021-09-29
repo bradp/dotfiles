@@ -1,4 +1,3 @@
-
 # Props to https://gist.github.com/ctechols/ca1035271ad134841284#gistcomment-3485425
 
 # compinit optimization for oh-my-zsh

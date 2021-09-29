@@ -3,7 +3,7 @@
 # Remove a git submodule.
 #
 # Usage:
-#  git submodule-remove path/to/submodule
+#    git submodule-remove path/to/submodule
 #
 # From https://github.com/maximbaz/dotfiles/blob/master/.local/bin/git-submodule-remove
 

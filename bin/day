@@ -2,8 +2,8 @@
 #
 # Start the day with the weather & opening all my apps, end the day by closing the apps and ejecting HDDs.
 #
-# needs these enviroment variables to be set:
-# OPENWEATHER_API_KEY
+# Needs these enviroment variables to be set:
+#   OPENWEATHER_API_KEY
 #
 
 #######################################

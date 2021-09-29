@@ -2,8 +2,8 @@
 #
 # Backup various github things.
 #
-# needs these environment variables set:
-# MY_GH_TOKEN
+# Needs these environment variables set:
+#   MY_GH_TOKEN
 #
 
 function goto_temp_dir() {

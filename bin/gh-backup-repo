@@ -2,8 +2,8 @@
 #
 # Backup a github repo.
 #
-# needs these environment variables set:
-# MY_GH_TOKEN
+# Needs these environment variables set:
+#   MY_GH_TOKEN
 #
 
 function error_bad_usage() {

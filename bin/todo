@@ -3,13 +3,13 @@
 # Add a todo to Notion.
 #
 # Usage:
-#   $ todo this is the text of the todo
-#   $ todo w this is a todo for work
+#   . todo this is the text of the todo
+#   . todo w this is a todo for work
 #
-# needs these environment variables set:
-# NOTION_API_KEY
-# NOTION_TODO_ID
-# NOTION_WORK_TODO_ID
+# Needs these environment variables set:
+#   NOTION_API_KEY
+#   NOTION_TODO_ID
+#   NOTION_WORK_TODO_ID
 #
 
 # if "todo w this is a task" is called, then add it to the work todo db & remove the w.

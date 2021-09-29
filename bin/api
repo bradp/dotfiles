@@ -4,15 +4,17 @@
 #
 # Usage:
 #   api <target> <method>
-#   api github /repos
-#   api pocket /get
+#   api gh /repos/user/repo/commits 3 40
+#   api weather zip=53132
 #
-# Needs these environment variables set:
-# MY_GH_TOKEN
-# POCKET_CONSUMER_KEY
-# POCKET_ACCESS_TOKEN
-# MOVIEDB_KEY
-# OPENWEATHER_API_KEY
+#   api --list
+#
+# Uses these environment variables:
+#   MY_GH_TOKEN
+#   POCKET_CONSUMER_KEY
+#   POCKET_ACCESS_TOKEN
+#   MOVIEDB_KEY
+#   OPENWEATHER_API_KEY
 #
 
 

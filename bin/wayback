@@ -2,12 +2,11 @@
 #
 # Save items to the wayback machine.
 #
-# needs these environment variables set:
-# ARCHIVE_ACCESS
-# ARCHIVE_SECRET
+# Needs these environment variables set:
+#   ARCHIVE_ORG_ACCESS
+#   ARCHIVE_ORG_SECRET
 #
-# Get keys here https://archive.org/account/s3.php
-#
+# Get keys here: https://archive.org/account/s3.php
 # API docs: https://docs.google.com/document/d/1Nsv52MvSjbLb2PCpHlat0gkzw0EvtSgpKHu4mk0MnrA/edit
 #
 
