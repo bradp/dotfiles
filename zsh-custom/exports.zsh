@@ -23,7 +23,7 @@ export EDITOR="vim";
 export FZF_COMPLETION_OPTS='--border --info=inline'
 export FZF_COMPLETION_TRIGGER=',,'
 export FZF_DEFAULT_COMMAND='ag -l --nocolor --hidden -g ""'
-export FZF_DEFAULT_OPTS="--height=90% --info=inline --border --margin=1 --padding=1 --prompt='▶ ' --pointer='▶' --marker='→ ' --cycle --layout=reverse"
+export FZF_DEFAULT_OPTS="--height=90% --info=inline --border --margin=1 --padding=1 --prompt='▶ ' --pointer='▶' --marker='→ ' --cycle --layout=reverse --query="$1" --select-1 --no-multi"
 export FZF_DEFAULT_OPTS=$FZF_DEFAULT_OPTS'
  --color=fg:#cbccc6,bg:#1f2430,hl:#707a8c
  --color=fg+:#707a8c,bg+:#191e2a,hl+:#ffcc66
