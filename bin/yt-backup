@@ -7,25 +7,19 @@ cd /tmp || exit
 
 randome=$((RANDOM))
 
-mkdir "media-saving-$randome"
-cd "media-saving-$randome" || exit
+mkdir "media-saving-${randome}"
+cd "media-saving-${randome}" || exit
 
-youtube-dl "$1"
+yt-dlp --mark-watched --embed-subs --embed-metadata --sponsorblock-remove sponsor,selfpromo -o '%(title)s.%(id)s.%(ext)s' "${1}"
 
-for f in *.mp4; do
-	echo "$f"
-	tar czf "$f".tar.gz "$f"
-	rm "$f"
-done
-
-for f in *.mkv; do
-	echo "$f"
-	tar czf "$f".tar.gz "$f"
-	rm "$f"
+for f in *.*; do
+	echo "${f}"
+	tar czf "${f}".tar.gz "${f}"
+	rm "${f}"
 done
 
 cd ../ || exit
 
-rclone copy --fast-list --progress "/tmp/media-saving-$randome/" "b2:parbs-media/YT/"
+rclone copy --fast-list --progress "/tmp/media-saving-${randome}/" "b2:parbs-media/YT/"
 
-rm -rf "media-saving-$randome"
+rm -rf "media-saving-${randome}"

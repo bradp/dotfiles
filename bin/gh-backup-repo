@@ -6,15 +6,15 @@
 #   MY_GH_TOKEN
 #
 
-function error_bad_usage() {
-	echo "Usage: ghback <user>/<repo> [--keep, --meta]" 1>&2;
+function _error_bad_usage() {
+	echo "Usage: gh-backup-repo <user>/<repo> [--keep, --meta]" 1>&2;
 	exit
 }
 
-function get_vars() {
+function _get_vars() {
 
 	if [ -z "$1" ]; then
-		error_bad_usage
+		_error_bad_usage
 	fi
 
 	target="$1"
@@ -29,45 +29,45 @@ function get_vars() {
 	repo=$( echo "$repo_raw" | tr '[:upper:]' '[:lower:]')
 
 	if [ -z "$user" ] || [ -z "$repo" ]; then
-		error_bad_usage
+		_error_bad_usage
 	fi
 }
 
-function goto_temp_dir() {
+function _goto_temp_dir() {
 	tempfolder="$RANDOM"
 	mkdir -p "/tmp/$tempfolder" 2> /dev/null
 	cd "/tmp/$tempfolder" || exit
 }
 
-function get_repo_metadata() {
+function _get_repo_metadata() {
 	mkdir -p "$repo/.github-meta" 2> /dev/null
 
-	gh_api "repos/$user/$repo" > "$repo/.github-meta/metadata.json"
+	__gh_api "repos/$user/$repo" > "$repo/.github-meta/metadata.json"
 }
 
-function get_page_count_from_metadata_file() {
+function _get_page_count_from_metadata_file() {
 	echo $(($(jq "$1" "$repo/.github-meta/metadata.json")+99)) / 100 | bc
 }
 
-function gh_api() {
+function __gh_api() {
 	page="${2:-1}"
 	curl -sLu "$MY_GH_TOKEN" "https://api.github.com/$1?per_page=100&page=$page" | jq
 }
 
-function gh_api_get() {
-	gh_api "repos/$user/$repo/$1" | jq > "$repo/.github-meta/$1.json"
+function __gh_api_get() {
+	__gh_api "repos/$user/$repo/$1" | jq > "$repo/.github-meta/$1.json"
 
 	echo -n "."
 }
 
-function get_paginated() {
-	pages=$(get_page_count_from_metadata_file ".open_issues")
+function _get_paginated() {
+	pages=$(_get_page_count_from_metadata_file ".open_issues")
 
 	mkdir ".$1" 2> /dev/null
 
 	for (( i="$pages"; i > 0; i-- )); do
 		echo -n "."
-		gh_api "repos/$user/$repo/$1" "$i" > ".$1/$i.json"
+		__gh_api "repos/$user/$repo/$1" "$i" > ".$1/$i.json"
     done
 	echo ""
 
@@ -77,7 +77,7 @@ function get_paginated() {
 	rmdir ".$1"
 }
 
-function get_comments() {
+function _get_comments() {
 	count=$(jq -r ".[] | select(.comments != 0) | .number" "$repo/.github-meta/$1.json")
 
 	if [[ "$count" ]]; then
@@ -85,7 +85,7 @@ function get_comments() {
 
 		echo "$count" | while IFS= read -r number ; do
 			echo -n "."
-    		response=$(gh_api "repos/$user/$repo/$1/$number/comments" | jq )
+    		response=$(__gh_api "repos/$user/$repo/$1/$number/comments" | jq )
 			data=$(echo "$response" | jq ".[]")
 
 			if [[ "$data" ]]; then
@@ -96,45 +96,45 @@ function get_comments() {
 	fi
 }
 
-function clone_repo() {
+function _clone_repo() {
 	git clone "git@github.com:$user/$repo.git" "$repo" || exit
 }
 
 function get_other_metadata_for_repo() {
 	echo " - getting repo metadata"
-	get_repo_metadata
+	_get_repo_metadata
 
 	echo -n " - getting issues "
-	get_paginated "issues"
+	_get_paginated "issues"
 
 	echo -n " - getting issue comments "
-	get_comments "issues"
+	_get_comments "issues"
 
 	echo -n " - getting PRs "
-	get_paginated "pulls"
+	_get_paginated "pulls"
 
 	echo -n " - getting PR comments "
-	get_comments "pulls"
+	_get_comments "pulls"
 
 	echo -n " - getting other metadata "
-	gh_api_get "releases"
-	gh_api_get "contributors"
-	gh_api_get "downloads"
-	gh_api_get "labels"
-	gh_api_get "languages"
-	gh_api_get "milestones"
+	__gh_api_get "releases"
+	__gh_api_get "contributors"
+	__gh_api_get "downloads"
+	__gh_api_get "labels"
+	__gh_api_get "languages"
+	__gh_api_get "milestones"
 	echo ""
 }
 
-function compress_data() {
+function _compress_data() {
 	tar czf "$repo".tar.gz "$repo"
 }
 
-function send_to_b2() {
+function _send_to_b2() {
 	rclone copy --fast-list --progress "$repo".tar.gz "b2:parbs-github/$user/"
 }
 
-function clean_up() {
+function _clean_up() {
 	if [[ $* != *--keep* ]]; then
 		echo '   - removing cloned repo'
 		rm -rf "$repo"
@@ -144,30 +144,30 @@ function clean_up() {
 }
 
 echo ""
-get_vars "$@"
+_get_vars "$@"
 
 echo "Backing up $target"
 echo ""
 
 if [[ $* != *--keep* ]]; then
 	echo " - building temp dir"
-	goto_temp_dir
+	_goto_temp_dir
 fi
 
 echo " - cloning repo"
-clone_repo
+_clone_repo
 
 if [[ $* == *--meta* ]]; then
 	get_other_metadata_for_repo
 fi
 
 echo " - compressing files"
-compress_data
+_compress_data
 
 echo " - sending to b2"
-send_to_b2
+_send_to_b2
 
 echo " - cleaning up"
-clean_up "$@"
+_clean_up "$@"
 
 echo "done!"

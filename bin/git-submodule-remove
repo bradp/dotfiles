@@ -7,19 +7,18 @@
 #
 # From https://github.com/maximbaz/dotfiles/blob/master/.local/bin/git-submodule-remove
 
-emulate zsh -o err_exit -o no_unset -o xtrace
+emulate zsh -o err_exit -o no_unset
 
 (( $# == 1 ))
 [[ -e $1 ]]
 
-local gitdir workdir
 gitdir=$(git rev-parse --git-dir)
 workdir=$(git rev-parse --show-toplevel)
 
-[[ $workdir == $PWD ]]
+[[ ${workdir} == "${PWD}" ]]
 
-git submodule deinit -f -- $1
-rm -rf -- $gitdir/modules/$1
-rm -rf -- $1
+git submodule deinit -f -- "${1}"
+rm -rf -- "${gitdir}/modules/${1}"
+rm -rf -- "${1}"
 
-echo "Remember to update .gitmodules"
+$EDITOR .gitmodules

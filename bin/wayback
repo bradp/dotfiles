@@ -37,11 +37,11 @@ EOF
 	exit
 }
 
-function doarchive() {
+function _doarchive() {
 	curl --silent --location \
 	--request POST 'https://web.archive.org/save' \
 	--header 'Accept: application/json' \
-	--header "Authorization: LOW $ARCHIVE_ACCESS:$ARCHIVE_SECRET" \
+	--header "Authorization: LOW ${ARCHIVE_ORG_ACCESS}:${ARCHIVE_ORG_SECRET}" \
 	--header 'Content-Type: application/x-www-form-urlencoded' \
 	--data-urlencode "url=$1" \
 	--data-urlencode 'capture_all=1' \
@@ -51,140 +51,126 @@ function doarchive() {
 	> /dev/null
 }
 
-__urlizeit() {
-	if [[ "$1" == *"http:"* ]]; then
-		site="$1"
-	elif [[ "$1" == *"https:"* ]]; then
-		site="$1"
+function _urlizeit() {
+	if [[ "${1}" == *"http:"* ]]; then
+		site="${1}"
+	elif [[ "${1}" == *"https:"* ]]; then
+		site="${1}"
 	else
-		site="https://$1"
+		site="https://${1}"
 	fi
 }
 
-__maketmp() {
+function _maketmp() {
 	tmpdir=$(mktemp -d /tmp/wayback_links.XXXXXXX)
 }
 
-__checkavailable() {
+function _checkavailable() {
 	userstatus=$(curl --silent --location \
 	--header 'Accept: application/json' \
-	--header "Authorization: LOW $ARCHIVE_ACCESS:$ARCHIVE_SECRET" \
-	"https://web.archive.org/save/status/user?_t=$RANDOM")
+	--header "Authorization: LOW ${ARCHIVE_ORG_ACCESS}:${ARCHIVE_ORG_SECRET}" \
+	"https://web.archive.org/save/status/user?_t=${RANDOM}")
 
-	available=$(echo "$userstatus" | jq -r ".available")
-	processing=$(echo "$userstatus" | jq -r ".processing")
+	available=$(echo "${userstatus}" | jq -r ".available")
+	processing=$(echo "${userstatus}" | jq -r ".processing")
 }
 
-__archivethempages() {
-	echo "► Found $(cat "$tmpdir"/found_urls | wc -l | tr -d ' ') pages to archive"
+function _archivethempages() {
+	echo "► Found $(cat "${tmpdir}"/found_urls | wc -l | tr -d ' ') pages to archive"
 
-	for url in $(cat "$tmpdir"/found_urls); do
+	for url in $(cat "${tmpdir}"/found_urls); do
 		echo -n "  →  $url "
 
-		__checkavailable
+		_checkavailable
 		numtries=0
-		while (( $available == 0 )); do
+		while (( ${available} == 0 )); do
 			numtries=$(( numtries + 1 ))
 
-			if (( $numtries == 10 )); then
+			if (( ${numtries} == 10 )); then
 				break 2
 			fi
 
 			echo -n " ᙮"
-			sleep "$processing"
-			__checkavailable
+			sleep "${processing}"
+			_checkavailable
 		done
 
-		doarchive $url
+		_doarchive "${url}"
 
 		echo " ✓"
 	done
 
-	__checkavailable
+	_checkavailable
 	echo "► Done!"
 	echo ""
-	echo "    You've sent $(echo "$userstatus" | jq -r ".daily_captures") urls to archive.org today  "
+	echo "    You've sent $(echo "${userstatus}" | jq -r ".daily_captures") urls to archive.org today  "
 }
 
-_runurl() {
-	__urlizeit "$1"
-	__maketmp
+function _runurl() {
+	_urlizeit "${1}"
+	_maketmp
 
-	echo "$site" > "$tmpdir"/found_urls
+	echo "${site}" > "${tmpdir}"/found_urls
 
-	__archivethempages
+	_archivethempages
 	exit
 }
 
-_runfile() {
-	if [ -z "$1" ]; then
+function _runfile() {
+	if [ -z "${1}" ]; then
 		echo "Please provide a path to a file"
 		exit
 	fi
 
-	if [[ ! -f "$1" ]]; then
-		echo "$1 not found, exiting."
+	if [[ ! -f "${1}" ]]; then
+		echo "${1} not found, exiting."
 		exit
 	fi
 
 	echo -n "► Grabbing urls from file  "
 
-	__maketmp
-	cp "$1" "$tmpdir"/found_urls || exit
+	_maketmp
+	cp "${1}" "${tmpdir}"/found_urls || exit
 
 	echo "✓"
 
-	__archivethempages
+	_archivethempages
 	exit
 }
 
-_runsite() {
-	__urlizeit "$1"
+function _runsite() {
+	_urlizeit "$1"
 
-	echo -n "► Crawling internal links on $site  "
+	echo -n "► Crawling internal links on ${site}  "
 
-	doarchive "$site"
+	doarchive "${site}"
 
-	__maketmp
+	_maketmp
 
-	wget --spider --recursive --no-directories --max-redirect=30 "$site" 2>&1 \
+	wget --spider --recursive --no-directories --max-redirect=30 "${site}" 2>&1 \
 	| grep '^--' \
 	| awk '{ print $3 }' \
 	| grep -E -v '\.(css|doc|docx|gif|ico|jpeg|jpg|js|map|pdf|png|ppt|pptx|svg|ts|txt|xls|xlsx|xml)(\?.*)?$' \
 	| sort -u \
-	> "$tmpdir"/found_urls
+	> "${tmpdir}"/found_urls
 
 	echo "✓"
 
-	__archivethempages
+	_archivethempages
 	exit
 }
 
-_runpocket () {
+function _runpocket () {
 	echo -n "► Grabbing Pocket list  "
-	__maketmp
-	bash api pocket /get | jq -r ".list[].resolved_url" > "$tmpdir"/found_urls && echo "✓"
-	__archivethempages
+	_maketmp
+	bash api pocket /get | jq -r ".list[].resolved_url" > "${tmpdir}"/found_urls && echo "✓"
+	_archivethempages
 	exit
 }
 
-_runtabs () {
-	echo -n "► Grabbing Chrome tabs  "
-	__maketmp
-	bash ctabs > "$tmpdir"/found_urls && echo "✓"
-	__archivethempages
-	exit
-}
 
-_runbookmarks () {
-	echo -n "► Grabbing Chrome Bookmarks  "
-	bash cmarks > "$tmpdir"/found_urls && echo "✓"
-	__archivethempages
-	exit
-}
-
-_runstatus() {
-	curl --silent --location --request GET --header 'Accept: application/json' --header "Authorization: LOW $ARCHIVE_ACCESS:$ARCHIVE_SECRET" "https://web.archive.org/save/status/user?_t=$RANDOM" | jq
+function _runstatus() {
+	curl --silent --location --request GET --header 'Accept: application/json' --header "Authorization: LOW ${ARCHIVE_ORG_ACCESS}:${ARCHIVE_ORG_SECRET}" "https://web.archive.org/save/status/user?_t=${RANDOM}" | jq
 	exit
 }
 
@@ -196,10 +182,8 @@ while :; do
 		file) _runfile "${2-}" ;;
 		site) _runsite "${2-}" ;;
 		pocket) _runpocket ;;
-		tabs) _runtabs ;;
-		bookmarks) _runbookmarks ;;
 		status) _runstatus ;;
-		*) _runurl "$1" ;;
+		*) _runurl "${1}" ;;
 	esac
 	shift
 done

@@ -20,7 +20,7 @@ else
 	db_id="${NOTION_TODO_ID}"
 fi
 
-text="$@"
+text="$*"
 
 status=$(curl -sL 'https://api.notion.com/v1/pages' \
 	-H 'Authorization: Bearer '"${NOTION_API_KEY}"'' \
@@ -50,7 +50,7 @@ status=$(curl -sL 'https://api.notion.com/v1/pages' \
     }
   }' | jq -r ".object" )
 
-if [ "error" = "$status" ]; then
+if [ "error" = "${status}" ]; then
 	echo "Error adding todo."
 	exit 1
 fi
