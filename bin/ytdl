@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+#
+# Wrapper for youtube-dl / yt-dlp.
+#
+
+yt-dlp --mark-watched --embed-subs --embed-metadata --sponsorblock-remove sponsor,selfpromo -o '%(title)s.%(id)s.%(ext)s' "${1}"
