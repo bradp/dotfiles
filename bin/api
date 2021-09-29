@@ -10,6 +10,7 @@
 #   api --list
 #
 # Uses these environment variables:
+#   CLOUDFLARE_TOKEN
 #   MY_GH_TOKEN
 #   POCKET_CONSUMER_KEY
 #   POCKET_ACCESS_TOKEN
@@ -17,6 +18,9 @@
 #   OPENWEATHER_API_KEY
 #
 
+function _api_cloudflare() {
+  curl -sL -X GET "https://api.cloudflare.com/client/v4/${2}" -H "Authorization: Bearer ${CLOUDFLARE_TOKEN}" -H "Content-Type:application/json"
+}
 
 function _api_github() {
   # Set default of page 1, 100 per page
@@ -44,6 +48,7 @@ function _api_weather() {
 }
 
 function _list() {
+  echo "cloudflare"
   echo "github"
   echo "pocket"
   echo "movie"
@@ -51,6 +56,7 @@ function _list() {
 }
 
 case $1 in
+  cloudflare | cf) _api_cloudflare "$@" ;;
   github | gh) _api_github "$@" ;;
   pocket) _api_pocket "$@" ;;
   movie) _api_movie "$@" ;;
