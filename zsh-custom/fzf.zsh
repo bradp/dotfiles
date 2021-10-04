@@ -99,11 +99,11 @@ function bookmarks() {
 # Launch app 						    #
 #########################################
 function app() {
-	print -l /System/Applications/*.app /Applications/*.app | \
-	fzf --delimiter="Applications/" --with-nth=-1 --multi --no-info --prompt='' --reverse --border=none --black --margin=2,20%,2,10% \
-	--color="gutter:black,bg:black,pointer:cyan,fg+:cyan,fg+:bold,border:black"
-	--preview-window=right
-	--preview='catimg -H "$FZF_PREVIEW_COLUMNS" "$(make-tmp-app-icon-preview {+})"' | \
+	fd '.app' --search-path '/Applications' --search-path '/System/Applications' --prune -t d | sort | \
+	fzf --delimiter="Applications/" --with-nth=-1 --query="${1}" --select-1 --multi --no-info --prompt='open: ' --reverse --border=none --black \
+	--color="gutter:black,bg:black,pointer:cyan,fg+:cyan,fg+:bold,border:black" \
+	--preview-window=right \
+	--preview='catimg -H "$FZF_PREVIEW_LINES" "$(make-tmp-app-icon-preview {+})"' | \
 	sed 's/ /\\ /' | \
 	xargs open
 }
