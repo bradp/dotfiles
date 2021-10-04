@@ -58,7 +58,6 @@ _files_to_symlink="
 .config/bat
 .config/gh
 .config/htop
-.config/youtube-dl
 .gnupg/gpg.conf
 .gnupg/gpg-agent.conf
 .curlrc
