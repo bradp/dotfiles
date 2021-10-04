@@ -15,7 +15,7 @@ function co() {
 	if ! git rev-parse --is-inside-work-tree > /dev/null 2>&1; then return; fi
 
 	local branches=$(git branch --color | grep -v HEAD | sed 's#.* ##' | sed 's#remotes/##')
-	local target=$(fzf +s +m +e --preview-window 'right:60%' --preview 'git log --pretty=lo --no-merges --color --oneline --date=human {1} -- | head -200' <<< "$branches")
+	local target=$(fzf --no-sort --no-multi +e --ansi --preview-window 'right:60%' --preview 'git log --pretty=lo --no-merges --color --oneline --date=human {1} -- | head -200' <<< "$branches")
 
 	git checkout "$@" "$(awk '{print $1}' <<< "$target")"
 }
@@ -30,7 +30,7 @@ function gtag() {
 	local new=$(echo "$current" | awk -F '.' '{FS="."; OFS="."; $3++; print $0; $2++; $3=0; print $0; $1++; $2=0; print $0}' | fzf --height=5 --color=16 --border=none --info=hidden --header="Current Version: $current" --print-query)
 
 	new=${new//$'\n'/}
-	
+
 	print -z git tag -a ${new} -m \"Version ${new}\"
 }
 
@@ -58,7 +58,7 @@ function art() {
 #########################################
 function npmr() {
 	if [ -f package.json ]; then
-		print -z "npm run-script $(cat package.json | jq -r '.scripts | to_entries[] | [.key, .value] | join("||||")' | column -t -s "||||" | fzf --no-multi ---height=25 --prompt='' --border=none --color=dark --color="gutter:-1" | cut -d' ' -f1) "
+		print -z "npm run-script $(cat package.json | jq -r '.scripts | to_entries[] | [.key, .value] | join("||||")' | column -t -s "||||" | fzf --no-multi --height=25 --prompt='' --border=none --color=dark --color="gutter:-1" | cut -d' ' -f1) "
 	fi
 }
 
@@ -117,7 +117,7 @@ function icon-picker() {
 	cd "${HOME}/Dropbox/Photos/Icons/" || { echo "Could not find icons folder"; return; }
 
  	fd --type file --extension svg --extension png | \
-	fzf --border=none --multi --filepath-word --prompt="    " \
+	fzf --exact --border=none --multi --filepath-word --prompt="    " \
 	--color=16 --color="preview-bg:white,gutter:-1,border:-1,preview-fg:-1" \
 	--preview-window left,26,border-rounded \
 	--preview='echo -e "\n\n\n";catimg -w 50 $(make-tmp-image-preview {})' | \
@@ -171,7 +171,7 @@ function ffunc() {
 	fzf --prompt="   function: " --color=dark
 	--color='gutter:black,bg+:black,prompt:gray,info:black'
 	--preview-window=right,70%
-	--preview 'source .zshrc; which {1} | bat --color=always --style=numbers -l zsh')
+	--preview 'source .zshrc; which {1} | bat --color=always --style=numbers --language zsh')
 
 	print -z "${func} "
 }
