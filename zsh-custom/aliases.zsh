@@ -39,6 +39,9 @@ alias v=vim
 alias vag="vagrant"
 alias vi=vim
 alias x="exa -Flam --git --color-scale --icons"
+alias c="pbcopy"
+alias p="pbpaste"
+
 
 #########################################
 # Git                                   #
