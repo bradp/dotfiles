@@ -217,3 +217,37 @@ function run() {
 
 	print -z "${runit} "
 }
+
+#########################################
+# Open a VSCode project, if             #
+# it's set up with Project Manager      #
+#########################################
+function proj() {
+	local query="$@"
+
+	project=$(jq -r '.[] | [.name, .rootPath] | @tsv' ${HOME}/Library/Application\ Support/Code/User/globalStorage/alefragnani.project-manager/projects.json | \
+	rev | \
+	cut -d' ' -f1 | \
+	rev | \
+	cut -c1- | \
+	column -t -s $'\t' | \
+	fzf --query=$query --prompt=" open --no-multi project: " --preview='file=$(echo {2} | sed "s/~//g" )
+	if [ -f $HOME/${file} ]; then file=$(echo -e $(dirname $file)); fi
+	exa -1 --icons --long --no-permissions --no-filesize --no-user --tree --level=2 --ignore-glob="node_modules" $HOME/${file}' | \
+	sed 's/~//g' | \
+	rev | \
+	cut -d' ' -f1 | \
+	rev )
+
+	if [ ! -z "${project}" ]; then
+		project="${HOME}/${project}"
+
+		if [[ "$project" == *"code-workspace"* ]]; then
+			cd "$(dirname "$project")" && open -a 'Visual Studio Code' "${project}"
+		elif [ -d "${project}" ]; then
+			cd "${project}" && code .
+		else
+			echo "Project not found - ${project}"
+		fi
+	fi
+}
