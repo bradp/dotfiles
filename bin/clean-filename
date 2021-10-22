@@ -1,24 +1,20 @@
 #!/usr/bin/env bash
 #
-# Clean a filename by removing spaces and lowercasing it.
+# Clean a filename by removing spaces and numbers and lowercasing it.
 #
 # Usage:
 #   To get the clean filename:
-#   clean-filename <filename>
+#   rename-icon <filename>
 #
 #   To write the new file:
-#   clean-filename -mv <filename>
+#   rename-icon -mv <filename>
 #
 
-name=${1// /-}
-name="$( echo "${name}" | tr '[:upper:]' '[:lower:]' | tr -cd "[:alnum:]._-" )"
 
-if [[ $* == *-mv* ]]; then
-	if [ "${name}" != "${1}" ]; then
-		mv -v "${1}" "${name}"
-	else
-		echo "Skipping ${1}"
-	fi
+target=$(echo "$1" | sed 's|[0-9]*||g' | sed 's| |-|g' | sed 's|/-|/|g' | sed 's|-.png|.png|g' | sed 's|-.svg|.svg|g' | tr '[:upper:]' '[:lower:]' )
+
+if [ "${target}" != "${1}" ]; then
+	mv -v "${1}" "${target}"
 else
-	echo "${name}"
+	echo "Skipping ${1} -> ${target}"
 fi

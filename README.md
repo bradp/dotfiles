@@ -79,7 +79,7 @@ $ bash ~/dotfiles/misc/install
 |`api`| Helper to easily call APIs|
 |`backup`| Backup various things|
 |`chars`| Display all available nerd-font characters|
-|`clean-filename`| Clean a filename by removing spaces and lowercasing it|
+|`clean-filename`| Removes spaces, removes numbers, and lowercases a filename|
 |`day`| Helper to get your computer ready for the start or end of the day|
 |`emoji`| Emoji picker to copy emoji to your clipboard|
 |`gh-backup`| Backup various GitHub things|
