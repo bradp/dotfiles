@@ -17,8 +17,8 @@ fi
 iname=$(defaults read "${1}/Contents/Info" CFBundleIconFile | sed 's#.icns##')
 iname="${1}/Contents/Resources/${iname}.icns"
 
-if [ ! -f "/tmp/${customIconName}" ]; then
-	sips -s format png --resampleHeightWidthMax 150 "${iname}" --out "/tmp/${customIconName}" > /dev/null 2>&1
+if [ ! -f "/tmp/ic_${customIconName}" ]; then
+	sips -s format png --resampleHeightWidthMax 500 "${iname}" --out "/tmp/ic_${customIconName}" > /dev/null 2>&1
 fi
 
-echo "/tmp/${customIconName}"
+echo "/tmp/ic_${customIconName}"

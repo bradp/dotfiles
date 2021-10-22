@@ -88,9 +88,9 @@ function bookmarks() {
 		sed -E $'s/(.*)\t(.*)/\\1\t\x1b[36m\\2\x1b[m/g' | \
 		sed 's#Bookmarks Bar /##' | \
 		fzf --multi --border=none \
-		--color="gutter:black,bg:black,pointer:cyan,fg+:cyan,fg+:bold,border:black" | \
-		--preview-window=right \
-		--preview='catimg -w 50 $(make-tmp-favicon-preview {})' | \
+		--color="gutter:black,bg:black,pointer:cyan,fg+:cyan,fg+:bold,border:black" \
+		--preview-window right,35 \
+		--preview='catimg -w 50 -r 2 $(make-tmp-favicon-preview {})' | \
 		grep -Eo 'http(?:s?)://[^ >]+' | \
 		xargs open
 }
@@ -102,8 +102,8 @@ function app() {
 	fd '.app' --search-path '/Applications' --search-path '/System/Applications' --prune -t d | sort | \
 	fzf --delimiter="Applications/" --with-nth=-1 --query="${1}" --select-1 --multi --no-info --prompt='open: ' --reverse --border=none --black \
 	--color="gutter:black,bg:black,pointer:cyan,fg+:cyan,fg+:bold,border:black" \
-	--preview-window=right \
-	--preview='catimg -H "$FZF_PREVIEW_LINES" "$(make-tmp-app-icon-preview {+})"' | \
+	--preview-window=left,30 \
+	--preview='catimg -H "$FZF_PREVIEW_LINES" -r 2 "$(make-tmp-app-icon-preview {+})"' | \
 	sed 's/ /\\ /' | \
 	xargs open
 }
@@ -111,16 +111,15 @@ function app() {
 #########################################
 # Icon picker 						    #
 #########################################
-function icon-picker() {
+function icons() {
 	local current_dir=$(pwd)
-
 	cd "${HOME}/Dropbox/Photos/Icons/" || { echo "Could not find icons folder"; return; }
 
- 	fd --type file --extension svg --extension png | \
-	fzf --exact --border=none --multi --filepath-word --prompt="    " \
+ 	fd . --type file --extension png | \
+	fzf --query="${1}" --exact --border=none --multi --filepath-word --prompt="    " \
 	--color=16 --color="preview-bg:white,gutter:-1,border:-1,preview-fg:-1" \
-	--preview-window left,26,border-rounded \
-	--preview='echo -e "\n\n\n";catimg -w 50 $(make-tmp-image-preview {})' | \
+	--preview-window left,50,border-rounded \
+	--preview='echo -e "\n\n\n";catimg -w 70 -r 2 $(make-tmp-image-preview {})' | \
 	xargs -I{} cp -v {} "${HOME}/Desktop/"
 
 	cd "${current_dir}"
@@ -131,11 +130,7 @@ function icon-picker() {
 #########################################
 function bin() {
 	local commands=$(command ls $DOTFILES_PATH/bin)
-	local cmd=$( echo "$commands" | fzf
-	--color=dark --color='gutter:black,bg+:black,prompt:gray,info:black'
-	--preview-window=right,70%
-	--preview='bat --color=always --style=numbers $(which {})')
-
+	local cmd=$( echo "$commands" | fzf --color=dark --color='gutter:black,bg+:black,prompt:gray,info:black' --preview-window=right,70% --preview='bat --color=always --style=numbers $(which {})')
 	print -z "$cmd "
 }
 
@@ -187,7 +182,6 @@ function run() {
 
 	cd "$DOTFILES_PATH/bin" && bins=$(fd . --type f) && cd "$current_dir"
 
-
 	runit=$(echo "$funcs $bins" | \
 	sed -n '/util\//!p' | \
 	sed -n '/\$/!p' | \
@@ -198,7 +192,7 @@ function run() {
 	--preview-window=right,80% \
 	--preview '
 	if [ -z $ZSH_CUSTOM ]; then
-		source .zshrc
+		source $HOME/dotfiles/.zshrc
 	fi
 
 	src=$(which {})
