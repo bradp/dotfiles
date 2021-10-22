@@ -143,7 +143,7 @@ function _runsite() {
 
 	echo -n "► Crawling internal links on ${site}  "
 
-	doarchive "${site}"
+	_doarchive "${site}"
 
 	_maketmp
 
