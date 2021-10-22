@@ -87,6 +87,7 @@ $ bash ~/dotfiles/misc/install
 |`git-current-branch`| `git current-branch` or `current-branch` displays your git branch|
 |`git-submodule-remove`| Helper to remove a git submodule|
 |`hr`| Output a horizontal line in the terminal|
+|`meow`| Alternative `catimg` script|
 |`mirror-site`| Run httrack on a full website|
 |`pocket-to-notion`| Export all Pocket items to a Notion DB.|
 |`pubkey`| Display public key and copy to clipboard.|
