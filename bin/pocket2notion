@@ -1,15 +1,36 @@
 #!/usr/bin/env bash
+#
+# Export all pocket items to a notion DB.
+# $ pocket2notion - all current items in list
+# $ pocket2notion archive - all items in archive.
+#
+# needs these environment variables set:
+# POCKET_CONSUMER_KEY
+# POCKET_ACCESS_TOKEN
+# NOTION_API_KEY
+# NOTION_POCKET_ID
 
+#######################################
+# Send a url to Notion Pocket DB
+#######################################
 function send() {
+	local title
+	local url
+
+	url=${1}
+	title=${2}
+
+	echo "Sending to Notion: ${title} - ${url}"
+
 	curl -sL 'https://api.notion.com/v1/pages' \
-	-H 'Authorization: Bearer '"$NOTION_API_KEY"'' \
+	-H 'Authorization: Bearer '"${NOTION_API_KEY}"'' \
 	-H "Content-Type: application/json" \
 	-H "Notion-Version: 2021-05-13" \
 	--data '{
   		"object": "page",
 		"parent": {
 			"type": "database_id",
-			"database_id": "'"$NOTION_POCKET_ID"'"
+			"database_id": "'"${NOTION_POCKET_ID}"'"
 		},
 		"archived": false,
 		"properties": {
@@ -21,7 +42,7 @@ function send() {
 			"URL": {
 				"id": "ltG`",
 				"type": "url",
-				"url": "'"$1"'"
+				"url": "'"${url}"'"
 			},
 			"Name": {
 				"id": "title",
@@ -30,7 +51,7 @@ function send() {
 					{
 						"type": "text",
 						"text": {
-							"content": "'"$2"'",
+							"content": "'"${title}"'",
 							"link": null
 						}
 					}
@@ -40,14 +61,15 @@ function send() {
 	}' > /dev/null
 }
 
-items=$( curl -sL "https://getpocket.com/v3/get?consumer_key=$POCKET_CONSUMER_KEY&access_token=$POCKET_ACCESS_TOKEN" | jq -r ".list[] |  \"\(.resolved_url)====\(.resolved_title)\"")
-# items=$( curl -sL "https://getpocket.com/v3/get?consumer_key=$POCKET_CONSUMER_KEY&access_token=$POCKET_ACCESS_TOKEN&state=archive" | jq -r ".list[] |  \"\(.resolved_url)====\(.resolved_title)\"")
-
+if [[ "archive" == "$1" ]]; then
+	items=$( curl -sL "https://getpocket.com/v3/get?consumer_key=${POCKET_CONSUMER_KEY}&access_token=${POCKET_ACCESS_TOKEN}&state=archive" | jq -r ".list[] |  \"\(.resolved_url)====\(.resolved_title)\"")
+else
+	items=$( curl -sL "https://getpocket.com/v3/get?consumer_key=${POCKET_CONSUMER_KEY}&access_token=${POCKET_ACCESS_TOKEN}" | jq -r ".list[] |  \"\(.resolved_url)====\(.resolved_title)\"")
+fi
 
 echo "$items" | while IFS="" read -r i || [ -n "$i" ]; do
   	url="${i%====*}"
 	title="${i#*====*}"
 
-	echo "$title  $url"
-	send "$url" "$title"
+	send "${url}" "${title}"
 done

@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+#
 # props https://github.com/cowboy/dotfiles/blob/master/bin/%24
 
 echo '# stop copying and pasting from the internet'

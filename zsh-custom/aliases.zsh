@@ -9,36 +9,60 @@
 #
 
 #########################################
-# Quick config                          #
+# Paths                                 #
 #########################################
-alias zshconfig="$EDITOR ~/.zshrc"
-alias ohmyzsh="$EDITOR ~/.oh-my-zsh"
-alias ssource="source ~/.zshrc"
-alias hosts="sudo $EDITOR /etc/hosts"
-
-alias ghback="gh-backup"
+alias box="cd $HOME/Dropbox"
+alias goo="cd $HOME/go/src/github.com/bradp"
+alias scr="cd $HOME/Dropbox/Working/scratch"
+alias sites="cd $HOME/Sites"
+alias ww="cd $HOME/Dropbox/Working"
+alias ws="cd $HOME/Dropbox/Working/sites"
+alias vvv="cd $HOME/Sites/www"
+alias www="cd $HOME/Sites/www"
 
 #########################################
 # Replace commands                      #
 #########################################
 alias ack="ag"
 alias cat="bat"
+alias e="$EDITOR ."
 alias gemini="amfora"
+alias ghback="gh-backup"
+alias hist="history"
 alias hub="gh"
 alias imgcat="catimg"
-alias lynx="lynx -accept_all_cookies -use_mouse -vikeys $@"
-alias x="exa -Flam --git --color-scale --icons"
 alias ls="x"
-alias hist="history"
+alias lynx="lynx -accept_all_cookies -use_mouse -vikeys $@"
 alias tree="tree -C"
+alias v=vim
+alias vi=vim
+alias x="exa -Flam --git --color-scale --icons"
+
+alias f="fzf --preview 'bat --color=always --style=numbers --line-range=:500 {}'"
 alias kdiff="git difftool -y -t Kaleidoscope"
+alias lss="ls -Gal"
+alias qlook="qlmanage -p 2>/dev/null"
+
+#########################################
+# Git                                   #
+#########################################
+alias g="git"
+alias gs="git status"
+alias gc="git commit -m"
+alias gcb="git fetch && git checkout -b $@ origin/$@"
+alias gpre="git pull --rebase origin $1"
+alias gcm="git commit -m $@"
+
+alias current-branch="git rev-parse --abbrev-ref HEAD | tr -d '\n' | tr -d ' '"
 
 #########################################
 # Hide / Show files                     #
 #########################################
 alias unhidelibrary="chflags nohidden ~/Library"
+
 alias showdotfiles="defaults write com.apple.finder AppleShowAllFiles -bool true && killall Finder"
 alias hidedotfiles="defaults write com.apple.finder AppleShowAllFiles -bool false && killall Finder"
+
 alias hide="chflags hidden $0"
 alias unhide="chflags nohidden $0"
 
@@ -52,84 +76,50 @@ alias lscleanup="/System/Library/Frameworks/CoreServices.framework/Frameworks/La
 # Vagrant                               #
 #########################################
 alias vag="vagrant"
+alias vu="vagrant up; vagrant ssh"
 alias vup="vagrant up; vagrant provision; vagrant ssh"
 alias vp="vagrant provision"
-alias vs='sites && vagrant ssh'
-
-#########################################
-# VIM                                   #
-#########################################
-alias v=vim
-alias vi=vim
-alias mvi=mvim
-
-#########################################
-# IP / Speedtest                        #
-#########################################
-alias ip="curl ipinfo.io/ip"
 
 #########################################
 # PHPCS                                 #
 #########################################
-alias php7="/usr/local/opt/php@7.4/bin/php"
-
-alias pc='phpcs --standard=parbs $@'
-alias pcf='phpcbf --standard=parbs $@'
-alias pcbfall='find . | grep .php | xargs phpcbf --standard=parbs --ignore=node_modules/'
-alias pcsall='find . | grep .php | xargs phpcs --standard=parbs --ignore=node_modules/'
-alias pcsalle='find . | grep .php | xargs phpcs -n --standard=parbs --ignore=node_modules/'
 alias lint="phpcs -s -p -n . --standard=parbs --extensions=php -n --colors"
 
-alias phpfixer="php-cs-fixer --config=$HOME/dotfiles/.php-cs-fixer.php --allow-risky=yes --show-progress=dots"
-alias phpinsights="phpinsights --config-path=$HOME/dotfiles/.phpinsights-config.php"
+alias pcs='phpcs --standard=parbs $@'
+alias pcsall='find . | grep .php | xargs phpcs --standard=parbs --ignore=node_modules/'
+
+alias pcbf='phpcbf --standard=parbs $@'
+alias pcbfall='find . | grep .php | xargs phpcbf --standard=parbs --ignore=node_modules/'
+
+alias phpfixer="php-cs-fixer --config=$DOTFILES_PATH/.php-cs-fixer.php --allow-risky=yes --show-progress=dots"
+alias phpinsights="phpinsights --config-path=$DOTFILES_PATH/.phpinsights-config.php"
 alias phpi="phpinsights"
 
+alias artisan="php artisan"
 #########################################
-# Git                                   #
+# youtube-dl                             #
 #########################################
-alias g="git"
-alias gs="git status"
-alias gc="git commit -m"
-alias gcb="git fetch && git checkout -b $@ origin/$@"
-alias gpre="git pull --rebase origin $1"
-
-#########################################
-# Fun                                   #
-#########################################
-alias lol="lolcat"
-alias fs='fortune -as | cowsay -f small | lolcat'
-alias kill9="afplay ~/dotfiles/misc/kill-9.wav && kill -9 $1"
-
-#########################################
-# Misc                                  #
-#########################################
-alias pubkey="more ~/.ssh/id_rsa.pub | pbcopy | printf '=> Public key copied to pasteboard.\n'";
-alias bell='echo "\a"'
-
-alias caff="caffeinate -dis"
-alias currentdate='date "+%Y.%m.%d"'
-alias 3d="figlet -f 3d $1"
-alias tailf="less +F $0"
-alias sha256="shasum -a 256 "$1" "
-alias qr="qrencode "$1" -o - -t utf8"
-alias webp="cwebp -q 85 $1.png -o $1.webp"
-
-alias ql="qlmanage -p" # Quick-look a file
-alias exot="exit"
-alias foot="tail"
 
 alias yt="youtube-dl --mark-watched $@"
 alias dyt="cd ~/Desktop/; yt $@"
 alias myt="cd ~/Documents/Media/YT; yt $@"
 
-alias e="$EDITOR ."
-alias lss="ls -Gal"
+#########################################
+# Fun                                   #
+#########################################
+alias kill9="afplay $DOTFILES_PATH/misc/kill-9.wav && kill -9 $1"
 
-alias dc="docker compose"
-alias ctop="docker run --rm -ti -v /var/run/docker.sock:/var/run/docker.sock quay.io/vektorlab/ctop:latest"
+#########################################
+# Misc                                  #
+#########################################
+alias ssource="source $DOTFILES_PATH/.zshrc"
 
-alias qlook="qlmanage -p 2>/dev/null"
+alias 3d="figlet -f 3d $1"
+alias 3dfonts="showfigfonts"
+alias bell='echo "\a"'
+alias caff="caffeinate -dis"
+alias tailf="less +F $0"
+alias sha256="shasum -a 256 "$1" "
+
 alias st='open -a "Sublime Text"'
 alias stt="st ."
-
-alias f="fzf --preview 'bat --color=always --style=numbers --line-range=:500 {}'"

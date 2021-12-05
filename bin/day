@@ -1,5 +1,13 @@
 #!/usr/bin/env bash
+#
+# Start the day with the weather & opening all my apps, end the day by closing the apps and ejecting HDDs.
+#
+# needs these enviroment variables to be set:
+# OPENWEATHER_API_KEY
 
+#######################################
+# Output the weather for a given day.
+#######################################
 function _show_weather() {
     local weather
     local current
@@ -34,6 +42,9 @@ function _show_weather() {
     echo "${icon}  ${current}  ${feels_like}° "
 }
 
+#######################################
+# Show a cowsay cow
+#######################################
 function _show_cow() {
     local cows
     local random_cow
@@ -46,6 +57,9 @@ function _show_cow() {
     fortune -s | cowsay -f "$cow"
 }
 
+#######################################
+# Start the day.
+#######################################
 function _run_start() {
     clear
 
@@ -60,7 +74,7 @@ function _run_start() {
     echo ""
     echo "Good morning! Today's weather is: $(_show_weather)"
     echo ""
-    echo "Starting up  Airmail,  Slack,  VSCode,  Notion,  Pocket, and  Stream Deck ... "
+    echo "Starting up  Chrome,  Airmail,  Slack,  VSCode,  Notion,  Pocket, and  Stream Deck ... "
     echo ""
     echo ""
     echo "                       "
@@ -68,15 +82,19 @@ function _run_start() {
     echo ""
 
 
-    osascript -e 'tell application "Airmail 3" to activate'
-    osascript -e 'tell application "Slack" to activate'
-    osascript -e 'tell application "Visual Studio Code" to activate'
-    osascript -e 'tell application "Notion" to activate'
-    osascript -e 'tell application "Pocket" to activate'
-    osascript -e 'tell application "Stream Deck" to activate'
-    osascript -e 'tell application "System Events" to tell process "Stream Deck" to tell window 1 to click (first button whose subrole = "AXCloseButton")'
+    osascript -e 'tell application "Chrome" to activate' > /dev/null
+    osascript -e 'tell application "Airmail" to activate' > /dev/null
+    osascript -e 'tell application "Slack" to activate' > /dev/null
+    osascript -e 'tell application "Visual Studio Code" to activate' > /dev/null
+    osascript -e 'tell application "Notion" to activate' > /dev/null
+    osascript -e 'tell application "Pocket" to activate' > /dev/null
+    osascript -e 'tell application "Stream Deck" to activate' > /dev/null
+    osascript -e 'tell application "System Events" to tell process "Stream Deck" to tell window 1 to click (first button whose subrole = "AXCloseButton")' > /dev/null
 }
 
+#######################################
+# End the day
+#######################################
 function _run_end() {
     local confirm
 

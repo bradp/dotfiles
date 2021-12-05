@@ -1,39 +1,45 @@
 #!/usr/bin/env bash
+#
+# API helper.
+#
+# needs these environment variables set:
+# MY_GH_TOKEN
+# POCKET_CONSUMER_KEY
+# POCKET_ACCESS_TOKEN
+# MOVIEDB_KEY
+# OPENWEATHER_API_KEY
 
-function github() {
+
+function __api_github() {
 
   # Set default of page 1, 100 per page
   page="${3:-1}"
   per_page="${4:-100}"
 
-  curl -sLu "$MY_GH_TOKEN" "https://api.github.com$2?per_page=$per_page&page=$page"
+  curl -sLu "${MY_GH_TOKEN}" "https://api.github.com${2}?per_page=${per_page}&page=${page}"
 }
 
-function pocket() {
-
-  curl -sL "https://getpocket.com/v3$2?consumer_key=$POCKET_CONSUMER_KEY&access_token=$POCKET_ACCESS_TOKEN"
+function __api_pocket() {
+  curl -sL "https://getpocket.com/v3${2}?consumer_key=${POCKET_CONSUMER_KEY}&access_token=${POCKET_ACCESS_TOKEN}"
 }
 
-function movie() {
+function __api_movie() {
+  curl -sL "https://api.themoviedb.org/3/${2}?api_key=${MOVIEDB_KEY}&language=en-US"
+}
 
-  curl -sL "https://api.themoviedb.org/3/$2?api_key=$MOVIEDB_KEY&language=en-US"
+function __api_weather() {
+  curl -sl "https://api.openweathermap.org/data/2.5/weather?${2}&APPID=${OPENWEATHER_API_KEY}"
 }
 
 case $1 in
-
-  github | gh)
-    github "$@"
-    ;;
-  pocket)
-    pocket "$@"
-    ;;
-  movie)
-    movie "$@"
-    ;;
-
+  github | gh) __api_github "$@" ;;
+  pocket) __api_pocket "$@" ;;
+  movie) __api_movie "$@" ;;
+  weather) __api_weather "$@" ;;
   *)
     echo "usage: api github [page] [per_page]"
     echo "  api gh /repos/user/repo/commits 3 40"
-	exit
+    echo "  api weather zip=53132"
+    exit
     ;;
 esac

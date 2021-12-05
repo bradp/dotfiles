@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+#
+# Add sr.ht remote repo to origin push for a repo & push everything to it.
+
+if [[ -z "$1" ]]; then
+	name=$(basename "$PWD")
+else
+	name="$1"
+fi
+
+git remote rm origin
+git remote add origin git@github.com:bradp/"${name}".git
+git remote set-url --add --push origin git@github.com:bradp/"${name}".git
+git remote set-url --add --push origin git@git.sr.ht:\~bp/"${name}"
+
+git push origin --all
+git push origin --tags

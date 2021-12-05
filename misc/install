@@ -54,11 +54,11 @@ echo -e "${_colors_green}Setting up dotfiles in ${_colors_bold}${_dotfiles_dir}$
 echo ""
 
 _files_to_symlink="
-.config/amfora/
-.config/bat/
-.config/gh/
-.config/htop/
-.config/youtube-dl/
+.config/amfora
+.config/bat
+.config/gh
+.config/htop
+.config/youtube-dl
 .gnupg/gpg.conf
 .gnupg/gpg-agent.conf
 .curlrc
@@ -67,14 +67,33 @@ _files_to_symlink="
 .hushlogin
 .npmrc
 .nuxtrc
-.vim/
+.vim
 .vimrc
 .zshrc"
+
+
+mkdir -p "$HOME/.config"
+mkdir -p "$HOME/.gnupg"
 
 # Symlink them up
 for f in $_files_to_symlink; do
 	echo "${_colors_cyan}${_dotfiles_dir}/${f}${_colors_reset} ${_colors_bold}→${_colors_reset} ${_colors_cyan}$HOME/${f}${_colors_reset}"
-	ln -nfsv "${_dotfiles_dir}/$f" "$HOME/$f"
+
+	if [[ -L "$HOME/$f" ]]; then
+		# If it's already a symlink, skip it.
+		echo "${_dotfiles_dir}/$f is already symlinked, skipping..."
+	elif [[ ! -f "${_dotfiles_dir}/$f" && ! -d "${_dotfiles_dir}/$f" ]]; then
+		# Make sure the target file exists in the dotfiles before symlinking.
+		echo "Could not find ${_dotfiles_dir}/$f, skipping..."
+	else
+		# If the file already exists, back it up first.
+		if [[ -f "$HOME/$f" || -d "$HOME/$f" ]]; then
+			echo "$HOME/$f already exists, backing it up..."
+			mv "$HOME/$f" "$HOME/$f.bak"
+		fi
+
+		ln -nfsv "${_dotfiles_dir}/$f" "$HOME/$f" 1> /dev/null
+	fi
 done
 
 echo ""

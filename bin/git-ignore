@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+#
 # from: https://github.com/tj/git-extras/blob/master/bin/git-ignore
 
 : ${GIT_DIR:=$(git rev-parse --git-dir)}

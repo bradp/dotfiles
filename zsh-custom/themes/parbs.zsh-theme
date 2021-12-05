@@ -78,7 +78,7 @@ __write_protected_icon() {
 
 __find_vagrantfile() {
 	dir=.
-	until [ $dir -ef "$HOME" ]; do
+	until [ $dir -ef / ]; do
 		if [ -f "$dir/Vagrantfile" ]; then
 			echo "$dir/Vagrantfile"
 			return 0
@@ -172,6 +172,10 @@ __file_icon() {
 }
 
 __icons() {
+	if [[ $HOME == ${PWD}] ]]; then
+		return
+	fi
+
 	local display_icons
 
 	icons=$(__file_icon)
@@ -196,7 +200,8 @@ __prompt_path() {
 }
 
 __git_remote_warning() {
-	if __git_prompt_git rev-parse --git-dir &> /dev/null; then
+	return
+	if __git_prompt_git rev-parse --max-count=1 --git-dir &> /dev/null; then
 		echo "$(git_prompt_remote) "
 	fi
 }
@@ -207,6 +212,10 @@ __git_info() {
 
 __prompt_color() {
 	echo "%{%(?.%{$FG[082]%}.%{$FG[196]%})%}"
+}
+
+__() {
+	echo ""
 }
 
 PROMPT='$(__prompt_path) $(__icons) %{$reset_color%}

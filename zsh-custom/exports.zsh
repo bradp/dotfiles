@@ -10,6 +10,8 @@
 
 export BAT_CONFIG_PATH="$HOME/dotfiles/.config/bat/.bat"
 
+export HOMEBREW_BREWFILE="$DOTFILES_PATH/Brewfile"
+
 export CARGOPATH="$HOME/.cargo"
 
 export COWPATH="/usr/local/Cellar/cowsay/3.04_1/share/cows:$DOTFILES_PATH/misc/cows"
@@ -64,4 +66,3 @@ sys  : $fg[blue]%S$reset_color
 real : $fg[blue]%E$reset_color
 CPU  : $fg[blue]%P$reset_color"
 
-export VVV_SKIP_LOGO=1

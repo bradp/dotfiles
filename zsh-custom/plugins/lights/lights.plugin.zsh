@@ -8,9 +8,9 @@
 # ░░░ ░░  ░░░░░  ░░   ░░    ░░  ░░░░░░
 #
 
-LIGHTS_OFFICE=4,8
-LIGHTS_BED=5,7
-LIGHTS_LIVING=1,2,6
+PARBS_LIGHTS_OFFICE=4,8
+PARBS_LIGHTS_BED=5,7
+PARBS_LIGHTS_LIVING=1,2,6
 
 # Wrapper for hue lights with no output.
 function lights() {
@@ -19,31 +19,17 @@ function lights() {
 
 # Control office lights.
 function office() {
-	lights ${LIGHTS_OFFICE} $@;
+	lights ${PARBS_LIGHTS_OFFICE} $@;
 }
 
 # Control bedroom lights.
 function bed() {
-	lights ${LIGHTS_BED} $@;
+	lights ${PARBS_LIGHTS_BED} $@;
 }
 
 # Control living room lights.
 function living() {
-	lights ${LIGHTS_LIVING} $@;
-}
-
-# Turn all lights on.
-function lighton() {
-	office on;
-	bed on;
-	living on;
-}
-
-# Turn all lights off.
-function lightoff() {
-	office off;
-	bed off;
-	living off;
+	lights ${PARBS_LIGHTS_LIVING} $@;
 }
 
 # Flash an alert in the office.
@@ -52,4 +38,18 @@ function oalert() {
 	office ${1:-red};
 	sleep 1;
 	office white;
+}
+
+function lightsrandom() {
+	while true; do
+		color=$((1 + $RANDOM % 65535))
+		light=$((1 + $RANDOM % 7))
+
+		curl --silent --location --request PUT \
+		"http://$LIGHTS_IP/api/$LIGHTS_TOKEN/lights/$light/state" \
+		--header 'Content-Type: application/json' \
+		--data-raw '{ "on":true, "sat":254, "bri":254, "hue":'"$color"'}' > /dev/null
+
+		sleep 1
+	done
 }

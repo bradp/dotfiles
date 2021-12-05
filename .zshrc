@@ -9,11 +9,13 @@
 
 export DOTFILES_PATH="$HOME/dotfiles"
 
+
 COMPLETION_WAITING_DOTS=true
 DISABLE_AUTO_UPDATE=true
 HYPHEN_INSENSITIVE=true
 
 unsetopt nomatch
+unsetopt flowcontrol
 
 setopt APPEND_HISTORY
 setopt HIST_FIND_NO_DUPS
@@ -27,22 +29,27 @@ ZSH_CUSTOM="$DOTFILES_PATH"/zsh-custom
 ZSH_THEME="parbs"
 
 plugins=(
-	composer
 	dash
 	forgit
 	fzf
 	git-extras
+	lights
+	nvm-settings
 	rsync
+	speedycompinit
 	z
 	zf
+	zsh-nvm
 	zsh-syntax-highlighting
 )
 
 source "$DOTFILES_PATH"/.oh-my-zsh/oh-my-zsh.sh
 
+PATH="/bin"
 path+=(/usr/local/bin)
 path+=("$DOTFILES_PATH"/misc)
 path+=("$DOTFILES_PATH"/bin)
+path+=("$HOME"/.composer/vendor/bin)
 path+=("$HOME"/.yarn/bin)
 path+=("$HOME"/.cargo/bin)
 path+=("$HOME"/go/bin)

@@ -8,19 +8,127 @@
 #     ░░    ░░░░░░ ░░░   ░░  ░░░░░     ░░  ░░  ░░░░░░  ░░░   ░░ ░░░░░░
 #
 
-# Make a directory and cd into it
+#########################################
+# Make a directory and cd into it       #
+#########################################
 function mkd()  {
 	mkdir -p -- "$@" && cd -- "$@"
 }
 
-# cd to the root of git directory
+#########################################
+# cd to the root of git directory       #
+#########################################
 function root() {
 	while ! [ -d .git ]; do
 		cd ..
 	done
 }
 
-# Go up N directories from https://git.io/updir
+#########################################
+# Grep for a running process            #
+#########################################
+function pa() {
+	ps aux | ag "$*"
+}
+
+#########################################
+# Grep for a history entry              #
+#########################################
+function ha() {
+	history | ag "$*"
+}
+
+#########################################
+# Add a spacer to the Dock              #
+#########################################
+function add-dock-spacer() {
+	defaults write com.apple.dock persistent-apps -array-add '{"tile-type"="spacer-tile";}'; killall Dock
+}
+
+#########################################
+# Run httrack on a website              #
+#########################################
+function htrack() {
+	httrack "https://${1}/" -O "${1//\//-}" "+*.${1}/*" --depth=1000 --display --disable-security-limits --max-rate=10000000000 -c256 -I0
+}
+
+#########################################
+# Create a directory like  2021-07-18   #
+#########################################
+function dirdate() {
+	mkdir $(date +%F)
+}
+
+#########################################
+# Git checkout w/ fzf                   #
+#########################################
+function checkout() {
+    git checkout $(git branch | grep -v $(git rev-parse --abbrev-ref HEAD) | fzf)
+}
+
+########################################
+# Run a git hook                       #
+########################################
+function hook() {
+    CURRENT_DIR=$(pwd)
+    root
+
+    if [ -f .git/hooks/$1 ]; then
+        . .git/hooks/$1
+    fi
+
+    cd $CURRENT_DIR
+}
+
+function _hook() {
+    root
+    compadd "${(@)${(f)$(ls .git/hooks | grep -v "\.sample")}}"
+}
+
+compdef _hook hook
+
+########################################
+# git commit -m "" --no-verify         #
+########################################
+function gcom() {
+    message=$@
+    git commit -m "$message" --no-verify
+}
+
+########################################
+# Backup pocket repos                  #
+########################################
+function backup-pocket-repos() {
+	api pocket /get | jq -r '.list | .[].resolved_url' | ag 'https://github' | sed 's/https:\/\/github.com\///g' | xargs -L 1 gh-backup-repo
+}
+
+########################################
+# Make scratch directory               #
+########################################
+alias newdir="scratch"
+alias scrath="scratch"
+
+function scratch() {
+	newdir="${1}"
+
+	cd "$HOME/Dropbox/Working/scratch" || exit 1
+
+	if [[ -d "${newdir}" ]]; then
+
+		echo "${newdir} already exists"
+		exit 1
+	fi
+
+	mkdir "${newdir}"
+
+	cd "${newdir}"
+}
+
+#########################################
+# Go up N directories                   #
+#                                       #
+# taken from https://git.io/updir       #
+#########################################
 function up() {
 	if [[ "${1}" == "" ]]; then
 		cd ..
@@ -35,11 +143,11 @@ function up() {
 	fi
 }
 
-# Move target $1 to $1.bak
-# Example:
-#   $ bak helpers.bash
-#   helpers.bash -> helpers.bash.bak
-# props https://github.com/shazow/dotfiles/blob/master/helpers.bash
+#########################################
+# Move target $1 to $1.bak              #
+#                                       #
+# https://github.com/shazow/dotfiles/   #
+#########################################
 function bak() {
     declare target=$1;
     if [[ "${target:0-1}" = "/" ]]; then
@@ -48,10 +156,11 @@ function bak() {
     mv -v $target{,.bak}
 }
 
-# Revert previously bak'd $1 target
-# Example:
-#   $ unbak *.bak
-#   helpers.bash.bak -> helpers.bash
+#########################################
+# Move target $1.bak to $1              #
+#                                       #
+# https://github.com/shazow/dotfiles/   #
+#########################################
 function unbak() {
     declare target=$1;
     if [[ "${target:0-1}" = "/" ]]; then
@@ -66,37 +175,83 @@ function unbak() {
     fi
 }
 
-# Grep for a running process
-function pa() {
-    ps aux | ag "$*"
+function _unbak() {
+    compadd "${(@)$(ls *.bak)}"
 }
 
-# Grep for a history entry
-function ha() {
-	history | ag "$*"
-}
+compdef _unbak unbak
 
-# Get battery percent
+#########################################
+# Get battery percent                   #
+#########################################
 function battery() {
 	batt=$(pmset -g batt)
-
-	batt=($(echo "$batt" | tr '	' '\n'))
+	batt=($(echo "${batt}" | tr '	' '\n'))
 	percent="${batt[8]}"
 	percent=${percent//\;/}
 
-	echo "$percent"
+	echo "${percent}"
 }
 
-function bookmarks() {
-     bookmarks_path=~/Library/Application\ Support/Google/Chrome/Default/Bookmarks
+#########################################
+# Create a new chassis site             #
+#########################################
+function newchassis() {
+    target="${HOME}/Sites/${1}"
 
-     jq_script='
-        def ancestors: while(. | length >= 2; del(.[-1,-2]));
-        . as $in | paths(.url?) as $key | $in | getpath($key) | {name,url, path: [$key[0:-2] | ancestors as $a | $in | getpath($a) | .name?] | reverse | join("/") } | .path + "/" + .name + "\t" + .url'
+    if [[ -d "${target}" ]]; then
+        echo "$(tput setaf 1)${target} already exists, exiting.$(tput gr0)"
+        exit 1
+    fi
 
-    jq -r "$jq_script" < "$bookmarks_path" \
-        | sed -E $'s/(.*)\t(.*)/\\1\t\x1b[36m\\2\x1b[m/g' \
-        | fzf --ansi \
-        | cut -d$'\t' -f2 \
-        | xargs open
+    git clone --recursive --single-branch --depth 1 https://github.com/Chassis/Chassis "${target}"
+    cd "${target}" || exit
+    rm -rf ./git/
+
+    vagrant up --provision
 }
+
+#########################################
+# Purge Cloudflare cache                #
+#########################################
+function purge-cloudflare-cache() {
+    curl -X POST "https://api.cloudflare.com/client/v4/zones/$1/purge_cache" \
+    -H "Authorization: Bearer $CLOUDFLARE_TOKEN" \
+    -H "Content-Type:application/json" \
+    --data '{"purge_everything":true}'
+}
+
+#########################################
+# Deployments for hugo sites            #
+#########################################
+function deploy() {
+    site=${1:-$(basename $(pwd))}
+
+    # go to the site dir, or use the one we're in
+    cd "$HOME/Dropbox/Working/sites/${site}" || exit
+
+    # clean up files
+    rm .DS_Store 2> /dev/null
+
+    # build the site
+    hugo --gc --minify --environment production
+
+    # fix hugo's breaking of timestamps
+    if [[ -d "public" ]]; then
+        touch public
+    fi
+
+    # push it up
+    rsync -avz --verbose --human-readable --progress --delete public/ root@"$XAVIER":/var/www/"$1"/html/
+
+    # bust the cache
+    if [ "$SITE" = "bradparbs.com" ]; then
+        purge-cloudflare-cache "$BP_CLOUD_FLARE_ZONE";
+    fi
+}
+
+_deploy() {
+    _files -W $HOME/Dropbox/Working/sites/ -/;
+}
+
+compdef _deploy deploy
