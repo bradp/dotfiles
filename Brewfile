@@ -92,7 +92,7 @@ mas 'DaisyDisk', id: 411643860
 mas 'Keynote', id: 409183694
 mas 'Numbers', id: 409203825
 mas 'Pages', id: 409201541
-mas 'Pixelmator', id: 407963104
+mas 'Pixelmator Pro', id: 1289583905
 mas 'Pocket', id: 568494494
 mas 'Poolsuite FM', id: 1514817810
 mas 'Slack', id: 803453959
