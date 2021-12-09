@@ -8,9 +8,9 @@
 #    ░░░░░  ░░    ░░   ░░░░░   ░░░░░░  ░░░   ░░   ░░   ░░  ░░░░░
 
 [user]
-	name = Brad Parbs
-	email = brad@bradparbs.com
-	github = bradp
+    name = Brad Parbs
+    email = brad@bradparbs.com
+    github = bradp
     signingKey = 1C711FC4DC10B17E
 
 [alias]
@@ -53,7 +53,7 @@
     addEmptyPathspec = false
 
 [branch]
-	autosetupmerge = true
+    autosetupmerge = true
 
 [color "branch"]
     current = red reverse
@@ -72,16 +72,16 @@
     untracked = cyan
 
 [commit]
-	gpgSign = true
+    gpgSign = true
 
 [core]
-	editor = vim
-	excludesfile = /Users/brad/dotfiles/.global_ignore
+    editor = vim
+    excludesfile = /Users/brad/dotfiles/.global_ignore
     preloadindex = true
     abbrev = 12
 
 [credential]
-	helper = osxkeychain
+    helper = osxkeychain
 
 [delta]
     features     = syntax line-numbers
@@ -117,44 +117,42 @@
     ; plus-empty-line-marker-style = green brightgreen
     ; plus-emph-style = brightgreen bold ul auto
 
-    true-color = true
-
     whitespace-error-style = 22 reverse
 
 [diff]
-	tool = Kaleidoscope
+    tool = Kaleidoscope
 
 [difftool]
-	prompt = false
+    prompt = false
 
 [difftool "Kaleidoscope"]
-	cmd = ksdiff --partial-changeset --relative-path \"$MERGED\" -- \"$LOCAL\" \"$REMOTE\"
+    cmd = ksdiff --partial-changeset --relative-path \"$MERGED\" -- \"$LOCAL\" \"$REMOTE\"
 
 [gitcvs]
     commitMsgAnnotation = ""
 
 [gpg]
-	program = /usr/local/MacGPG2/bin/gpg
+    program = /usr/local/MacGPG2/bin/gpg
 
 [help]
-	autocorrect = 1
+    autocorrect = 1
     format = html
 
 [init]
-	defaultBranch = main
+    defaultBranch = main
 
 [interactive]
     diffFilter = delta --color-only
 
 [merge]
-	tool = Kaleidoscope
+    tool = Kaleidoscope
 
 [mergetool]
-	prompt = false
+    prompt = false
 
 [mergetool "Kaleidoscope"]
-	cmd = ksdiff --merge --output \"$MERGED\" --base \"$BASE\" -- \"$LOCAL\" --snapshot \"$REMOTE\" --snapshot
-	trustExitCode = true
+    cmd = ksdiff --merge --output \"$MERGED\" --base \"$BASE\" -- \"$LOCAL\" --snapshot \"$REMOTE\" --snapshot
+    trustExitCode = true
 
 [pager]
     diff = delta
@@ -162,21 +160,21 @@
     show = delta
 
 [pretty]
-	log = "%C(yellow)%h%Cred%d %Creset%s%Cblue [%cn]"
+    log = "%C(yellow)%h%Cred%d %Creset%s%Cblue [%cn]"
     graph = "%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset"
 
 [pull]
-	rebase = true
+    rebase = true
 
 [push]
-	default = current
+    default = current
 
 [status]
     showUntrackedFiles = all
 
 [tag]
     forceSignAnnotated = true
-	gpgSign = true
+    gpgSign = true
 
 [url "ssh://git@github.com/"]
-	insteadOf = https://github.com/
+    insteadOf = https://github.com/
