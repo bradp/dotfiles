@@ -1,0 +1,74 @@
+#!/usr/bin/env bash
+#
+# Add a youtube video to the pocket watchlist in Notion.
+#
+# Usage:
+#   watch https://www.youtube.com/watch?v=2kEJoWfobpA
+#
+# Needs these environment variables set:
+#   NOTION_API_KEY
+#   NOTION_POCKET_ID
+#
+
+if [ -z "$1" ]; then
+	echo "Error: No URL specified."
+	echo ""
+	echo "Usage: notion-watch <url>"
+	exit 1
+fi
+
+title="$(yt-dlp --get-title "${1}")"
+url="$1"
+
+thumbnail=""
+
+# check if its a youtube link
+if [[ "${url}" =~ ^https?://(www\.)?youtube\.com/watch\?v= ]]; then
+	vid_id=$(echo "${url}" | cut -d '=' -f2 )
+	thumbnail="https://i.ytimg.com/vi/${vid_id}/hqdefault.jpg"
+elif [[ "${url}" =~ ^https?://(www\.)?archive.org/details/ ]]; then
+	vid_id="$(echo "${url}" | cut -d'/' -f5 )"
+	thumbnail="https://archive.org/download/${vid_id}/__ia_thumb.jpg"
+fi
+
+status=$(curl -sL 'https://api.notion.com/v1/pages' \
+	-H 'Authorization: Bearer '"${NOTION_API_KEY}"'' \
+	-H "Content-Type: application/json" \
+	-H "Notion-Version: 2021-05-13" \
+	--data '{
+		"object": "page",
+		"parent": {
+			"type": "database_id",
+			"database_id": "'"${NOTION_POCKET_ID}"'"
+		},
+		"archived": false,
+		"cover": {
+			"external": {
+				"url": "'"${thumbnail}"'"
+			}
+		},
+		"properties": {
+			"Name": {
+				"id": "title",
+				"type": "title",
+				"title": [ {
+					"type": "text",
+					"text": {
+						"content": "'"${title}"'",
+						"link": null
+					}
+				} ]
+			},
+			"URL": {
+				"id": "Rv%3CB",
+				"name": "URL",
+				"type": "url",
+				"url": "'"${url}"'"
+			}
+		}
+	}' | jq -r ".object" )
+
+if [ "error" = "${status}" ]; then
+	echo "Error adding item."
+	exit 1
+fi
