@@ -99,7 +99,7 @@ function bookmarks() {
 # Launch app 						    #
 #########################################
 function app() {
-	fd '.app' --search-path '/Applications' --search-path '/System/Applications' --prune -t d | sort | \
+	fd '.app' --search-path '/Applications' --search-path '/System/Applications' --search-path '/System/Library/CoreServices/Finder.app/Contents/Applications/' --prune -t d | sort | \
 	fzf --delimiter="Applications/" --with-nth=-1 --query="${1}" --select-1 --multi --no-info --prompt='open: ' --reverse --border=none --black \
 	--color="gutter:black,bg:black,pointer:cyan,fg+:cyan,fg+:bold,border:black" \
 	--preview-window=left,30 \
