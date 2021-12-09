@@ -43,12 +43,13 @@ status=$(curl -sL 'https://api.notion.com/v1/pages' \
 						"text": {
 							"content": "'"${text}"'",
 							"link": null
-            }
-          }
-        ]
-      }
-    }
-  }' | jq -r ".object" )
+						}
+					}
+				]
+			}
+		}
+	}' \
+| jq -r ".object" )
 
 if [ "error" = "${status}" ]; then
 	echo "Error adding todo."
