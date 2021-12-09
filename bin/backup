@@ -143,6 +143,10 @@ function backup_pocket() {
 		echo "$i"
 		wget --quiet --show-progress --progress=bar:force:noscroll --page-requisites "$i"
 	done
+
+	cd ../
+
+	rclone copy --fast-list --progress --copy-links --checkers 50 --transfers 100 "$date" b2:parbs-pocket
 }
 
 #######################################
