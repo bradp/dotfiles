@@ -2,7 +2,18 @@
 #
 # Add a spacer to the Dock.
 #
+# Usage:
+#   add-dock-spacer
+#   add-dock-spacer small
+#
 
-defaults write com.apple.dock persistent-apps -array-add '{"tile-type"="spacer-tile";}'
+if [ "$1" == "small" ]; then
+	defaults write com.apple.dock persistent-apps -array-add '{"tile-type"="small-spacer-tile";}'
+else
+	defaults write com.apple.dock persistent-apps -array-add '{"tile-type"="spacer-tile";}'
+fi
 
-killall Dock
+# If there isn't a second argument
+if [ -z "$2" ]; then
+	killall Dock
+fi
