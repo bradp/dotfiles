@@ -33,6 +33,7 @@ alias hub="gh"
 alias imgcat="catimg"
 alias ls="x"
 alias lynx="lynx -accept_all_cookies -use_mouse -vikeys"
+alias markdown="mdcat"
 alias ql="qlmanage -p 2>/dev/null"
 alias tree="tree -C"
 alias v=vim
