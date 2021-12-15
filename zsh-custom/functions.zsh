@@ -59,6 +59,15 @@ function dash() {
 }
 
 ########################################
+# Get public IP address                #
+########################################
+function ip() {
+	ip=$(curl -s ifconfig.me)
+	echo "$ip"
+	echo "$ip" | pbcopy
+}
+
+########################################
 # Run a git hook                       #
 ########################################
 function hook() {
