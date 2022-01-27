@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+
+# Assert there is at least one tag provided
+test -z $1 && echo "tag required." 1>&2 && exit 1
+
+# Detect the default remote exists or not
+default_remote=$(git config git-extras.default-remote)
+
+if [[ -n "$default_remote" ]]; then
+    origin="$default_remote"
+else
+    origin=origin
+fi
+
+# Concatenate all the tag references
+local_tags=""
+origin_refs=""
+for tagname in "$@"
+do
+  local_tags=$local_tags" $tagname"
+  origin_refs=$origin_refs" :refs/tags/$tagname"
+done
+
+# Delete all the tags
+git tag -d $local_tags
+git push $origin $origin_refs

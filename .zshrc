@@ -49,6 +49,7 @@ PATH="/bin"
 path+=(/usr/local/bin)
 path+=($DOTFILES_PATH/misc)
 path+=($DOTFILES_PATH/bin)
+path+=($DOTFILES_PATH/bin/git)
 path+=($DOTFILES_PATH/bin/util)
 path+=($HOME/.composer/vendor/bin)
 path+=($HOME/.yarn/bin)
