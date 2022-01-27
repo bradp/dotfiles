@@ -37,7 +37,7 @@ EOF
 	exit
 }
 
-function _doarchive() {
+_doarchive() {
 	curl --silent --location \
 	--request POST 'https://web.archive.org/save' \
 	--header 'Accept: application/json' \
@@ -51,7 +51,7 @@ function _doarchive() {
 	> /dev/null
 }
 
-function _urlizeit() {
+_urlizeit() {
 	if [[ "${1}" == *"http:"* ]]; then
 		site="${1}"
 	elif [[ "${1}" == *"https:"* ]]; then
@@ -61,11 +61,11 @@ function _urlizeit() {
 	fi
 }
 
-function _maketmp() {
+_maketmp() {
 	tmpdir=$(mktemp -d /tmp/wayback_links.XXXXXXX)
 }
 
-function _checkavailable() {
+_checkavailable() {
 	userstatus=$(curl --silent --location \
 	--header 'Accept: application/json' \
 	--header "Authorization: LOW ${ARCHIVE_ORG_ACCESS}:${ARCHIVE_ORG_SECRET}" \
@@ -75,7 +75,7 @@ function _checkavailable() {
 	processing=$(echo "${userstatus}" | jq -r ".processing")
 }
 
-function _archivethempages() {
+_archivethempages() {
 	echo "► Found $(cat "${tmpdir}"/found_urls | wc -l | tr -d ' ') pages to archive"
 
 	for url in $(cat "${tmpdir}"/found_urls); do
@@ -106,7 +106,7 @@ function _archivethempages() {
 	echo "    You've sent $(echo "${userstatus}" | jq -r ".daily_captures") urls to archive.org today  "
 }
 
-function _runurl() {
+_runurl() {
 	_urlizeit "${1}"
 	_maketmp
 
@@ -116,7 +116,7 @@ function _runurl() {
 	exit
 }
 
-function _runfile() {
+_runfile() {
 	if [ -z "${1}" ]; then
 		echo "Please provide a path to a file"
 		exit
@@ -138,7 +138,7 @@ function _runfile() {
 	exit
 }
 
-function _runsite() {
+_runsite() {
 	_urlizeit "$1"
 
 	echo -n "► Crawling internal links on ${site}  "
@@ -160,7 +160,7 @@ function _runsite() {
 	exit
 }
 
-function _runpocket () {
+_runpocket () {
 	echo -n "► Grabbing Pocket list  "
 	_maketmp
 	bash api pocket /get | jq -r ".list[].resolved_url" > "${tmpdir}"/found_urls && echo "✓"
@@ -169,7 +169,7 @@ function _runpocket () {
 }
 
 
-function _runstatus() {
+_runstatus() {
 	curl --silent --location --request GET --header 'Accept: application/json' --header "Authorization: LOW ${ARCHIVE_ORG_ACCESS}:${ARCHIVE_ORG_SECRET}" "https://web.archive.org/save/status/user?_t=${RANDOM}" | jq
 	exit
 }

@@ -6,13 +6,13 @@
 #   MY_GH_TOKEN
 #
 
-function _goto_temp_dir() {
+_goto_temp_dir() {
 	tempfolder="$RANDOM"
 	mkdir -p "/tmp/$tempfolder" 2> /dev/null
 	cd "/tmp/$tempfolder" || exit
 }
 
-function _clone_and_compress_from_api() {
+_clone_and_compress_from_api() {
 	curl -sLu "$MY_GH_TOKEN" "$1" |  jq -r '.[] | select(.fork == false) | .ssh_url' | xargs -L1 -P10 git clone --depth 1
 
 	for d in */ ; do
@@ -24,22 +24,22 @@ function _clone_and_compress_from_api() {
 	done
 }
 
-function _backup_user_page() {
+_backup_user_page() {
 	_clone_and_compress_from_api "https://api.github.com/users/$1/repos?per_page=100&page=$2"
 }
 
-function _backup_stars_page() {
+_backup_stars_page() {
 	_clone_and_compress_from_api "https://api.github.com/users/$1/starred?per_page=100&page=$2"
 }
 
-function _gh_start() {
+_gh_start() {
 	echo "Cloning & backing up $2 repos for $1 ..."
 
 	mkdir "$1" 2> /dev/null
 	cd "$1" || exit
 }
 
-function _gh_end() {
+_gh_end() {
 	cd ../ || exit
 	echo "Sending to b2 ..."
 
@@ -48,7 +48,7 @@ function _gh_end() {
 	rm -rf "$1"
 }
 
-function _backup_user() {
+_backup_user() {
 	_gh_start "$1" "all"
 
 	repos=$(curl -sLu "$MY_GH_TOKEN" "https://api.github.com/users/$1" | jq -r '.public_repos' )
@@ -61,7 +61,7 @@ function _backup_user() {
 	_gh_end "$1" "b2:parbs-github/$1"
 }
 
-function _backup_stars() {
+_backup_stars() {
 	_gh_start "$1" "starred"
 
 	# set for 10 pages of 100, so default to assuming 1000 stars max

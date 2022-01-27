@@ -13,7 +13,7 @@
 if [ -z "$1" ]; then
 	echo "Error: No URL specified."
 	echo ""
-	echo "Usage: notion-watch <url>"
+	echo "Usage: nwatch <url>"
 	exit 1
 fi
 

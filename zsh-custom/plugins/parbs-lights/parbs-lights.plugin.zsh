@@ -13,34 +13,34 @@ PARBS_LIGHTS_BED=5,7
 PARBS_LIGHTS_LIVING=1,2,6
 
 # Wrapper for hue lights with no output.
-function lights() {
+lights() {
 	hue lights "$@" &>/dev/null;
 }
 
 # Control office lights.
-function office() {
+office() {
 	lights ${PARBS_LIGHTS_OFFICE} "$@";
 }
 
 # Control bedroom lights.
-function bed() {
+bed() {
 	lights ${PARBS_LIGHTS_BED} "$@";
 }
 
 # Control living room lights.
-function living() {
+living() {
 	lights ${PARBS_LIGHTS_LIVING} "$@";
 }
 
 # Flash an alert in the office.
-function oalert() {
+oalert() {
 	office on;
 	office ${1:-red};
 	sleep 1;
 	office white;
 }
 
-function lightsrandom() {
+lightsrandom() {
 	while true; do
 		color=$((1 + ${RANDOM} % 65535))
 		light=$((1 + ${RANDOM} % 7))

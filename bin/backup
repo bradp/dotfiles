@@ -8,7 +8,7 @@
 #######################################
 # Set color helpers for output.
 #######################################
-function _set_colors() {
+_set_colors() {
 	red=$(tput setaf 1)
 	green=$(tput setaf 2)
 	reset=$(tput sgr0)
@@ -17,14 +17,14 @@ function _set_colors() {
 #######################################
 # Display backup start message.
 #######################################
-function _display_start() {
+_display_start() {
 	echo "   $1   $2 ... "
 }
 
 #######################################
 # Display backup end message.
 #######################################
-function _display_done() {
+_display_done() {
 	if [[ -z "$1" && "$1" == "error" ]];then
 		echo "${red}${2}${reset}"
 	else
@@ -35,7 +35,7 @@ function _display_done() {
 #######################################
 # Backup xavier server.
 #######################################
-function backup_xavier() {
+backup_xavier() {
 	_display_start "" "xavier"
 	ssh xavier "rclone copy --fast-list --progress --copy-links --checkers 20 --transfers 20 /etc/caddy b2:parbs-xavier/etc/caddy"
 	ssh xavier "rclone copy --fast-list --progress --copy-links --checkers 20 --transfers 20 /var/www b2:parbs-xavier/var/www"
@@ -46,7 +46,7 @@ function backup_xavier() {
 #######################################
 # Backup pihole.
 #######################################
-function backup_pihole() {
+backup_pihole() {
 	_display_start "" "pihole"
 	ssh pihole "rclone copy --fast-list --progress --copy-links --exclude '.git/**' --checkers 50 --transfers 50 /var/www b2:parbs-pihole/var/www"
 	ssh pihole "rclone copy --fast-list --progress --copy-links --exclude '.git/**' --exclude 'wp-gen/**' --exclude '.cache/**' --checkers 50 --transfers 50 /home/pi b2:parbs-pihole/home/pi"
@@ -56,7 +56,7 @@ function backup_pihole() {
 #######################################
 # Backup dropbox via b2 targets.
 #######################################
-function backup_dropbox() {
+backup_dropbox() {
 	_display_start "" "dropbox"
 	rclone copy --fast-list --progress --copy-links --checkers 8 --transfers 10 dropbox: b2:parbs-dropbox
 	_display_done
@@ -65,7 +65,7 @@ function backup_dropbox() {
 #######################################
 # Backup dropbox from local files
 #######################################
-function backup_dropbox_local() {
+backup_dropbox_local() {
 	_display_start "" "dropbox-local"
 	rclone copy --fast-list --progress --copy-links --exclude '.git/**' --exclude 'node_modules/**' --exclude '.dropbox.cache/**' --checkers 50 --transfers 50 /Users/brad/Dropbox b2:parbs-dropbox
 	_display_done
@@ -74,7 +74,7 @@ function backup_dropbox_local() {
 #######################################
 # Backup SDR - currently not configured.
 #######################################
-function backup_sdr() {
+backup_sdr() {
 	_display_start "殺" "sdr"
 	_display_done "error" "not configured"
 }
@@ -82,7 +82,7 @@ function backup_sdr() {
 #######################################
 # Backup screen - currently not configured.
 #######################################
-function backup_screen() {
+backup_screen() {
 	_display_start "" "screen"
 	_display_done "error" "not configured"
 }
@@ -90,7 +90,7 @@ function backup_screen() {
 #######################################
 # Backup github user
 #######################################
-function backup_github() {
+backup_github() {
 	_display_start "" "github"
 
 	gh-backup user bradp
@@ -101,7 +101,7 @@ function backup_github() {
 #######################################
 # Backup github stars.
 #######################################
-function backup_github_stars() {
+backup_github_stars() {
 	_display_start "" "github-stars"
 
 	gh-backup starred bradp
@@ -112,7 +112,7 @@ function backup_github_stars() {
 #######################################
 # Backup the media HDD
 #######################################
-function backup_media_hdd() {
+backup_media_hdd() {
 	_display_start "" "media-hdd"
 
 	if [[ -d /Volumes/Small/Media ]]; then
@@ -127,7 +127,7 @@ function backup_media_hdd() {
 #######################################
 # Backup pocket items.
 #######################################
-function backup_pocket() {
+backup_pocket() {
 	_display_start "" "pocket"
 
 	cd "$HOME/Dropbox/Working/backups/pocket" || exit
@@ -152,7 +152,7 @@ function backup_pocket() {
 #######################################
 # Backup ~/Sites
 #######################################
-function backup_www() {
+backup_www() {
 	_display_start "" "www"
 
 	rclone copy --fast-list --progress --copy-links --checkers 50 --transfers 100 "$HOME/Sites" b2:parbs-www
@@ -162,7 +162,7 @@ function backup_www() {
 #######################################
 # Backup sites to the wayback machine.
 #######################################
-function backup_wayback() {
+backup_wayback() {
 	_display_start "" "wayback"
 
 	wayback site bradparbs.com
@@ -180,7 +180,7 @@ function backup_wayback() {
 #######################################
 # Run all (well most) backup targets.
 #######################################
-function backup_all() {
+backup_all() {
 	_display_start " " "all"
 
 	backup_xavier
@@ -198,7 +198,7 @@ function backup_all() {
 #######################################
 # Display help/usage.
 #######################################
-function _display_help() {
+_display_help() {
 	echo "${red} Available targets: ${reset}"
 	echo ""
 	echo "${green}  •   all${reset}"

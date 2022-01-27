@@ -18,11 +18,11 @@
 #   OPENWEATHER_API_KEY
 #
 
-function _api_cloudflare() {
+_api_cloudflare() {
   curl -sL -X GET "https://api.cloudflare.com/client/v4/${2}" -H "Authorization: Bearer ${CLOUDFLARE_TOKEN}" -H "Content-Type:application/json"
 }
 
-function _api_github() {
+_api_github() {
   # Set default of page 1, 100 per page
   page="${3:-1}"
   per_page="${4:-100}"
@@ -30,7 +30,7 @@ function _api_github() {
   curl -sLu "${MY_GH_TOKEN}" "https://api.github.com${2}?per_page=${per_page}&page=${page}"
 }
 
-function _api_pocket() {
+_api_pocket() {
   args="${3}"
   if [[ ! -z "${args}" ]]; then
     args="&${args}"
@@ -39,15 +39,15 @@ function _api_pocket() {
   curl -sL "https://getpocket.com/v3/${2}?consumer_key=${POCKET_CONSUMER_KEY}&access_token=${POCKET_ACCESS_TOKEN}${args}"
 }
 
-function _api_movie() {
+_api_movie() {
   curl -sL "https://api.themoviedb.org/3/${2}?api_key=${MOVIEDB_KEY}&language=en-US"
 }
 
-function _api_weather() {
+_api_weather() {
   curl -sl "https://api.openweathermap.org/data/2.5/weather?${2}&APPID=${OPENWEATHER_API_KEY}"
 }
 
-function _list() {
+_list() {
   echo "cloudflare"
   echo "github"
   echo "pocket"

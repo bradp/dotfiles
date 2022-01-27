@@ -38,7 +38,7 @@ clear
 
 case "${1-}" in
 	all) echo "$all" ;;
-	f) echo "$fa"; echo "fae" ;;
+	f) echo "$fa"; echo "$fae" ;;
 	fa) echo "$fa" ;;
 	fae) echo "$fae" ;;
 	d|dev) echo "$dev" ;;

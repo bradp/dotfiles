@@ -11,28 +11,28 @@
 #########################################
 # Make a directory and cd into it       #
 #########################################
-function mkd() {
+mkd() {
 	mkdir -p -- "$@" && cd -- "$@"
 }
 
 #########################################
 # Go to the root of git directory       #
 #########################################
-function root() {
+root() {
 	while ! [ -d .git ]; do cd ..; done
 }
 
 #########################################
 # Grep for a running process            #
 #########################################
-function pa() {
+pa() {
 	ps aux | rg "$*"
 }
 
 #########################################
 # Grep for a history entry              #
 #########################################
-function ha() {
+ha() {
 	history | rg "$*"
 }
 
@@ -40,28 +40,28 @@ function ha() {
 # Open a file if passed one, otherwise #
 # open the current directory           #
 #######################################
-function o() {
+o() {
 	open "${1:-.}"
 }
 
 #########################################
 # 1Password                             #
 #########################################
-function 1p() {
+1p() {
 	eval $(op signin my)
 }
 
 ########################################
 # Dash                                 #
 ########################################
-function dash() {
+dash() {
 	open "dash://${1}"
 }
 
 ########################################
 # Get public IP address                #
 ########################################
-function ip() {
+ip() {
 	ip=$(curl -s ifconfig.me)
 	echo "$ip"
 	echo "$ip" | pbcopy
@@ -70,7 +70,7 @@ function ip() {
 ########################################
 # Run a git hook                       #
 ########################################
-function hook() {
+hook() {
 	local current_dir=$(pwd)
 
 	root
@@ -89,7 +89,7 @@ compdef _hook git-hook
 ########################################
 # Backup pocket repos                  #
 ########################################
-function backup-pocket-repos() {
+backup-pocket-repos() {
 	api pocket /get | \
 	jq -r '.list | .[].resolved_url' | \
 	ag 'https://github' | \
@@ -102,7 +102,7 @@ function backup-pocket-repos() {
 #                                       #
 # https://github.com/shazow/dotfiles/   #
 #########################################
-function bak() {
+bak() {
 	declare target=$1;
 	if [[ "${target:0-1}" = "/" ]]; then
 		target=${target%%/}; # Strip trailing / of directories
@@ -115,7 +115,7 @@ function bak() {
 #                                       #
 # https://github.com/shazow/dotfiles/   #
 #########################################
-function unbak() {
+unbak() {
 	declare target=$1;
 	if [[ "${target:0-1}" = "/" ]]; then
 		# Strip trailing / of directories
@@ -136,7 +136,7 @@ compdef _unbak unbak
 #########################################
 # Get battery percent                   #
 #########################################
-function battery() {
+battery() {
 	local batt=$(pmset -g batt)
 	batt=($(echo "${batt}" | tr '	' '\n'))
 	local percent="${batt[8]}"
@@ -148,7 +148,7 @@ function battery() {
 #########################################
 # Purge Cloudflare cache                #
 #########################################
-function purge-cloudflare-cache() {
+purge-cloudflare-cache() {
 	local zone=$(api cf zones | \
 	jq -r '.result[] | [.name, .id] | flatten | @csv' | \
 	sed 's/"//g' | \
@@ -174,7 +174,7 @@ function purge-cloudflare-cache() {
 #########################################
 # Deployments for hugo sites            #
 #########################################
-function deploy() {
+deploy() {
 	local site=${1:-$(basename $(pwd))}
 
 	cd "${HOME}/Dropbox/Working/sites/${site}" || exit
@@ -194,7 +194,7 @@ compdef _deploy deploy
 #########################################
 # Quickly jump to Sites/www/site        #
 #########################################
-function site() {
+site() {
     cd "${HOME}/Sites/www/${1}/content/"
 }
 
@@ -204,9 +204,11 @@ compdef _site site
 #########################################
 # Quickly jump to site directory        #
 #########################################
-function s() {
+s() {
     cd "${HOME}/Dropbox/Working/sites/${1}/"
 }
 
-_s() { _files -W "${HOME}/Dropbox/Working/sites/" -/ }
+_s() {
+	_files -W "${HOME}/Dropbox/Working/sites/" -/
+}
 compdef _s s

@@ -9,7 +9,7 @@
 #######################################
 # Output the weather for a given day.
 #######################################
-function _show_weather() {
+_show_weather() {
     local weather
     local current
     local feels_like
@@ -46,7 +46,7 @@ function _show_weather() {
 #######################################
 # Show a cowsay cow
 #######################################
-function _show_cow() {
+_show_cow() {
     local cows
     local random_cow
     local cow
@@ -61,7 +61,7 @@ function _show_cow() {
 #######################################
 # Start the day.
 #######################################
-function _run_start() {
+_run_start() {
     clear
 
     echo ""
@@ -96,7 +96,7 @@ function _run_start() {
 #######################################
 # End the day
 #######################################
-function _run_end() {
+_run_end() {
     local confirm
 
     echo ""

@@ -16,7 +16,7 @@
 #######################################
 # Send a url to Notion Pocket DB
 #######################################
-function _send() {
+_send() {
 	local title
 	local url
 

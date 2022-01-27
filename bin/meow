@@ -4,7 +4,7 @@
 # <sequence> ST, and for all ESCs in <sequence> to be replaced with ESC ESC. It
 # only accepts ESC backslash for ST. We use TERM instead of TMUX because TERM
 # gets passed through ssh.
-function print_osc() {
+print_osc() {
     if [[ $TERM == screen* ]] ; then
         printf "\033Ptmux;\033\033]"
     else
@@ -13,7 +13,7 @@ function print_osc() {
 }
 
 # More of the tmux workaround described above.
-function print_st() {
+print_st() {
     if [[ $TERM == screen* ]] ; then
         printf "\a\033\\"
     else
@@ -21,13 +21,13 @@ function print_st() {
     fi
 }
 
-function load_version() {
+load_version() {
     if [ -z ${IMGCAT_BASE64_VERSION+x} ]; then
         export IMGCAT_BASE64_VERSION=$(base64 --version 2>&1)
     fi
 }
 
-function b64_encode() {
+b64_encode() {
     load_version
     if [[ "$IMGCAT_BASE64_VERSION" =~ GNU ]]; then
         # Disable line wrap
@@ -37,7 +37,7 @@ function b64_encode() {
     fi
 }
 
-function b64_decode() {
+b64_decode() {
     load_version
     if [[ "$IMGCAT_BASE64_VERSION" =~ fourmilab ]]; then
       BASE64ARG=-d
@@ -55,7 +55,7 @@ function b64_decode() {
 #   base64contents: Base64-encoded contents
 #   print_filename: If non-empty, print the filename
 #                   before outputting the image
-function print_image() {
+print_image() {
     print_osc
     printf '1337;File='
     if [[ -n "$1" ]]; then
@@ -73,16 +73,16 @@ function print_image() {
     fi
 }
 
-function error() {
+error() {
     echo "ERROR: $*" 1>&2
 }
 
-function show_help() {
+show_help() {
     echo "Usage: imgcat [-p] filename ..." 1>& 2
     echo "   or: cat filename | imgcat" 1>& 2
 }
 
-function check_dependency() {
+check_dependency() {
   if ! (builtin command -V "$1" > /dev/null 2>& 1); then
     echo "imgcat: missing dependency: can't find $1" 1>& 2
     exit 1
