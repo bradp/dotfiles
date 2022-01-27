@@ -1,0 +1,6 @@
+#compdef pubkey
+
+local -a keys
+keys=($(find $HOME/.ssh -type f -name "*.pub" | cut -d'/' -f5 | cut -d'.' -f1))
+
+_describe 'commands' keys

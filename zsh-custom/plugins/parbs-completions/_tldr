@@ -1,0 +1,7 @@
+#compdef tldr
+IFS=$'\n'
+
+local -a keys
+keys=($(tail -n 20 $HOME/.zsh_history | cut -d';' -f2 | cut -d' ' -f1 | sort | uniq ))
+
+_describe 'commands' keys

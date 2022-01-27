@@ -1,0 +1,9 @@
+#compdef api
+local -a providers=( \
+	'cloudflare:CloudFlare API' \
+	'github:GitHub API' \
+	'pocket:Pocket API' \
+	'movie:MovieDB API' \
+	'weather:OpenWeatherMap API' \
+)
+_describe 'commands' providers

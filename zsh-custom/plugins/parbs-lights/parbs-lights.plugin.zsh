@@ -53,3 +53,18 @@ lightsrandom() {
 		sleep 1
 	done
 }
+
+_light_completion() {
+	local -a options=( \
+		'on:⬜️  Turn on' \
+		'off:⬛️  Turn off' \
+		'red:🔴  Turn red' \
+		'green:🟢  Turn green' \
+		'blue:🔵  Turn blue' \
+		'yellow:🟡  Turn yellow' \
+		'purple:🟣  Turn purple' \
+		'white:⚪️  Turn white'
+	)
+	_describe 'commands' options
+}
+compdef _light_completion office bed living

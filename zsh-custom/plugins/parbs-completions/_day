@@ -1,0 +1,7 @@
+#compdef day
+
+local -a commands=( \
+	'start:☀️  Start the day' \
+	'end:🌒️ End the day' \
+)
+_describe 'commands' commands

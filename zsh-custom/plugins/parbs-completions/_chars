@@ -1,0 +1,16 @@
+#compdef chars
+local -a icons=( \
+	'all:All icons' \
+	'fa:Font Awesome' \
+	'fae:Font Awesome + Extras' \
+	'dev:Devicons' \
+	'weather:Weather icons' \
+	'seti:Seti UI' \
+	'pom:Pomodoro' \
+	'ple:Powerline Extras' \
+	'oct:Octoicons' \
+	'linux:Linux' \
+	'material:Material Icons' \
+	'box:Boxicons'
+)
+_describe 'commands' icons
