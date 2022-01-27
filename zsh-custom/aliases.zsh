@@ -51,7 +51,7 @@ alias g="git"
 alias gs="git status"
 alias gc="git commit -m"
 alias gcb="git fetch && git checkout -b $@ origin/$@"
-alias gpre="git pull --rebase origin ${1}"
+alias gpre="git pull --rebase origin $1"
 alias gcm="git commit -m $@"
 
 alias forgit_checkout_branch="gco"
@@ -60,7 +60,7 @@ alias kdiff="git difftool -y -t Kaleidoscope"
 #########################################
 # Un-git git commands                   #
 #########################################
-alias current-branch="git-current-branch"
+alias current-branch="git current-branch"
 
 #########################################
 # Editing 							    #
