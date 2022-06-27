@@ -18,6 +18,8 @@ ZSH_THEME_GIT_PROMPT_REMOTE_MISSING="%{$FG[193]%}  %{$reset_color%}"
 
 # Show battery icon
 __battery_icon() {
+	return
+
 	if ! hash pmset 2>/dev/null; then
 		return
 	fi

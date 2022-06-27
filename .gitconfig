@@ -17,6 +17,8 @@
     a = add
     aa = !git add -u && git add . && git status
 
+    amend = commit --amend --reuse-message=HEAD
+
     s = status
     st = status -sb
 
@@ -46,7 +48,6 @@
     tig = !tig $@
 
 [advice]
-    statusAheadBehind = fals
     statusHints = false
     detachedHead = false
     waitingForEditor = false
@@ -157,7 +158,7 @@
 [pager]
     diff = delta
     reflog = delta
-    show = delta
+#    show = delta
 
 [pretty]
     log = "%C(yellow)%h%Cred%d %Creset%s%Cblue [%cn]"

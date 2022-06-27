@@ -1,0 +1,149 @@
+#!/usr/bin/env bash
+#
+# Character picker
+#
+chars="⚐ Flag
+⚑ Flag filled
+☆ Star
+★ Star filled
+· Dot
+᙮ x
+✓ Checkmark
+§ Section
+¶ Paragraph
+‽ Interrobang
+“ Left quote
+” Right Quote
+— Em dash
+– En dash
+⌘ Command
+⌥ Option / Alt
+⌃ Control
+⌫ Backspace
+⌦ Delete
+⏏ Eject
+↘ End
+⌅ Return
+⎋ Escape
+↖ Home
+⇟ Page down
+⇞ Page up
+↵ Return
+⇧ Shift
+⇪ Caps lock
+␣ Space
+↹ Tab
+⇤ Tab left
+⇥ Tab right
+⏎ Carriage return
+₿ Bitcoin
+€ Euro
+¥ Yen
+£ Pound
+₩ Won"
+
+chars="$chars
+☑ Checked box
+☒ Checkbox
+☐ Unchecked box
+✓ Checkmark
+✕ Multiplication x
+✗ Cross Mark
+✘ Heavy Cross Mark
+♔ King
+♕ Queen
+♖ Bishop
+♗ Knight
+♘ Rook
+♙ Pawn
+♡ Heart
+♢ Diamond
+♧ Club
+♤ Spade
+⚀ Dice Die 1
+⚁ Dice Die 2
+⚂ Dice Die 3
+⚃ Dice Die 4
+⚄ Dice Die 5
+⚅ Dice Die 6
+☤ Staff of Caduceus
+⚚ Staff of Hermes
+🜚 Sun
+⚘ Flower
+☭ Hammer and Sickle
+⌽ Power key
+␀ Null
+␖ SYN
+␆ ACK
+␈ Backspace
+␡ Alternative DEL
+␛ Alternative ESC
+␉ Horizontal tab
+␊ Line feed
+␍ Carriage return
+÷ Division
+∑ Summation
+λ Lambda
+∩ Intersection
+∫ Integral
+∴ Therefore
+≠ Not equal to
+≈ Approximately equal to
+≉ Not approximately equal to
+≤ Less than or equal to
+≥ Less than or equal to
+⊂ Subset
+⊃ Superset
+√ Square root
+∞ Infinity
+½ Fraction 1/2
+¼ Fraction 1/4
+¾ Fraction 3/4
+⅕ Fraction 1/5
+⅙ Fraction 1/6
+⅐ Fraction 1/7
+⅑ Fraction 1/9
+⅒ Fraction 1/10
+♭ Flat sign
+♯ Sharp sign
+♮ Natural sign
+♩ Quarter note
+♪ Eighth note
+♫ Double eight notes
+♬ Double sixteenth notes
+𝄞 Clef
+𝄢 Clef
+⁇ Double question
+⁈ Question & Exclamation
+¶ Pilcrow / paragraph symbol
+† Dagger
+‡ Double dagger
+〃 Ditto
+〆 Ideographic closing mark
+… Elipsis
+† Dagger
+‡ Double dagger
+‰ Per mille sign
+° Degree sign
+© Copyright
+® Registered
+™ Trademark
+⅋ Upside down ampersand
+￠ Fullwidth Cent Sign
+¤ currency sign
+﹟ small number sign
+﹠ small ampersand
+﹩ small dollar sign
+﹪ small percent sign
+﹫ small at sign
+� replacement"
+
+
+character=$(echo "$chars" | \
+fzf --query="${1}" --select-1 --no-info --cycle --height=20 --border=none --padding=1,0,0,2 --margin=0 --no-multi --color=dark --color='gutter:-1,fg:dim' --no-bold --prompt=" " | \
+cut -c 1 | \
+tr -d '\n')
+
+echo "${character}" | pbcopy
+
+echo -e "\n$(tput setaf 2)Copied ${character} to clipboard.$(tput sgr0)\n"

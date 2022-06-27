@@ -33,8 +33,9 @@ plugins=(
 	forgit
 	fzf
 	parbs-completions
-	parbs-nvm-settings
 	parbs-lights
+	parbs-nvm-settings
+	parbs-php
 	speedycompinit
 	z
 	zf
@@ -46,7 +47,6 @@ source $DOTFILES_PATH/.oh-my-zsh/oh-my-zsh.sh
 source $ZSH_CUSTOM/zshrc-loaded
 
 PATH="/bin"
-path+=(/usr/local/bin)
 path+=($DOTFILES_PATH/misc)
 path+=($DOTFILES_PATH/bin)
 path+=($DOTFILES_PATH/bin/git)
@@ -55,6 +55,7 @@ path+=($HOME/.composer/vendor/bin)
 path+=($HOME/.yarn/bin)
 path+=($HOME/.cargo/bin)
 path+=($HOME/go/bin)
+path+=(/usr/local/bin)
 path+=(/usr/local/opt)
 path+=(/usr/local/MacGPG2/bin)
 path+=(/usr/local/share/npm/bin)

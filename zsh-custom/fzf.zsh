@@ -19,7 +19,9 @@ co() {
 	branches=$(git branch --color | grep -v HEAD | sed 's#.* ##' | sed 's#remotes/##')
 	target=$(fzf --no-sort --no-multi +e --ansi --preview-window 'right:60%' --preview 'git log --pretty=lo --no-merges --color --oneline --date=human {1} -- | head -200' <<< "$branches")
 
-	git checkout "$@" "$(awk '{print $1}' <<< "$target")"
+	if [ -n "$target" ]; then
+		git checkout "$(awk '{print $1}' <<< "$target")"
+	fi
 }
 
 #########################################
@@ -33,9 +35,10 @@ gtag() {
 	current=$(git describe --tags --abbrev=0 | sed 's#v##')
 	new=$(echo "$current" | awk -F '.' '{FS="."; OFS="."; $3++; print $0; $2++; $3=0; print $0; $1++; $2=0; print $0}' | fzf --height=5 --color=16 --border=none --info=hidden --header="Current Version: $current" --print-query)
 
-	new=${new//$'\n'/}
-
-	print -z git tag -a "${new}" -m \"Version "${new}"\"
+	if [ -n "$new" ]; then
+		new=${new//$'\n'/}
+		print -z git tag -a "${new}" -m \"Version "${new}"\"
+	fi
 }
 
 
