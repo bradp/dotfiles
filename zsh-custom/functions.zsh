@@ -212,3 +212,16 @@ _s() {
 	_files -W "${HOME}/Dropbox/Working/sites/" -/
 }
 compdef _s s
+
+###############################################
+# Helper to copy local WP mu-plugin to a site #
+###############################################
+copy-local-wp() {
+	if [ -d "wp-content/mu-plugins" ]; then
+		mkdir -p "wp-content/mu-plugins"
+		cp "${HOME}/Dropbox/Working/scratch-wp/wp-local/___local_wp.php" "wp-content/mu-plugins/"
+		echo "Copied ___local_wp.php to wp-content/mu-plugins"
+	else
+		echo "No wp-content/mu-plugins directory found, skipping copy of ___local_wp.php"
+	fi
+}

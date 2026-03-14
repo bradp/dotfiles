@@ -9,7 +9,7 @@
 #
 
 # ctrl + l → ls
-bindkey -s '^l' 'exa -Flam --git --color-scale --icons'
+bindkey -s '^l' 'eza -Flam --git --color-scale --icons'
 
 # ctrl + s → g status
 bindkey -s '^s' 'git status^M'

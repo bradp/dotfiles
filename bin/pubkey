@@ -5,7 +5,7 @@
 # Defaults to id_rsa.pub, but can pass in others.
 #
 
-ident=${1:-id_rsa}
+ident=${1:-id_ed25519}
 
 if [[ ! -f "$HOME/.ssh/${ident}.pub" ]]; then
 	echo "Key not found for ${ident}"

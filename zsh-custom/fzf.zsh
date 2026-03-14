@@ -16,7 +16,7 @@ co() {
 		return
 	fi
 
-	branches=$(git branch --color | grep -v HEAD | sed 's#.* ##' | sed 's#remotes/##')
+	branches=$(git for-each-ref --sort=-committerdate refs/heads/ --format='%(refname:short)')
 	target=$(fzf --no-sort --no-multi +e --ansi --preview-window 'right:60%' --preview 'git log --pretty=lo --no-merges --color --oneline --date=human {1} -- | head -200' <<< "$branches")
 
 	if [ -n "$target" ]; then
@@ -227,7 +227,7 @@ proj() {
 	column -t -s $'\t' | \
 	fzf --query=$query --prompt=" open --no-multi project: " --preview='file=$(echo {2} | sed "s/~//g" )
 	if [ -f $HOME/${file} ]; then file=$(echo -e $(dirname $file)); fi
-	exa -1 --icons --long --no-permissions --no-filesize --no-user --tree --level=2 --ignore-glob="node_modules" $HOME/${file}' | \
+	eza -1 --icons --long --no-permissions --no-filesize --no-user --tree --level=2 --ignore-glob="node_modules" $HOME/${file}' | \
 	sed 's/~//g' | \
 	rev | \
 	cut -d' ' -f1 | \

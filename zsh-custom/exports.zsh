@@ -20,6 +20,8 @@ export DOCKER_SCAN_SUGGEST=false
 
 export EDITOR="vim";
 
+
+export FZF_BASE="/opt/homebrew/bin/fzf"
 export FZF_COMPLETION_OPTS='--border --info=inline'
 export FZF_COMPLETION_TRIGGER=',,'
 export FZF_DEFAULT_COMMAND='ag -l --nocolor --hidden -g ""'
@@ -62,6 +64,8 @@ export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 export NEXT_TELEMETRY_DISABLED=1
 
 export PROMPT_EOL_MARK=''
+
+export TERMINUS_ALLOW_UNSUPPORTED_NEWER_PHP=1
 
 export TIMEFMT="\
 

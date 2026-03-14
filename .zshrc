@@ -24,14 +24,19 @@ ZSH_HIGHLIGHT_PATTERNS=('rm -rf *' 'fg=white,bold,bg=red' 'trash' 'underline,fg=
 
 zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
 zstyle ':completion:*:git-checkout:*' sort false
+zstyle ':fzf-tab:*' ignore 3
 
 DOTFILES_PATH=$HOME/dotfiles
 ZSH_CUSTOM=$DOTFILES_PATH/zsh-custom
 ZSH_THEME="parbs"
+export FZF_BASE="/opt/homebrew/bin/fzf"
+
+# Keep plain `z` fast; expose fzf-enhanced jumps via `zz`/`zzz`.
+export FZ_CMD=zz
+export FZ_SUBDIR_CMD=zzz
 
 plugins=(
 	forgit
-	fzf
 	parbs-completions
 	parbs-lights
 	parbs-nvm-settings
@@ -46,25 +51,24 @@ plugins=(
 source $DOTFILES_PATH/.oh-my-zsh/oh-my-zsh.sh
 source $ZSH_CUSTOM/zshrc-loaded
 
-PATH="/bin"
+typeset -U path
 path+=($DOTFILES_PATH/misc)
 path+=($DOTFILES_PATH/bin)
 path+=($DOTFILES_PATH/bin/git)
 path+=($DOTFILES_PATH/bin/util)
 path+=($HOME/.composer/vendor/bin)
+path+=($HOME/.bun/bin)
 path+=($HOME/.yarn/bin)
 path+=($HOME/.cargo/bin)
 path+=($HOME/go/bin)
-path+=(/usr/local/bin)
-path+=(/usr/local/opt)
-path+=(/usr/local/MacGPG2/bin)
-path+=(/usr/local/share/npm/bin)
-path+=(/usr/local/git/bin)
+path+=(/opt/homebrew/bin)
 path+=(/usr/local/bin)
 path+=(/usr/bin)
 path+=(/bin)
-path+=(/usr/local/sbin)
 path+=(/usr/sbin)
 path+=(/sbin)
 
 export PATH
+
+# bun completions
+[ -s "/Users/brad/.bun/_bun" ] && source "/Users/brad/.bun/_bun"

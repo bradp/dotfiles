@@ -1,0 +1,84 @@
+#!/usr/bin/env bash
+# Generate a .wp-env.json file for a WordPress project.
+# Usage: new-wp-env            — full WP install (auto-discovers themes/plugins)
+#        new-wp-env theme      — single theme mapped to "."
+#        new-wp-env plugin     — single plugin mapped to "."
+
+set -e
+
+type="${1:-}"
+
+if [ -n "$type" ] && [ "$type" != "theme" ] && [ "$type" != "plugin" ]; then
+	echo "Usage: new-wp-env [theme|plugin]"
+	exit 1
+fi
+
+if [ -f ".wp-env.json" ]; then
+	echo ".wp-env.json already exists."
+	exit 1
+fi
+
+port=$((RANDOM % 16384 + 49152))
+tests_port=$((RANDOM % 16384 + 49152))
+
+if [ -z "$type" ]; then
+	# Full WordPress install — discover themes and plugins
+
+	cat > .wp-env.json <<EOF
+{
+	"mappings": {
+		"wp-content/mu-plugins": "./wp-content/mu-plugins",
+		"wp-content/themes": "./wp-content/themes",
+		"wp-content/plugins": "./wp-content/plugins",
+		"wp-content/uploads": "./wp-content/uploads"
+	},
+	"port": ${port},
+	"env": {
+		"tests": {
+			"port": ${tests_port}
+		}
+	},
+	"config": {
+		"WP_DEBUG": true,
+		"WP_DEBUG_LOG": true,
+		"WP_DEBUG_DISPLAY": true
+	}
+}
+EOF
+
+	echo "Created .wp-env.json for full WordPress install"
+else
+	# Single theme or plugin
+	cat > .wp-env.json <<EOF
+{
+	"${type}s": [ "." ],
+	"port": ${port},
+	"env": {
+		"tests": {
+			"port": ${tests_port}
+		}
+	},
+	"config": {
+		"WP_DEBUG": true,
+		"WP_DEBUG_LOG": true,
+		"WP_DEBUG_DISPLAY": true
+	}
+}
+EOF
+
+	echo "Created .wp-env.json for $type: $(basename "$PWD")"
+fi
+
+# Check if there is a wp-content/mu-plugins directory and if there is, copy
+# copy /Users/brad/Dropbox/Working/scratch/wp-local/___local_wp.php to it.
+if [ -d "wp-content/mu-plugins" ]; then
+	mkdir -p "wp-content/mu-plugins"
+	cp "${HOME}/Dropbox/Working/scratch/wp-local/___local_wp.php" "wp-content/mu-plugins/"
+	echo "Copied ___local_wp.php to wp-content/mu-plugins"
+fi
+
+# Now start the environment unless the '--no-start' flag is passed.
+if [ "$2" != "--no-start" ]; then
+	echo "Starting the WordPress environment..."
+	bunx wp-env start
+fi

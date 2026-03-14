@@ -78,71 +78,8 @@ __write_protected_icon() {
   	fi
 }
 
-__find_vagrantfile() {
-	dir=.
-	until [ $dir -ef / ]; do
-		if [ -f "$dir/Vagrantfile" ]; then
-			echo "$dir/Vagrantfile"
-			return 0
-		fi
-		dir+=/..
-	done
-}
-__find_docker_files() {
-	dir=.
-	until [ $dir -ef / ]; do
-		if [[ -f "$dir/docker-compose.yml" || -f "$dir/docker-compose.yaml" || -f "$dir/Dockerfile" ]]; then
-			echo "$dir/Dockerfile"
-			return 0
-		fi
-		dir+=/..
-	done
-}
-
-__find_wp() {
-	dir=.
-	until [ $dir -ef / ]; do
-		if [ -f "$dir/wp-config.php" ]; then
-			echo "$dir/wp-config.php"
-			return 0
-		fi
-		dir+=/..
-	done
-}
-
-__find_hugo() {
-	dir=.
-	until [ $dir -ef / ]; do
-		if [ -f "$dir/hugo_stats.json" ]; then
-			echo "$dir/hugo_stats.json"
-			return 0
-		fi
-		dir+=/..
-	done
-}
-
 __file_icon() {
 	local display
-
-	if [[ -d .vagrant || $(__find_vagrantfile) ]]; then
-		display="${display}%{$FG[075]%}  "
-	fi
-
-	if [[ $(__find_docker_files) ]]; then
-		display="${display}%{$FG[032]%}  "
-	fi
-
-	if [[ $(__find_wp) ]]; then
-		display="${display}%{$FG[247]%}  "
-	fi
-
-	if [[ -f $(__find_hugo) ]]; then
-		display="${display}%{$FG[199]%} H "
-	fi
-
-	if [[ -f go.mod || ( $GOPATH && "$PWD/" =~ "$GOPATH/" ) || -n ./*.go(#qN^/) ]]; then
-		display="${display}%{$FG[116]%}  "
-	fi
 
 	if [[ -f package.json || -d node_modules || -n ./*.js(#qN^/) ]]; then
 		js_icon="%{$FG[070]%}  "
@@ -183,7 +120,6 @@ __icons() {
 	icons=$(__file_icon)
 
 	if [[ "$icons" != "" ]]; then
-		# display_icons="%{$FG[236]%} %{$reset_color%}%{$BG[236]%}$(__file_icon) %{$reset_color%}%{$FG[236]%} %{$reset_color%}"
 		display_icons="%{$FG[236]%}  %{$reset_color%}%{$BG[236]%}$(__file_icon) %{$reset_color%}%{$FG[236]%} %{$reset_color%}"
 
 	fi
@@ -220,7 +156,7 @@ __() {
 	echo ""
 }
 
-PROMPT='$(__prompt_path) $(__icons) %{$reset_color%}
+PROMPT='$(__prompt_path) %{$reset_color%}
 $(__git_info)$(__remote_host)$(__prompt_color)△  %{$reset_color%}'
-RPROMPT="$(__battery_icon)$(__internet_icon)"
+RPROMPT="$(__battery_icon)"
 PS2='%{$FG[246]%}↳  %{$reset_color%}'

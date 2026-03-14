@@ -39,10 +39,10 @@ alias tree="tree -C"
 alias v=vim
 alias vag="vagrant"
 alias vi=vim
-alias x="exa -Flam --git --color-scale --icons"
+alias x="eza -Flam --git --color-scale --icons"
 alias c="pbcopy"
 alias p="pbpaste"
-
+alias b="bun"
 
 #########################################
 # Git                                   #
@@ -53,10 +53,13 @@ alias gc="git commit -m"
 alias gcb="git fetch && git checkout -b $@ origin/$@"
 alias gpre="git pull --rebase origin $1"
 alias gcm="git commit -m $@"
+alias gun="git reset HEAD $1"
+alias guna="git reset HEAD $1"
 
 alias forgit_checkout_branch="gco"
 alias kdiff="git difftool -y -t Kaleidoscope"
-
+alias branches="git --no-pager for-each-ref --sort=-committerdate refs/heads/ --format='%(refname:short)'"
+alias branch="git current-branch"
 #########################################
 # Un-git git commands                   #
 #########################################
@@ -74,6 +77,7 @@ alias ctt="code ."
 alias st='open -a "Sublime Text"'
 alias stt="st ."
 
+alias edit='fc'
 #########################################
 # Figlet                                #
 #########################################
@@ -109,6 +113,15 @@ alias vu="vagrant up && vagrant ssh"
 alias vup="vagrant up && vagrant provision && vagrant ssh"
 alias vp="vagrant provision"
 
+##########################################
+# WordPress                             #
+##########################################
+alias wpstart=" wp-env start"
+alias wup="wp-env start"
+alias wpstop="wp-env stop"
+alias wpdown="wp-env stop"
+alias wown="wp-env stop"
+
 #########################################
 # youtube-dl                             #
 #########################################
@@ -119,3 +132,11 @@ alias myt="ytdl '${HOME}/Dropbox/Documents/Backups/Media'"
 # Misc                                  #
 #########################################
 alias f="fzf --preview 'bat --color=always --style=numbers --line-range=:500 {}'"
+alias rg="rg --hyperlink-format vscode"
+alias pbj="pbpaste|jq . |pbcopy"
+alias jbp="pbpaste|jq -c . |pbcopy"
+alias lastijq="tail -n 1 ~/Library/Application\ Support/ijq/history"
+alias "/codex"="codex"
+
+alias openrctfolder="cd /Users/brad/Library/Application\ Support/OpenRCT2 && open ."
+alias scratch="cd ${HOME}/Dropbox/Working/scratch"

@@ -37,6 +37,7 @@
     diff = diff --word-diff
 
     unstage = reset HEAD --
+    unstageall = reset HEAD -- .
 
     undo = reset --soft HEAD^
 
@@ -86,7 +87,6 @@
 
 [delta]
     features     = syntax line-numbers
-    syntax-theme = "Monokai (SL)"
 
     commit-decoration-style = bold yellow box ul
 
@@ -121,19 +121,17 @@
     whitespace-error-style = 22 reverse
 
 [diff]
-    tool = Kaleidoscope
+	tool = Kaleidoscope
 
 [difftool]
-    prompt = false
+	prompt = false
 
+	trustExitCode = true
 [difftool "Kaleidoscope"]
-    cmd = ksdiff --partial-changeset --relative-path \"$MERGED\" -- \"$LOCAL\" \"$REMOTE\"
+	cmd = ksdiff --partial-changeset --relative-path \"$MERGED\" -- \"$LOCAL\" \"$REMOTE\"
 
 [gitcvs]
     commitMsgAnnotation = ""
-
-[gpg]
-    program = /usr/local/MacGPG2/bin/gpg
 
 [help]
     autocorrect = 1
@@ -146,14 +144,14 @@
     diffFilter = delta --color-only
 
 [merge]
-    tool = Kaleidoscope
+	tool = Kaleidoscope
 
 [mergetool]
-    prompt = false
+	prompt = false
 
 [mergetool "Kaleidoscope"]
-    cmd = ksdiff --merge --output \"$MERGED\" --base \"$BASE\" -- \"$LOCAL\" --snapshot \"$REMOTE\" --snapshot
-    trustExitCode = true
+	cmd = ksdiff --merge --output \"$MERGED\" --base \"$BASE\" -- \"$LOCAL\" --snapshot \"$REMOTE\" --snapshot
+	trustExitCode = true
 
 [pager]
     diff = delta
@@ -179,3 +177,10 @@
 
 [url "ssh://git@github.com/"]
     insteadOf = https://github.com/
+[filter "lfs"]
+	required = true
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+[gpg]
+	program = /opt/homebrew/bin/gpg

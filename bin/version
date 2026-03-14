@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+# if we get passed in a version, use that, otherwise use the version in package.json
+if [ -z "$1" ]; then
+  npmversion=$(cat package.json | jq -r '.version');
+else
+  npmversion=$1
+fi
+
+echo "Tagging version v$npmversion"
+
+git tag -a "v$npmversion" -m "Release v$npmversion"

@@ -12,3 +12,5 @@ aliases:
     issues: issue list
     prs: pr list
     repos: repo list
+    prco: pr checkout
+version: "1"

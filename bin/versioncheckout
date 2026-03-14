@@ -1,0 +1,11 @@
+#!/usr/bin/env zsh
+
+if [ ! -z "$1" ]; then
+  git checkout "$1"
+fi
+
+npmversion=$(cat package.json | jq -r '.version');
+
+echo "Tagging version v$npmversion"
+
+git tag -a "v$npmversion" -m "Release v$npmversion"
