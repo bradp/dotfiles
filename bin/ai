@@ -1,0 +1,566 @@
+#!/usr/bin/env bash
+#
+# Run local AI helper workflows through llm.
+#
+# Usage:
+#   ai query [flags] <question>
+#   ai commit-message [flags]
+#   ai make-prompt [flags] <description>
+#   ai improve-prompt [flags] <prompt>
+#   ai models [--all] [--names]
+#
+
+set -o pipefail
+
+##
+# Print top-level command usage.
+#
+function ai-usage() {
+  cat <<'EOF'
+Usage:
+  ai query [flags] <question>
+  ai q [flags] <question>
+  ai commit-message [flags]
+  ai commit [flags]
+  ai make-prompt [flags] <description>
+  ai prompt [flags] <description>
+  ai improve-prompt [flags] <prompt>
+  ai improve [flags] <prompt>
+  ai models [--all] [--names]
+  ai list-models [--all] [--names]
+
+Flags:
+  --clipboard       Append the current clipboard contents to the prompt.
+  --no-cwd          Do not include current directory or git context.
+  --oneline         For commit-message: return a one-line commit message without a body.
+  --output <file>   Write the output to a file.
+  --print           Print the output to the terminal. Default: true.
+  --no-print        Do not print the output to the terminal.
+  -m, --model <id>  Model to use. Shorthands like claude, gpt5, and claude-opus are accepted.
+EOF
+}
+
+##
+# Reset shared option state before parsing a command.
+#
+function ai-reset-options() {
+  AI_CLIPBOARD=0
+  AI_CWD=1
+  AI_MODEL="${AI_MODEL:-}"
+  AI_ONELINE=0
+  AI_OUTPUT=""
+  AI_PRINT=1
+  AI_REMAINING_ARGS=()
+}
+
+##
+# Parse common flags and leave non-option arguments in AI_REMAINING_ARGS.
+#
+function ai-parse-options() {
+  ai-reset-options
+
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      --clipboard | -c)
+        AI_CLIPBOARD=1
+        shift
+        ;;
+      --no-cwd | --plain | -n)
+        AI_CWD=0
+        shift
+        ;;
+      --output | -o)
+        if [[ -z "${2:-}" ]]; then
+          echo "ai: $1 requires a file path" >&2
+          return 1
+        fi
+        AI_OUTPUT="$2"
+        shift 2
+        ;;
+      --print | -p)
+        AI_PRINT=1
+        shift
+        ;;
+      --no-print)
+        AI_PRINT=0
+        shift
+        ;;
+      --model | -m)
+        if [[ -z "${2:-}" ]]; then
+          echo "ai: $1 requires a model" >&2
+          return 1
+        fi
+        AI_MODEL="$2"
+        shift 2
+        ;;
+      --oneline)
+        AI_ONELINE=1
+        shift
+        ;;
+      --help | -h)
+        ai-usage
+        exit 0
+        ;;
+      --)
+        shift
+        AI_REMAINING_ARGS+=("$@")
+        break
+        ;;
+      --*)
+        echo "ai: unknown option: $1" >&2
+        return 1
+        ;;
+      *)
+        AI_REMAINING_ARGS+=("$1")
+        shift
+        ;;
+    esac
+  done
+}
+
+##
+# Read stdin when data is piped to the process.
+#
+function ai-read-stdin-if-piped() {
+  if [[ ! -t 0 ]]; then
+    cat
+  fi
+}
+
+##
+# Combine positional arguments and piped stdin into one prompt body.
+#
+function ai-join-args-and-stdin() {
+  local stdin_text
+  local arg_text
+
+  arg_text="$*"
+  stdin_text="$(ai-read-stdin-if-piped)"
+
+  if [[ -n "$arg_text" && -n "$stdin_text" ]]; then
+    printf '%s\n\n%s' "$arg_text" "$stdin_text"
+  elif [[ -n "$arg_text" ]]; then
+    printf '%s' "$arg_text"
+  else
+    printf '%s' "$stdin_text"
+  fi
+}
+
+##
+# Print clipboard context when requested.
+#
+function ai-clipboard-context() {
+  if [[ "$AI_CLIPBOARD" != "1" ]]; then
+    return
+  fi
+
+  local clipboard
+  clipboard="$(pbpaste)"
+
+  if [[ -n "$clipboard" ]]; then
+    cat <<EOF
+
+Clipboard:
+${clipboard}
+EOF
+  fi
+}
+
+##
+# Print current working directory and git context when enabled.
+#
+function ai-project-context() {
+  if [[ "$AI_CWD" != "1" ]]; then
+    return
+  fi
+
+  printf 'Current directory: %s\n' "$(pwd)"
+
+  if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+    printf 'Git root: %s\n' "$(git rev-parse --show-toplevel)"
+    printf 'Git branch: %s\n' "$(git branch --show-current 2>/dev/null || git rev-parse --short HEAD)"
+
+    echo
+    echo "Git status:"
+    git status --short
+
+    echo
+    echo "Recent commits:"
+    git log --oneline -5
+
+    echo
+    echo "Diff stat:"
+    git diff --stat
+  fi
+}
+
+##
+# Return success when a staged git diff exists.
+#
+function ai-staged-diff-exists() {
+  git diff --cached --quiet --exit-code
+  [[ $? -eq 1 ]]
+}
+
+##
+# Return success when an unstaged git diff exists.
+#
+function ai-worktree-diff-exists() {
+  git diff --quiet --exit-code
+  [[ $? -eq 1 ]]
+}
+
+##
+# Resolve model shorthands to the ids expected by llm.
+#
+function ai-resolve-model() {
+  local model="$1"
+  local normalized
+
+  if [[ -z "$model" ]]; then
+    return
+  fi
+
+  normalized="$(printf '%s' "$model" | tr '[:upper:]' '[:lower:]' | tr '_' '-')"
+
+  case "$normalized" in
+    gpt5)
+      printf 'gpt-5'
+      ;;
+    gpt5-* | gpt5.*)
+      printf 'gpt-5%s' "${normalized#gpt5}"
+      ;;
+    claude | sonnet | claude-sonnet)
+      printf 'anthropic/claude-sonnet-4-6'
+      ;;
+    opus | claude-opus)
+      printf 'anthropic/claude-opus-4-8'
+      ;;
+    haiku | claude-haiku)
+      printf 'anthropic/claude-haiku-4-5-20251001'
+      ;;
+    claude-fable | fable)
+      printf 'claude-fable'
+      ;;
+    *)
+      printf '%s' "$model"
+      ;;
+  esac
+}
+
+##
+# Print the curated model shorthand list as "name:model" pairs.
+#
+function ai-model-shorthands() {
+  cat <<'EOF'
+gpt5:gpt5
+gpt5-mini:gpt5-mini
+gpt5-nano:gpt5-nano
+gpt5.1:gpt5.1
+gpt5.2:gpt5.2
+claude:claude
+claude-sonnet:claude-sonnet
+claude-opus:claude-opus
+claude-haiku:claude-haiku
+claude-fable:claude-fable
+EOF
+}
+
+##
+# Call llm with the configured model, system prompt, and user prompt.
+#
+function ai-call-llm() {
+  local system_prompt="$1"
+  local user_prompt="$2"
+  local model
+
+  model="$(ai-resolve-model "$AI_MODEL")"
+
+  if [[ -n "$model" ]]; then
+    llm prompt --no-stream --model "$model" --system "$system_prompt" "$user_prompt"
+  else
+    llm prompt --no-stream --system "$system_prompt" "$user_prompt"
+  fi
+}
+
+##
+# Emit generated text to the configured destinations.
+#
+function ai-emit() {
+  local text="$1"
+
+  if [[ -n "$AI_OUTPUT" ]]; then
+    printf '%s\n' "$text" > "$AI_OUTPUT"
+  fi
+
+  if [[ "$AI_PRINT" == "1" ]]; then
+    printf '%s\n' "$text"
+  fi
+}
+
+##
+# Ask a general question using the configured LLM.
+#
+function ai-query() {
+  ai-parse-options "$@" || return 1
+
+  local prompt
+  local response
+  local system_prompt
+
+  system_prompt="You are a helpful assistant. Answer the user's question concisely and accurately. If you don't know the answer, say you don't know."
+
+  prompt="$(ai-join-args-and-stdin "${AI_REMAINING_ARGS[@]}")"
+
+  if [[ -z "$prompt" ]]; then
+    echo "ai query requires a question or stdin." >&2
+    return 1
+  fi
+
+  response="$(ai-call-llm "$system_prompt" "$prompt")" || return $?
+  ai-emit "$response"
+}
+
+##
+# Generate a commit message from the staged diff, or unstaged diff as fallback.
+#
+function ai-commit-message() {
+  ai-parse-options "$@" || return 1
+
+  if ! git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+    echo "ai commit-message must be run inside a git repository." >&2
+    return 1
+  fi
+
+  local diff
+  local diff_source
+  local format_instructions
+  local prompt
+  local response
+  local system_prompt
+
+  if ai-staged-diff-exists; then
+    diff_source="staged"
+    diff="$(git diff --cached --no-ext-diff)"
+  elif ai-worktree-diff-exists; then
+    diff_source="unstaged"
+    diff="$(git diff --no-ext-diff)"
+  else
+    echo "ai commit-message: no staged or unstaged diff found." >&2
+    return 1
+  fi
+
+  system_prompt="You write concise, high-signal git commit messages. Return only the commit message, with no markdown fences and no explanation."
+
+  if [[ "$AI_ONELINE" == "1" ]]; then
+    format_instructions="Use this format:
+<short imperative summary>"
+  else
+    format_instructions="Use this format:
+<short imperative summary>
+
+<optional body explaining why, wrapped around 72 columns>"
+  fi
+
+  prompt="$(cat <<EOF
+Generate a commit message for the ${diff_source} git diff below.
+
+${format_instructions}
+
+Repository context:
+$(ai-project-context)
+$(ai-clipboard-context)
+
+Git diff:
+${diff}
+EOF
+)"
+
+  response="$(ai-call-llm "$system_prompt" "$prompt")" || return $?
+  ai-emit "$response"
+}
+
+##
+# Generate a polished implementation prompt from a rough task description.
+#
+function ai-make-prompt() {
+  ai-parse-options "$@" || return 1
+
+  local description
+  local prompt
+  local response
+  local system_prompt
+
+  description="$(ai-join-args-and-stdin "${AI_REMAINING_ARGS[@]}")"
+
+  if [[ -z "$description" ]]; then
+    echo "ai make-prompt requires a description or stdin." >&2
+    return 1
+  fi
+
+  system_prompt="You turn rough task descriptions into clear implementation prompts for a coding agent. Preserve the user's intent, add relevant local context, identify constraints, and avoid inventing requirements."
+
+  prompt="$(cat <<EOF
+Create a polished implementation prompt from this request.
+
+Request:
+${description}
+
+Local context:
+$(ai-project-context)
+$(ai-clipboard-context)
+EOF
+)"
+
+  response="$(ai-call-llm "$system_prompt" "$prompt")" || return $?
+  ai-emit "$response"
+}
+
+##
+# Improve a prompt from arguments, stdin, or the clipboard.
+#
+function ai-improve-prompt() {
+  ai-parse-options "$@" || return 1
+
+  local original_prompt
+  local prompt
+  local response
+  local system_prompt
+
+  original_prompt="$(ai-join-args-and-stdin "${AI_REMAINING_ARGS[@]}")"
+
+  if [[ -z "$original_prompt" ]]; then
+    original_prompt="$(pbpaste)"
+  fi
+
+  if [[ -z "$original_prompt" ]]; then
+    echo "ai improve-prompt requires a prompt argument, stdin, or clipboard contents." >&2
+    return 1
+  fi
+
+  system_prompt="You improve prompts for software-building AI agents. Return only the improved prompt. Make it specific, testable, and concise. Do not add unsupported requirements."
+
+  prompt="$(cat <<EOF
+Improve this prompt:
+
+${original_prompt}
+
+Context to consider:
+$(ai-project-context)
+$(ai-clipboard-context)
+EOF
+)"
+
+  response="$(ai-call-llm "$system_prompt" "$prompt")" || return $?
+  ai-emit "$response"
+}
+
+##
+# List curated model shorthands or models reported by llm.
+#
+function ai-list-models() {
+  local all_models=0
+  local names_only=0
+  local shorthand
+  local shorthand_id
+
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      --all | -a)
+        all_models=1
+        shift
+        ;;
+      --names | -n)
+        names_only=1
+        shift
+        ;;
+      --help | -h)
+        cat <<'EOF'
+Usage:
+  ai models
+  ai models --names
+  ai models --all
+  ai models --all --names
+
+Flags:
+  --all, -a    Show every model reported by llm.
+  --names, -n  Show model ids only.
+EOF
+        return
+        ;;
+      *)
+        echo "ai models: unknown option: $1" >&2
+        return 1
+        ;;
+    esac
+  done
+
+  if [[ "$all_models" == "1" ]]; then
+    if [[ "$names_only" == "1" ]]; then
+      llm models | sed -E -n '/^Default:/d; s/^[^:]+: ([^ ]+).*/\1/p'
+    else
+      llm models
+    fi
+    return
+  fi
+
+  if [[ "$names_only" == "1" ]]; then
+    while IFS=: read -r shorthand shorthand_id; do
+      ai-resolve-model "$shorthand_id"
+      printf '\n'
+    done < <(ai-model-shorthands)
+    return
+  fi
+
+  echo "Useful model shorthands:"
+  while IFS=: read -r shorthand shorthand_id; do
+    printf '  %-14s %s\n' "$shorthand" "$(ai-resolve-model "$shorthand_id")"
+  done < <(ai-model-shorthands)
+
+  cat <<'EOF'
+Patterns:
+  gpt5.4, gpt5-mini, etc. become gpt-5.4, gpt-5-mini, etc.
+  Unknown model names are passed through unchanged.
+
+Use "ai models --all" for llm's full model list.
+Use "ai models --all --names" for full model ids only.
+EOF
+}
+
+##
+# Dispatch ai subcommands.
+#
+function ai() {
+  case "$1" in
+    --help | -h | help | "")
+      ai-usage
+      ;;
+    ai | query | q)
+      shift
+      ai-query "$@"
+      ;;
+    commit | commit-message | commit-msg)
+      shift
+      ai-commit-message "$@"
+      ;;
+    prompt | make-prompt)
+      shift
+      ai-make-prompt "$@"
+      ;;
+    improve | improve-prompt)
+      shift
+      ai-improve-prompt "$@"
+      ;;
+    models | list-models)
+      shift
+      ai-list-models "$@"
+      ;;
+    *)
+      echo "Unknown command: $1" >&2
+      echo "Available commands: query, commit-message, make-prompt, improve-prompt, models" >&2
+      exit 1
+      ;;
+  esac
+}
+
+ai "$@"

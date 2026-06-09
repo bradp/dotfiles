@@ -7,6 +7,8 @@
 #	 ██████ ██████ ░██  ░██░███   ░░█████
 #	░░░░░░ ░░░░░░  ░░   ░░ ░░░     ░░░░░
 
+# zmodload zsh/zprof # Uncomment to profile startup.
+
 COMPLETION_WAITING_DOTS=true
 DISABLE_AUTO_UPDATE=true
 HYPHEN_INSENSITIVE=true
@@ -31,20 +33,18 @@ ZSH_CUSTOM=$DOTFILES_PATH/zsh-custom
 ZSH_THEME="parbs"
 export FZF_BASE="/opt/homebrew/bin/fzf"
 
-# Keep plain `z` fast; expose fzf-enhanced jumps via `zz`/`zzz`.
-export FZ_CMD=zz
-export FZ_SUBDIR_CMD=zzz
+# Use `fzf`-backed jumps on `z`; keep subdir traversal on `zz`.
+export FZ_CMD=z
+export FZ_SUBDIR_CMD=zz
 
 plugins=(
 	forgit
 	parbs-completions
 	parbs-lights
-	parbs-nvm-settings
 	parbs-php
 	speedycompinit
 	z
 	zf
-	zsh-nvm
 	zsh-syntax-highlighting
 )
 
@@ -52,6 +52,7 @@ source $DOTFILES_PATH/.oh-my-zsh/oh-my-zsh.sh
 source $ZSH_CUSTOM/zshrc-loaded
 
 typeset -U path
+path=(/opt/homebrew/opt/git/bin $path)
 path+=($DOTFILES_PATH/misc)
 path+=($DOTFILES_PATH/bin)
 path+=($DOTFILES_PATH/bin/git)
@@ -61,6 +62,7 @@ path+=($HOME/.bun/bin)
 path+=($HOME/.yarn/bin)
 path+=($HOME/.cargo/bin)
 path+=($HOME/go/bin)
+path+=($HOME/.local/bin)
 path+=(/opt/homebrew/bin)
 path+=(/usr/local/bin)
 path+=(/usr/bin)
@@ -71,4 +73,12 @@ path+=(/sbin)
 export PATH
 
 # bun completions
-[ -s "/Users/brad/.bun/_bun" ] && source "/Users/brad/.bun/_bun"
+[ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
+
+# fnm
+FNM_PATH="/opt/homebrew/opt/fnm/bin"
+if [ -d "$FNM_PATH" ]; then
+  eval "$(fnm env --shell zsh)"
+fi
+
+# zprof # Uncomment to profile startup.

@@ -60,9 +60,6 @@ alias forgit_checkout_branch="gco"
 alias kdiff="git difftool -y -t Kaleidoscope"
 alias branches="git --no-pager for-each-ref --sort=-committerdate refs/heads/ --format='%(refname:short)'"
 alias branch="git current-branch"
-#########################################
-# Un-git git commands                   #
-#########################################
 alias current-branch="git current-branch"
 
 #########################################
@@ -74,10 +71,6 @@ alias codeo="code --reuse-window"
 alias ct="code"
 alias ctt="code ."
 
-alias st='open -a "Sublime Text"'
-alias stt="st ."
-
-alias edit='fc'
 #########################################
 # Figlet                                #
 #########################################
@@ -107,6 +100,13 @@ alias hide="chflags hidden $0"
 alias unhide="chflags nohidden $0"
 
 #########################################
+# JQ / JSON							    #
+#########################################
+alias pbj="pbpaste|jq . |pbcopy"
+alias jbp="pbpaste|jq -c . |pbcopy"
+alias lastijq="tail -n 1 ~/Library/Application\ Support/ijq/history"
+
+#########################################
 # Vagrant                               #
 #########################################
 alias vu="vagrant up && vagrant ssh"
@@ -123,20 +123,8 @@ alias wpdown="wp-env stop"
 alias wown="wp-env stop"
 
 #########################################
-# youtube-dl                             #
-#########################################
-alias dyt="ytdl '${HOME}/Desktop'"
-alias myt="ytdl '${HOME}/Dropbox/Documents/Backups/Media'"
-
-#########################################
 # Misc                                  #
 #########################################
 alias f="fzf --preview 'bat --color=always --style=numbers --line-range=:500 {}'"
 alias rg="rg --hyperlink-format vscode"
-alias pbj="pbpaste|jq . |pbcopy"
-alias jbp="pbpaste|jq -c . |pbcopy"
-alias lastijq="tail -n 1 ~/Library/Application\ Support/ijq/history"
 alias "/codex"="codex"
-
-alias openrctfolder="cd /Users/brad/Library/Application\ Support/OpenRCT2 && open ."
-alias scratch="cd ${HOME}/Dropbox/Working/scratch"

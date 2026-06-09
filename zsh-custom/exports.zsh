@@ -52,7 +52,6 @@ export HOMEBREW_CASK_OPTS="--appdir=/Applications"
 export HOMEBREW_DISPLAY_INSTALL_TIMES=1
 export HOMEBREW_INSTALL_BADGE=" 🎉️"
 export HOMEBREW_NO_ANALYTICS=1
-export HOMEBREW_NO_AUTO_UPDATE=1
 
 export LANG="en_US.UTF-8";
 export LC_ALL="en_US.UTF-8";

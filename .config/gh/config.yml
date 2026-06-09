@@ -14,3 +14,4 @@ aliases:
     repos: repo list
     prco: pr checkout
 version: "1"
+telemetry: disabled

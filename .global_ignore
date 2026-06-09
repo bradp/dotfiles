@@ -92,3 +92,9 @@ npm-debug.log
 yarn-error.log
 crash.log
 debug.log
+
+
+# ignore anything that is __local_
+___local_*
+
+**/.claude/settings.local.json

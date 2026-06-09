@@ -12,14 +12,17 @@
 # Make a directory and cd into it       #
 #########################################
 mkd() {
-	mkdir -p -- "$@" && cd -- "$@"
+	mkdir -p -- "$@" && cd -- "$@" || exit
 }
 
 #########################################
 # Go to the root of git directory       #
 #########################################
 root() {
-	while ! [ -d .git ]; do cd ..; done
+	local git_root
+	git_root=$(git rev-parse --show-toplevel 2> /dev/null) || return
+
+	cd "$git_root" || return
 }
 
 #########################################
@@ -86,17 +89,6 @@ _hook() { root && compadd "${(@)${(f)$(ls .git/hooks | grep -v "\.sample")}}"; }
 compdef _hook hook
 compdef _hook git-hook
 
-########################################
-# Backup pocket repos                  #
-########################################
-backup-pocket-repos() {
-	api pocket /get | \
-	jq -r '.list | .[].resolved_url' | \
-	ag 'https://github' | \
-	sed 's/https:\/\/github.com\///g' | \
-	xargs -L 1 gh-backup-repo
-}
-
 #########################################
 # Move target $1 to $1.bak              #
 #                                       #
@@ -109,6 +101,11 @@ bak() {
 	fi
 	mv -v $target{,.bak}
 }
+
+_bak() {
+	compadd "${(@)$(ls *.bak)}"
+}
+compdef _bak bak
 
 #########################################
 # Move target $1.bak to $1              #
@@ -129,7 +126,9 @@ unbak() {
 	fi
 }
 
-_unbak() { compadd "${(@)$(ls *.bak)}" }
+_unbak() {
+	compadd "${(@)$(ls *.bak)}"
+}
 compdef _unbak unbak
 
 
@@ -188,7 +187,9 @@ deploy() {
 
 	rsync -avz --verbose --human-readable --progress --delete public/ root@"${XAVIER}":/var/www/"${1}"/html/
 }
-_deploy() { _files -W ${HOME}/Dropbox/Working/sites/ -/ }
+_deploy() {
+	_files -W ${HOME}/Dropbox/Working/sites/ -/
+}
 compdef _deploy deploy
 
 #########################################
@@ -198,7 +199,9 @@ site() {
     cd "${HOME}/Sites/www/${1}/content/"
 }
 
-_site() { _files -W ${HOME}/Sites/www -/ }
+_site() {
+	_files -W ${HOME}/Sites/www -/
+}
 compdef _site site
 
 #########################################
@@ -224,4 +227,12 @@ copy-local-wp() {
 	else
 		echo "No wp-content/mu-plugins directory found, skipping copy of ___local_wp.php"
 	fi
+}
+
+############################################
+# Git push current branch to origin        #
+############################################
+gpob() {
+	branch=$(git rev-parse --abbrev-ref HEAD | tr -d '\n' | tr -d ' ')
+	git push origin "$branch"
 }

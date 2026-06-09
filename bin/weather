@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+#
+# Start the day with the weather & opening all my apps, end the day by closing the apps and ejecting HDDs.
+#
+# Needs these enviroment variables to be set:
+#   OPENWEATHER_API_KEY
+#
+
+_show_weather() {
+    local weather
+    local current
+    local feels_like
+
+    weather=$(curl --silent "https://api.openweathermap.org/data/2.5/weather?zip=53132&units=imperial&APPID=${OPENWEATHER_API_KEY}" )
+    current=$(echo "$weather" | jq -r ".weather[0].main")
+    feels_like=$(echo "$weather" | jq -r '.main.feels_like' )
+    feels_like=${feels_like%.*}
+
+    case $(echo "$weather" | jq -r '.weather[0].icon') in
+        "01d") icon="" ;;
+        "01n") icon="" ;;
+        "02d") icon="" ;;
+        "02n") icon="" ;;
+        "03d") icon="" ;;
+        "03n") icon="" ;;
+        "04d") icon=" " ;;
+        "04n") icon=" " ;;
+        "09d") icon="" ;;
+        "09n") icon="" ;;
+        "10d") icon="" ;;
+        "10n") icon="" ;;
+        "11d") icon="" ;;
+        "11n") icon="" ;;
+        "13d") icon="" ;;
+        "13n") icon="" ;;
+        "50d") icon="" ;;
+        "50n") icon="" ;;
+    esac
+
+    echo "${icon} ${current} ${feels_like}° "
+}
+
+_show_weather
