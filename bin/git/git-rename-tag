@@ -1,4 +1,10 @@
 #!/usr/bin/env bash
+#
+# Rename a local tag and update origin.
+#
+# Usage:
+#   git rename-tag <old-tag> <new-tag>
+#
 
 old=$1
 new=$2

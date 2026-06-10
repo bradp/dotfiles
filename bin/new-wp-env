@@ -1,8 +1,12 @@
 #!/usr/bin/env bash
+#
 # Generate a .wp-env.json file for a WordPress project.
-# Usage: new-wp-env            — full WP install (auto-discovers themes/plugins)
-#        new-wp-env theme      — single theme mapped to "."
-#        new-wp-env plugin     — single plugin mapped to "."
+#
+# Usage:
+#   new-wp-env
+#   new-wp-env theme
+#   new-wp-env plugin
+#
 
 set -e
 

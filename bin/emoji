@@ -2,6 +2,9 @@
 #
 # Emoji picker, copies to clipboard.
 #
+# Usage:
+#   emoji [query]
+#
 if [ ! -f "${TMPDIR}emoji.txt" ]; then
 	curl -sSL https://raw.githubusercontent.com/b4b4r07/emoji-cli/master/dict/emoji.json > "${TMPDIR}emoji.txt"
 fi

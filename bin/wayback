@@ -2,6 +2,13 @@
 #
 # Save items to the wayback machine.
 #
+# Usage:
+#   wayback <url>
+#   wayback file <file>
+#   wayback site <domain-or-url>
+#   wayback pocket
+#   wayback status
+#
 # Needs these environment variables set:
 #   ARCHIVE_ORG_ACCESS
 #   ARCHIVE_ORG_SECRET
@@ -10,6 +17,9 @@
 # API docs: https://docs.google.com/document/d/1Nsv52MvSjbLb2PCpHlat0gkzw0EvtSgpKHu4mk0MnrA/edit
 #
 
+##
+# Print usage and exit.
+#
 _usage() {
 	cat <<EOF
 Save items to the wayback machine.
@@ -37,6 +47,9 @@ EOF
 	exit
 }
 
+##
+# Submit one URL to archive.org.
+#
 _doarchive() {
 	curl --silent --location \
 	--request POST 'https://web.archive.org/save' \
@@ -51,6 +64,9 @@ _doarchive() {
 	> /dev/null
 }
 
+##
+# Ensure a domain or URL has an HTTP scheme.
+#
 _urlizeit() {
 	if [[ "${1}" == *"http:"* ]]; then
 		site="${1}"
@@ -61,10 +77,16 @@ _urlizeit() {
 	fi
 }
 
+##
+# Create a temporary directory for URL lists.
+#
 _maketmp() {
 	tmpdir=$(mktemp -d /tmp/wayback_links.XXXXXXX)
 }
 
+##
+# Check archive.org account availability.
+#
 _checkavailable() {
 	userstatus=$(curl --silent --location \
 	--header 'Accept: application/json' \
@@ -75,18 +97,21 @@ _checkavailable() {
 	processing=$(echo "${userstatus}" | jq -r ".processing")
 }
 
+##
+# Archive all URLs in the temporary URL list.
+#
 _archivethempages() {
 	echo "► Found $(cat "${tmpdir}"/found_urls | wc -l | tr -d ' ') pages to archive"
 
-	for url in $(cat "${tmpdir}"/found_urls); do
+	while IFS= read -r url; do
 		echo -n "  →  $url "
 
 		_checkavailable
 		numtries=0
-		while (( ${available} == 0 )); do
+		while (( available == 0 )); do
 			numtries=$(( numtries + 1 ))
 
-			if (( ${numtries} == 10 )); then
+			if (( numtries == 10 )); then
 				break 2
 			fi
 
@@ -98,7 +123,7 @@ _archivethempages() {
 		_doarchive "${url}"
 
 		echo " ✓"
-	done
+	done < "${tmpdir}"/found_urls
 
 	_checkavailable
 	echo "► Done!"
@@ -106,6 +131,9 @@ _archivethempages() {
 	echo "    You've sent $(echo "${userstatus}" | jq -r ".daily_captures") urls to archive.org today  "
 }
 
+##
+# Archive a single URL.
+#
 _runurl() {
 	_urlizeit "${1}"
 	_maketmp
@@ -116,6 +144,9 @@ _runurl() {
 	exit
 }
 
+##
+# Archive URLs from a file.
+#
 _runfile() {
 	if [ -z "${1}" ]; then
 		echo "Please provide a path to a file"
@@ -138,6 +169,9 @@ _runfile() {
 	exit
 }
 
+##
+# Crawl and archive a full site.
+#
 _runsite() {
 	_urlizeit "$1"
 
@@ -160,6 +194,9 @@ _runsite() {
 	exit
 }
 
+##
+# Archive URLs from Pocket.
+#
 _runpocket () {
 	echo -n "► Grabbing Pocket list  "
 	_maketmp
@@ -169,6 +206,9 @@ _runpocket () {
 }
 
 
+##
+# Display archive.org API usage status.
+#
 _runstatus() {
 	curl --silent --location --request GET --header 'Accept: application/json' --header "Authorization: LOW ${ARCHIVE_ORG_ACCESS}:${ARCHIVE_ORG_SECRET}" "https://web.archive.org/save/status/user?_t=${RANDOM}" | jq
 	exit

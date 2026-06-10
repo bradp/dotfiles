@@ -2,6 +2,9 @@
 #
 # Wrapper for youtube-dl / yt-dlp.
 #
+# Usage:
+#   ytdl <url>
+#
 
 yt-dlp \
 --mark-watched \

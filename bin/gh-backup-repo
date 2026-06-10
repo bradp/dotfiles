@@ -1,16 +1,25 @@
 #!/usr/bin/env bash
 #
-# Backup a github repo.
+# Back up a GitHub repository.
+#
+# Usage:
+#   gh-backup-repo <user>/<repo> [--keep] [--meta]
 #
 # Needs these environment variables set:
 #   MY_GH_TOKEN
 #
 
+##
+# Print usage and exit.
+#
 _error_bad_usage() {
 	echo "Usage: gh-backup-repo <user>/<repo> [--keep, --meta]" 1>&2;
 	exit
 }
 
+##
+# Parse repository owner and name from arguments.
+#
 _get_vars() {
 
 	if [ -z "$1" ]; then
@@ -33,33 +42,51 @@ _get_vars() {
 	fi
 }
 
+##
+# Create and enter a temporary working directory.
+#
 _goto_temp_dir() {
 	tempfolder="$RANDOM"
 	mkdir -p "/tmp/$tempfolder" 2> /dev/null
 	cd "/tmp/$tempfolder" || exit
 }
 
+##
+# Fetch repository metadata into the clone.
+#
 _get_repo_metadata() {
 	mkdir -p "$repo/.github-meta" 2> /dev/null
 
 	__gh_api "repos/$user/$repo" > "$repo/.github-meta/metadata.json"
 }
 
+##
+# Calculate API pagination count from stored metadata.
+#
 _get_page_count_from_metadata_file() {
 	echo $(($(jq "$1" "$repo/.github-meta/metadata.json")+99)) / 100 | bc
 }
 
+##
+# Call the GitHub API and pipe the response through jq.
+#
 __gh_api() {
 	page="${2:-1}"
 	curl -sLu "$MY_GH_TOKEN" "https://api.github.com/$1?per_page=100&page=$page" | jq
 }
 
+##
+# Fetch one repository metadata endpoint.
+#
 __gh_api_get() {
 	__gh_api "repos/$user/$repo/$1" | jq > "$repo/.github-meta/$1.json"
 
 	echo -n "."
 }
 
+##
+# Fetch and merge all pages for a repository metadata endpoint.
+#
 _get_paginated() {
 	pages=$(_get_page_count_from_metadata_file ".open_issues")
 
@@ -77,6 +104,9 @@ _get_paginated() {
 	rmdir ".$1"
 }
 
+##
+# Fetch issue or pull request comments.
+#
 _get_comments() {
 	count=$(jq -r ".[] | select(.comments != 0) | .number" "$repo/.github-meta/$1.json")
 
@@ -96,10 +126,16 @@ _get_comments() {
 	fi
 }
 
+##
+# Clone the target repository.
+#
 _clone_repo() {
 	git clone "git@github.com:$user/$repo.git" "$repo" || exit
 }
 
+##
+# Fetch auxiliary repository metadata.
+#
 get_other_metadata_for_repo() {
 	echo " - getting repo metadata"
 	_get_repo_metadata
@@ -126,14 +162,23 @@ get_other_metadata_for_repo() {
 	echo ""
 }
 
+##
+# Compress the cloned repository.
+#
 _compress_data() {
 	tar czf "$repo".tar.gz "$repo"
 }
 
+##
+# Upload compressed data to b2.
+#
 _send_to_b2() {
 	rclone copy --fast-list --progress "$repo".tar.gz "b2:parbs-github/$user/"
 }
 
+##
+# Remove temporary files unless --keep was passed.
+#
 _clean_up() {
 	if [[ $* != *--keep* ]]; then
 		echo '   - removing cloned repo'

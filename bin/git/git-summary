@@ -1,5 +1,13 @@
 #!/usr/bin/env bash
-
+#
+# Display a summary of repository activity.
+#
+# Usage:
+#   git summary [commit]
+#   git summary --line [path]
+#   git summary --dedup-by-email [commit]
+#   git summary --no-merges [commit]
+#
 
 cd "$(git root)" || { echo "Can't cd to top level directory";exit 1; }
 
@@ -45,20 +53,18 @@ commit=""
 test $# -ne 0 && commit=$*
 project=${PWD##*/}
 
+##
+# Get dates for the given commit range.
 #
-# get date for the given <commit>
-#
-
 date() {
   # the $1 can be empty
   # shellcheck disable=SC2086
   git log $MERGES_ARG --pretty='format: %ai' $1 | cut -d ' ' -f 2
 }
 
+##
+# Count active days for the given commit range.
 #
-# get active days for the given <commit>
-#
-
 active_days() {
   # shellcheck disable=SC2086
   date $1 | sort -r | uniq | awk '
@@ -67,27 +73,24 @@ active_days() {
   '
 }
 
+##
+# Count commits.
 #
-# get the commit total
-#
-
 commit_count() {
   # shellcheck disable=SC2086
   git log $MERGES_ARG --oneline $commit | wc -l | tr -d ' '
 }
 
+##
+# Count tracked files.
 #
-# total file count
-#
-
 file_count() {
   git ls-files | wc -l | tr -d ' '
 }
 
+##
+# Remove duplicate authors who belong to the same email address.
 #
-# remove duplicate authors who belong to the same email address
-#
-
 dedup_by_email() {
     # in:
     # 27  luo zexuan <LuoZexuan@xxx.com>
@@ -125,10 +128,9 @@ dedup_by_email() {
     }' | sort -rn -k 1
 }
 
+##
+# Format author commit or line counts.
 #
-# list authors
-#
-
 format_authors() {
   # a rare unicode character is used as separator to avoid conflicting with
   # author name. However, Linux column utility will escape tab if separator
@@ -143,16 +145,15 @@ format_authors() {
   ' | column -t -s♪ | sed "s/\\\x09/\t/g"
 }
 
+##
+# Fetch repository age from the oldest commit.
 #
-# fetch repository age from oldest commit
-#
-
 repository_age() {
   git log --reverse --pretty=oneline --format="%ar" | head -n 1 | LC_ALL=C sed 's/ago//'
 }
 
-#
-# list the last modified author for each line
+##
+# List the last modified author for each line in text files.
 #
 single_file() {
   while read -r data
@@ -163,21 +164,23 @@ single_file() {
   done
 }
 
-#
-# list the author for all file
+##
+# List authors for one path or all tracked files.
 #
 lines() {
   if [ -n "$1" ]; then
+    # shellcheck disable=SC2086
     git ls-files -- $1 | single_file
   else
     git ls-files | single_file
   fi
 }
 
-#
-# get the number of the lines
+##
+# Count lines.
 #
 line_count() {
+  # shellcheck disable=SC2086
   lines $1 | wc -l
 }
 
@@ -187,8 +190,10 @@ echo
 echo " project  : $project"
 
 if [ -n "$SUMMARY_BY_LINE" ]; then
+  # shellcheck disable=SC2086
   echo " lines    : $(line_count $commit)"
   echo " authors  :"
+  # shellcheck disable=SC2086
   lines $commit | sort | uniq -c | sort -rn | format_authors
 else
 

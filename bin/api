@@ -18,10 +18,16 @@
 #   OPENWEATHER_API_KEY
 #
 
+##
+# Call the Cloudflare API.
+#
 _api_cloudflare() {
   curl -sL -X GET "https://api.cloudflare.com/client/v4/${2}" -H "Authorization: Bearer ${CLOUDFLARE_TOKEN}" -H "Content-Type:application/json"
 }
 
+##
+# Call the GitHub API.
+#
 _api_github() {
   # Set default of page 1, 100 per page
   page="${3:-1}"
@@ -30,6 +36,9 @@ _api_github() {
   curl -sLu "${MY_GH_TOKEN}" "https://api.github.com${2}?per_page=${per_page}&page=${page}"
 }
 
+##
+# Call the Pocket API.
+#
 _api_pocket() {
   args="${3}"
   if [[ ! -z "${args}" ]]; then
@@ -39,14 +48,23 @@ _api_pocket() {
   curl -sL "https://getpocket.com/v3/${2}?consumer_key=${POCKET_CONSUMER_KEY}&access_token=${POCKET_ACCESS_TOKEN}${args}"
 }
 
+##
+# Call the Movie DB API.
+#
 _api_movie() {
   curl -sL "https://api.themoviedb.org/3/${2}?api_key=${MOVIEDB_KEY}&language=en-US"
 }
 
+##
+# Call the OpenWeather API.
+#
 _api_weather() {
   curl -sl "https://api.openweathermap.org/data/2.5/weather?${2}&APPID=${OPENWEATHER_API_KEY}"
 }
 
+##
+# List supported API targets.
+#
 _list() {
   echo "cloudflare"
   echo "github"

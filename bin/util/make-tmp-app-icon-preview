@@ -5,6 +5,7 @@
 # Usage:
 #   make-tmp-app-icon-preview <app-icon-path>
 #   make-tmp-app-icon-preview /System/Applications/App Store.app
+#
 
 customIconName="$(echo "${1}".png | sed 's#System##' | sed 's#Applications##' | sed 's#.app##' | sed 's# #-#g' | sed 's#/##g' | tr '[:upper:]' '[:lower:]')"
 customIconPath="$HOME/dotfiles/misc/icons/${customIconName}"

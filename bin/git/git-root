@@ -1,10 +1,22 @@
 #!/usr/bin/env bash
+#
+# Display the current git repository root.
+#
+# Usage:
+#   git root
+#   git root --relative
+#
 
+##
+# Print the repository root.
+#
 git_root() {
   git rev-parse --show-toplevel
 }
 
-# get the relative path of current path according to root of repo
+##
+# Print the current path relative to the repository root.
+#
 git_root_relative() {
     git rev-parse --show-prefix
 }
@@ -21,4 +33,3 @@ else
         ;;
     esac
 fi
-

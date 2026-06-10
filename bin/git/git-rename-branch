@@ -1,4 +1,12 @@
 #!/usr/bin/env bash
+#
+# Rename a local branch and update its remote tracking ref.
+#
+# Usage:
+#   git rename-branch <new-branch>
+#   git rename-branch <old-branch> <new-branch>
+#
+
 set -e
 
 # Assert there is at least one branch provided

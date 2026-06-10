@@ -1,4 +1,10 @@
 #!/usr/bin/env bash
+#
+# Tag the current package version.
+#
+# Usage:
+#   version [version]
+#
 
 # if we get passed in a version, use that, otherwise use the version in package.json
 if [ -z "$1" ]; then

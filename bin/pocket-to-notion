@@ -13,9 +13,9 @@
 #   NOTION_POCKET_ID
 #
 
-#######################################
-# Send a url to Notion Pocket DB
-#######################################
+##
+# Send a URL to Notion Pocket DB.
+#
 _send() {
 	local title
 	local url

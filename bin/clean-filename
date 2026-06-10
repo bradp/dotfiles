@@ -3,13 +3,8 @@
 # Clean a filename by removing spaces and numbers and lowercasing it.
 #
 # Usage:
-#   To get the clean filename:
-#   rename-icon <filename>
+#   clean-filename <filename>
 #
-#   To write the new file:
-#   rename-icon -mv <filename>
-#
-
 
 target=$(echo "$1" | sed 's|[0-9]*||g' | sed 's| |-|g' | sed 's|/-|/|g' | sed 's|-.png|.png|g' | sed 's|-.svg|.svg|g' | tr '[:upper:]' '[:lower:]' )
 

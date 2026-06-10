@@ -4,6 +4,7 @@
 #
 # Usage:
 #   make-tmp-image-preview <image-path>
+#
 
 name="/tmp/i_$(date -u +"%d")_$(md5 -q -s "${1}").png"
 

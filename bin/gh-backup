@@ -1,17 +1,30 @@
 #!/usr/bin/env bash
 #
-# Backup various github things.
+# Back up GitHub repositories and starred repositories.
+#
+# Usage:
+#   gh-backup user <user>
+#   gh-backup org <org>
+#   gh-backup stars <user>
+#   gh-backup starred <user>
+#   gh-backup repo <user>/<repo>
 #
 # Needs these environment variables set:
 #   MY_GH_TOKEN
 #
 
+##
+# Create and enter a temporary working directory.
+#
 _goto_temp_dir() {
 	tempfolder="$RANDOM"
 	mkdir -p "/tmp/$tempfolder" 2> /dev/null
 	cd "/tmp/$tempfolder" || exit
 }
 
+##
+# Clone repositories from an API URL and compress each clone.
+#
 _clone_and_compress_from_api() {
 	curl -sLu "$MY_GH_TOKEN" "$1" |  jq -r '.[] | select(.fork == false) | .ssh_url' | xargs -L1 -P10 git clone --depth 1
 
@@ -24,14 +37,23 @@ _clone_and_compress_from_api() {
 	done
 }
 
+##
+# Back up one page of user or org repositories.
+#
 _backup_user_page() {
 	_clone_and_compress_from_api "https://api.github.com/users/$1/repos?per_page=100&page=$2"
 }
 
+##
+# Back up one page of starred repositories.
+#
 _backup_stars_page() {
 	_clone_and_compress_from_api "https://api.github.com/users/$1/starred?per_page=100&page=$2"
 }
 
+##
+# Prepare a backup directory.
+#
 _gh_start() {
 	echo "Cloning & backing up $2 repos for $1 ..."
 
@@ -39,6 +61,9 @@ _gh_start() {
 	cd "$1" || exit
 }
 
+##
+# Upload backup data and remove the temporary directory.
+#
 _gh_end() {
 	cd ../ || exit
 	echo "Sending to b2 ..."
@@ -48,19 +73,25 @@ _gh_end() {
 	rm -rf "$1"
 }
 
+##
+# Back up all repositories for a user or org.
+#
 _backup_user() {
 	_gh_start "$1" "all"
 
 	repos=$(curl -sLu "$MY_GH_TOKEN" "https://api.github.com/users/$1" | jq -r '.public_repos' )
-	count=$(( $repos / 100 + 1))
+	count=$(( repos / 100 + 1))
 
-	for (( i = $count ; i > 0 ; i--)); do
+	for (( i = count ; i > 0 ; i--)); do
 		_backup_user_page "$1" "$i"
 	done
 
 	_gh_end "$1" "b2:parbs-github/$1"
 }
 
+##
+# Back up starred repositories for a user.
+#
 _backup_stars() {
 	_gh_start "$1" "starred"
 

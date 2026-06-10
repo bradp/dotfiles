@@ -1,4 +1,12 @@
 #!/usr/bin/env bash
+#
+# Create a local branch, optionally tracking a remote branch.
+#
+# Usage:
+#   git create-branch <branch>
+#   git create-branch --remote <remote> <branch>
+#   git create-branch --from <start-point> <branch>
+#
 
 test $# -eq 0 && echo "branch argument required." 1>&2 && exit 1
 

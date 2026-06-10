@@ -1,7 +1,20 @@
 #!/usr/bin/env bash
+#
+# Show or update local, global, and private gitignore files.
+#
+# Usage:
+#   git ignore
+#   git ignore <pattern> [pattern...]
+#   git ignore --local <pattern> [pattern...]
+#   git ignore --global <pattern> [pattern...]
+#   git ignore --private <pattern> [pattern...]
+#
 
-: ${GIT_DIR:=$(git rev-parse --git-dir)}
+: "${GIT_DIR:=$(git rev-parse --git-dir)}"
 
+##
+# Show the contents of one gitignore file.
+#
 function show_contents {
   local file="${2/#~/$HOME}"
   if [ -f "$file" ]; then
@@ -11,18 +24,28 @@ function show_contents {
   fi
 }
 
+##
+# Print the configured global gitignore path.
+#
 function global_ignore() {
     git config --global core.excludesFile || \
         ([ -n "$XDG_CONFIG_HOME"  ] && echo "$XDG_CONFIG_HOME/git/ignore") || \
         echo "$HOME/.config/git/ignore"
 }
 
+##
+# Show the global gitignore file.
+#
 function show_global {
   show_contents Global "$(global_ignore)"
 }
 
+##
+# Add patterns to the global gitignore file.
+#
 function add_global {
-  local global_gitignore="$(global_ignore)"
+  local global_gitignore
+  global_gitignore="$(global_ignore)"
   if [ -z "$global_gitignore" ]; then
     echo "Can't find global .gitignore."
     echo ""
@@ -33,27 +56,42 @@ function add_global {
   fi
 }
 
+##
+# Show the repository gitignore file.
+#
 function show_local {
-  cd "$(git root)"
+  cd "$(git root)" || exit
   show_contents Local .gitignore
 }
 
+##
+# Add patterns to the repository gitignore file.
+#
 function add_local {
-  cd "$(git root)"
+  cd "$(git root)" || exit
   add_patterns .gitignore "$@"
 }
 
+##
+# Show the private repository exclude file.
+#
 function show_private {
-  cd "$(git root)"
+  cd "$(git root)" || exit
   show_contents Private "${GIT_DIR}/info/exclude"
 }
 
+##
+# Add patterns to the private repository exclude file.
+#
 function add_private {
-  cd "$(git root)"
+  cd "$(git root)" || exit
   test -d "${GIT_DIR}/info" || mkdir -p "${GIT_DIR}/info"
   add_patterns "${GIT_DIR}/info/exclude" "$@"
 }
 
+##
+# Add one or more patterns to a gitignore file.
+#
 function add_patterns {
   echo "Adding pattern(s) to: $1"
   local file="${1/#~/$HOME}"
@@ -92,4 +130,3 @@ else
       ;;
   esac
 fi
-

@@ -2,28 +2,33 @@
 #
 # Run a variety of backups for different targets.
 #
-# When adding target, add to `all` as well as single command.
+# Usage:
+#   backup <target>
+#   backup all
+#   backup --help
+#
+# When adding a target, add it to `all` as well as a single command.
 #
 
-#######################################
+##
 # Set color helpers for output.
-#######################################
+#
 _set_colors() {
 	red=$(tput setaf 1)
 	green=$(tput setaf 2)
 	reset=$(tput sgr0)
 }
 
-#######################################
+##
 # Display backup start message.
-#######################################
+#
 _display_start() {
 	echo "   $1   $2 ... "
 }
 
-#######################################
+##
 # Display backup end message.
-#######################################
+#
 _display_done() {
 	if [[ -z "$1" && "$1" == "error" ]];then
 		echo "${red}${2}${reset}"
@@ -32,9 +37,9 @@ _display_done() {
 	fi
 }
 
-#######################################
+##
 # Backup xavier server.
-#######################################
+#
 backup_xavier() {
 	_display_start "" "xavier"
 	ssh xavier "rclone copy --fast-list --progress --copy-links --checkers 20 --transfers 20 /etc/caddy b2:parbs-xavier/etc/caddy"
@@ -43,9 +48,9 @@ backup_xavier() {
 	_display_done
 }
 
-#######################################
+##
 # Backup pihole.
-#######################################
+#
 backup_pihole() {
 	_display_start "" "pihole"
 	ssh pihole "rclone copy --fast-list --progress --copy-links --exclude '.git/**' --checkers 50 --transfers 50 /var/www b2:parbs-pihole/var/www"
@@ -53,43 +58,43 @@ backup_pihole() {
 	_display_done
 }
 
-#######################################
+##
 # Backup dropbox via b2 targets.
-#######################################
+#
 backup_dropbox() {
 	_display_start "" "dropbox"
 	rclone copy --fast-list --progress --copy-links --checkers 8 --transfers 10 dropbox: b2:parbs-dropbox
 	_display_done
 }
 
-#######################################
-# Backup dropbox from local files
-#######################################
+##
+# Backup dropbox from local files.
+#
 backup_dropbox_local() {
 	_display_start "" "dropbox-local"
 	rclone copy --fast-list --progress --copy-links --exclude '.git/**' --exclude 'node_modules/**' --exclude '.dropbox.cache/**' --checkers 50 --transfers 50 /Users/brad/Dropbox b2:parbs-dropbox
 	_display_done
 }
 
-#######################################
+##
 # Backup SDR - currently not configured.
-#######################################
+#
 backup_sdr() {
 	_display_start "殺" "sdr"
 	_display_done "error" "not configured"
 }
 
-#######################################
+##
 # Backup screen - currently not configured.
-#######################################
+#
 backup_screen() {
 	_display_start "" "screen"
 	_display_done "error" "not configured"
 }
 
-#######################################
-# Backup github user
-#######################################
+##
+# Backup GitHub user repositories.
+#
 backup_github() {
 	_display_start "" "github"
 
@@ -98,9 +103,9 @@ backup_github() {
 	_display_done
 }
 
-#######################################
-# Backup github stars.
-#######################################
+##
+# Backup GitHub starred repositories.
+#
 backup_github_stars() {
 	_display_start "" "github-stars"
 
@@ -109,9 +114,9 @@ backup_github_stars() {
 	_display_done
 }
 
-#######################################
-# Backup the media HDD
-#######################################
+##
+# Backup the media HDD.
+#
 backup_media_hdd() {
 	_display_start "" "media-hdd"
 
@@ -124,9 +129,9 @@ backup_media_hdd() {
 	fi
 }
 
-#######################################
+##
 # Backup pocket items.
-#######################################
+#
 backup_pocket() {
 	_display_start "" "pocket"
 
@@ -149,9 +154,9 @@ backup_pocket() {
 	rclone copy --fast-list --progress --copy-links --checkers 50 --transfers 100 "$date" b2:parbs-pocket
 }
 
-#######################################
-# Backup ~/Sites
-#######################################
+##
+# Backup ~/Sites.
+#
 backup_www() {
 	_display_start "" "www"
 
@@ -159,9 +164,10 @@ backup_www() {
 
 	_display_done
 }
-#######################################
+
+##
 # Backup sites to the wayback machine.
-#######################################
+#
 backup_wayback() {
 	_display_start "" "wayback"
 
@@ -177,9 +183,9 @@ backup_wayback() {
 	wayback site sax.cat
 }
 
-#######################################
+##
 # Run all (well most) backup targets.
-#######################################
+#
 backup_all() {
 	_display_start " " "all"
 
@@ -195,9 +201,9 @@ backup_all() {
 	backup_wayback
 }
 
-#######################################
+##
 # Display help/usage.
-#######################################
+#
 _display_help() {
 	echo "${red} Available targets: ${reset}"
 	echo ""
@@ -236,7 +242,6 @@ _set_colors
 
 if [[ -z "$1" ]]; then
 	_display_help
-	exit
 fi
 
 case "${1-help}" in

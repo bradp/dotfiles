@@ -2,6 +2,9 @@
 #
 # Add sr.ht as a secondary origin remote to a repo, to allow for pushing to both at once.
 #
+# Usage:
+#   srht [repo-name]
+#
 
 if [[ -z "$1" ]]; then
 	name=$(basename "$PWD")

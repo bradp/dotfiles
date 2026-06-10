@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 #
-#  Run httrack on a full website.
+# Run httrack on a full website.
+#
+# Usage:
+#   mirror-site <domain-or-url>
 #
 
 if [[ "${1}" == *"http:"* ]]; then

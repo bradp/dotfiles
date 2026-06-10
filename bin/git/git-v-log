@@ -1,3 +1,9 @@
 #!/usr/bin/env bash
+#
+# Display a verbose git log between two refs.
+#
+# Usage:
+#   git v-log <from-ref> <to-ref>
+#
 
 git log "$1".."$2" --pretty=log

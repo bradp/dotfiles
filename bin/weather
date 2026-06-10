@@ -1,11 +1,17 @@
 #!/usr/bin/env bash
 #
-# Start the day with the weather & opening all my apps, end the day by closing the apps and ejecting HDDs.
+# Show the current weather summary.
+#
+# Usage:
+#   weather
 #
 # Needs these enviroment variables to be set:
 #   OPENWEATHER_API_KEY
 #
 
+##
+# Fetch and print the current weather summary.
+#
 _show_weather() {
     local weather
     local current

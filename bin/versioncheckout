@@ -1,4 +1,10 @@
 #!/usr/bin/env zsh
+#
+# Check out a ref and tag the current package version.
+#
+# Usage:
+#   versioncheckout [ref]
+#
 
 if [ ! -z "$1" ]; then
   git checkout "$1"

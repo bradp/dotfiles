@@ -1,4 +1,10 @@
 #!/usr/bin/env bash
+#
+# Delete local tags and their origin refs.
+#
+# Usage:
+#   git delete-tag <tag> [tag...]
+#
 
 # Assert there is at least one tag provided
 test -z $1 && echo "tag required." 1>&2 && exit 1

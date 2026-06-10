@@ -1,4 +1,10 @@
 #!/usr/bin/env bash
+#
+# Rename a git remote.
+#
+# Usage:
+#   git rename-remote <old-remote> <new-remote>
+#
 
 set -euo pipefail
 

@@ -1,4 +1,11 @@
 #!/usr/bin/env bash
+#
+# Delete local branches and their remote refs.
+#
+# Usage:
+#   git delete-branch <branch> [branch...]
+#
+
 set -e
 
 # Assert there is at least one branch provided

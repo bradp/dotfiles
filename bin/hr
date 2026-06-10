@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 #
-# Output a horizontal line
+# Output a horizontal line.
+#
+# Usage:
+#   hr
 #
 
 echo ""

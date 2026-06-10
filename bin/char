@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 #
-# Character picker
+# Character picker.
+#
+# Usage:
+#   char
 #
 chars="⚐ Flag
 ⚑ Flag filled
