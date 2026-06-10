@@ -10,6 +10,7 @@
 
 set -e
 
+script_dir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
 type="${1:-}"
 
 if [ -n "$type" ] && [ "$type" != "theme" ] && [ "$type" != "plugin" ]; then
@@ -73,12 +74,9 @@ EOF
 	echo "Created .wp-env.json for $type: $(basename "$PWD")"
 fi
 
-# Check if there is a wp-content/mu-plugins directory and if there is, copy
-# copy /Users/brad/Dropbox/Working/scratch/wp-local/___local_wp.php to it.
+# If there is an existing mu-plugin directory, add the local development plugin.
 if [ -d "wp-content/mu-plugins" ]; then
-	mkdir -p "wp-content/mu-plugins"
-	cp "${HOME}/Dropbox/Working/scratch/wp-local/___local_wp.php" "wp-content/mu-plugins/"
-	echo "Copied ___local_wp.php to wp-content/mu-plugins"
+	"${script_dir}/copy-local-wp"
 fi
 
 # Now start the environment unless the '--no-start' flag is passed.

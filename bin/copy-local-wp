@@ -1,0 +1,72 @@
+#!/usr/bin/env bash
+#
+# Add a local development mu-plugin to a WordPress project.
+#
+# Usage:
+#   copy-local-wp
+#
+
+set -euo pipefail
+
+plugin_file="___local_wp.php"
+
+if [ -d "wp-content/mu-plugins" ]; then
+	mu_plugins_dir="wp-content/mu-plugins"
+elif [ -d "web/app/mu-plugins" ]; then
+	mu_plugins_dir="web/app/mu-plugins"
+elif [ -d "wp-content" ] || [ -d "wp-content/plugins" ] || [ -d "wp-content/themes" ]; then
+	mu_plugins_dir="wp-content/mu-plugins"
+	mkdir -p "$mu_plugins_dir"
+elif [ -d "web/app" ] || [ -d "web/app/plugins" ] || [ -d "web/app/themes" ]; then
+	mu_plugins_dir="web/app/mu-plugins"
+	mkdir -p "$mu_plugins_dir"
+else
+	echo "No WordPress content directory found. Expected wp-content or web/app."
+	exit 1
+fi
+
+cat > "${mu_plugins_dir}/${plugin_file}" <<'PHP'
+<?php
+
+// Disable pingbacks for local development.
+add_filter( 'pre_pingback_send', '__return_false' );
+
+// Disable XML-RPC for local development.
+add_filter( 'xmlrpc_enabled', '__return_false' );
+
+// Disable trackbacks for local development.
+add_filter( 'pre_trackback_send', '__return_false' );
+
+// Disable tracking for local development.
+add_filter( 'pre_option_blog_public', '__return_zero' );
+
+// Add a WP-CLI command to install Query Monitor, User Switching, and
+// other helpful plugins for local development.
+add_action( 'cli_init', function() {
+	WP_CLI::add_command( 'local-setup', function() {
+		$plugins = [
+			'query-monitor',
+			'user-switching',
+			'wp-crontrol',
+			'theme-check',
+			'debug-bar',
+			'debug-bar-slow-actions',
+		];
+
+		foreach ( $plugins as $plugin ) {
+			WP_CLI::runcommand( "plugin install $plugin --activate" );
+		}
+	} );
+} );
+
+// Make sure the admin user exists for local development.
+add_action( 'init', function() {
+	if ( ! username_exists( 'admin' ) ) {
+		$user_id = wp_create_user( 'admin', 'password', 'admin@example.com' );
+		$user = new WP_User( $user_id );
+		$user->set_role( 'administrator' );
+	}
+} );
+PHP
+
+echo "Wrote ${mu_plugins_dir}/${plugin_file}"

@@ -36,6 +36,8 @@ export FZF_BASE="/opt/homebrew/bin/fzf"
 # Use `fzf`-backed jumps on `z`; keep subdir traversal on `zz`.
 export FZ_CMD=z
 export FZ_SUBDIR_CMD=zz
+export FZ_HISTORY_CD_CMD=zshz
+export FZ_SUBDIR_HISTORY_CD_CMD="zshz -c"
 
 plugins=(
 	forgit

@@ -15,9 +15,9 @@ mkd() {
 	mkdir -p -- "$@" && cd -- "$@" || exit
 }
 
-#########################################
-# Go to the root of git directory       #
-#########################################
+################################################
+# Go to the root of the current git repository #
+################################################
 root() {
 	local git_root
 	git_root=$(git rev-parse --show-toplevel 2> /dev/null) || return
@@ -26,55 +26,57 @@ root() {
 }
 
 #########################################
-# Grep for a running process            #
+# Search running processes              #
 #########################################
 pa() {
 	ps aux | rg "$*"
 }
 
 #########################################
-# Grep for a history entry              #
+# Search shell history                  #
 #########################################
 ha() {
 	history | rg "$*"
 }
 
-########################################
-# Open a file if passed one, otherwise #
-# open the current directory           #
-#######################################
+################################################################
+# Open a file, or the current directory when no file is passed #
+################################################################
 o() {
 	open "${1:-.}"
 }
 
 #########################################
-# 1Password                             #
+# Sign in to 1Password                  #
 #########################################
 1p() {
 	eval $(op signin my)
 }
 
-########################################
-# Dash                                 #
-########################################
+#########################################
+# Open a Dash documentation search      #
+#########################################
 dash() {
 	open "dash://${1}"
 }
 
-########################################
-# Get public IP address                #
-########################################
+########################################################
+# Print public IP address and copy it to the clipboard #
+########################################################
 ip() {
+	local ip
+
 	ip=$(curl -s ifconfig.me)
 	echo "$ip"
 	echo "$ip" | pbcopy
 }
 
-########################################
-# Run a git hook                       #
-########################################
+#########################################
+# Run a git hook by name                #
+#########################################
 hook() {
-	local current_dir=$(pwd)
+	local current_dir
+	current_dir=$(pwd)
 
 	root
 
@@ -85,15 +87,18 @@ hook() {
 	cd "${current_dir}"
 }
 
+#########################################
+# Complete git hook names               #
+#########################################
 _hook() { root && compadd "${(@)${(f)$(ls .git/hooks | grep -v "\.sample")}}"; }
 compdef _hook hook
 compdef _hook git-hook
 
 #########################################
-# Move target $1 to $1.bak              #
-#                                       #
-# https://github.com/shazow/dotfiles/   #
+# Move a target to target.bak           #
 #########################################
+# Based on https://github.com/shazow/dotfiles/
+#
 bak() {
 	declare target=$1;
 	if [[ "${target:0-1}" = "/" ]]; then
@@ -102,16 +107,19 @@ bak() {
 	mv -v $target{,.bak}
 }
 
+#########################################
+# Complete backup files                 #
+#########################################
 _bak() {
 	compadd "${(@)$(ls *.bak)}"
 }
 compdef _bak bak
 
 #########################################
-# Move target $1.bak to $1              #
-#                                       #
-# https://github.com/shazow/dotfiles/   #
+# Move a target.bak file back to target #
 #########################################
+# Based on https://github.com/shazow/dotfiles/
+#
 unbak() {
 	declare target=$1;
 	if [[ "${target:0-1}" = "/" ]]; then
@@ -126,6 +134,9 @@ unbak() {
 	fi
 }
 
+#########################################
+# Complete backup files                 #
+#########################################
 _unbak() {
 	compadd "${(@)$(ls *.bak)}"
 }
@@ -133,10 +144,11 @@ compdef _unbak unbak
 
 
 #########################################
-# Get battery percent                   #
+# Print battery percent                 #
 #########################################
 battery() {
-	local batt=$(pmset -g batt)
+	local batt
+	batt=$(pmset -g batt)
 	batt=($(echo "${batt}" | tr '	' '\n'))
 	local percent="${batt[8]}"
 	percent=${percent//\;/}
@@ -144,20 +156,24 @@ battery() {
 	echo "${percent}"
 }
 
-#########################################
-# Purge Cloudflare cache                #
-#########################################
+##############################################
+# Purge Cloudflare cache for a selected zone #
+##############################################
 purge-cloudflare-cache() {
-	local zone=$(api cf zones | \
+	local zone
+	zone=$(api cf zones | \
 	jq -r '.result[] | [.name, .id] | flatten | @csv' | \
 	sed 's/"//g' | \
 	sed 's/,/ /g' | \
 	fzf --query="${1}" --select-1 --no-multi --cycle --layout=reverse --height=25 --prompt='' --with-nth 1 --delimiter=" " --border=none --color=dark --color="gutter:-1")
 
-	local zone_id=$(echo "${zone}" | cut -d' ' -f2)
-	local zone_name=$(echo "${zone}" | cut -d' ' -f1)
+	local zone_id
+	local zone_name
+	zone_id=$(echo "${zone}" | cut -d' ' -f2)
+	zone_name=$(echo "${zone}" | cut -d' ' -f1)
 
-	local diditwork=$(curl -X -sSL POST "https://api.cloudflare.com/client/v4/zones/${zone_id}/purge_cache" \
+	local diditwork
+	diditwork=$(curl -X -sSL POST "https://api.cloudflare.com/client/v4/zones/${zone_id}/purge_cache" \
 	-H "Authorization: Bearer ${CLOUDFLARE_TOKEN}" \
 	-H "Content-Type:application/json" \
 	--data '{"purge_everything":true}' | \
@@ -171,10 +187,12 @@ purge-cloudflare-cache() {
 }
 
 #########################################
-# Deployments for hugo sites            #
+# Deploy a Hugo site                    #
 #########################################
 deploy() {
-	local site=${1:-$(basename $(pwd))}
+	local site
+
+	site=${1:-$(basename "$(pwd)")}
 
 	cd "${HOME}/Dropbox/Working/sites/${site}" || exit
 
@@ -187,52 +205,51 @@ deploy() {
 
 	rsync -avz --verbose --human-readable --progress --delete public/ root@"${XAVIER}":/var/www/"${1}"/html/
 }
+
+#########################################
+# Complete Hugo site names              #
+#########################################
 _deploy() {
 	_files -W ${HOME}/Dropbox/Working/sites/ -/
 }
 compdef _deploy deploy
 
-#########################################
-# Quickly jump to Sites/www/site        #
-#########################################
+#################################################
+# Quickly jump to a Sites/www content directory #
+#################################################
 site() {
     cd "${HOME}/Sites/www/${1}/content/"
 }
 
+#########################################
+# Complete Sites/www directory names    #
+#########################################
 _site() {
 	_files -W ${HOME}/Sites/www -/
 }
 compdef _site site
 
-#########################################
-# Quickly jump to site directory        #
-#########################################
+############################################
+# Quickly jump to a working site directory #
+############################################
 s() {
     cd "${HOME}/Dropbox/Working/sites/${1}/"
 }
 
+#########################################
+# Complete working site directory names #
+#########################################
 _s() {
 	_files -W "${HOME}/Dropbox/Working/sites/" -/
 }
 compdef _s s
 
-###############################################
-# Helper to copy local WP mu-plugin to a site #
-###############################################
-copy-local-wp() {
-	if [ -d "wp-content/mu-plugins" ]; then
-		mkdir -p "wp-content/mu-plugins"
-		cp "${HOME}/Dropbox/Working/scratch-wp/wp-local/___local_wp.php" "wp-content/mu-plugins/"
-		echo "Copied ___local_wp.php to wp-content/mu-plugins"
-	else
-		echo "No wp-content/mu-plugins directory found, skipping copy of ___local_wp.php"
-	fi
-}
-
-############################################
-# Git push current branch to origin        #
-############################################
+#########################################
+# Push the current git branch to origin #
+#########################################
 gpob() {
+	local branch
+
 	branch=$(git rev-parse --abbrev-ref HEAD | tr -d '\n' | tr -d ' ')
 	git push origin "$branch"
 }

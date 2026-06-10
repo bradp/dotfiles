@@ -9,9 +9,12 @@
 #
 
 #########################################
-# Checkout local branch                 #
+# Check out a local branch              #
 #########################################
 co() {
+	local branches
+	local target
+
 	if ! git rev-parse --is-inside-work-tree > /dev/null 2>&1; then
 		return
 	fi
@@ -25,9 +28,12 @@ co() {
 }
 
 #########################################
-# Tag new version                       #
+# Create a new version tag              #
 #########################################
 gtag() {
+	local current
+	local new
+
 	if ! git rev-parse --is-inside-work-tree > /dev/null 2>&1; then
 		return
 	fi
@@ -43,7 +49,7 @@ gtag() {
 
 
 #########################################
-# Run a composer script                 #
+# Select a Composer script              #
 #########################################
 comp() {
 	if [ -f composer.json ]; then
@@ -52,7 +58,7 @@ comp() {
 }
 
 #########################################
-# Run an artisan script                 #
+# Select an Artisan command             #
 #########################################
 art() {
 	if [ -f artisan ]; then
@@ -61,7 +67,7 @@ art() {
 }
 
 #########################################
-# Run an npm script					    #
+# Select an npm script                  #
 #########################################
 npmr() {
 	if [ -f package.json ]; then
@@ -70,9 +76,11 @@ npmr() {
 }
 
 #########################################
-# SSH 								    #
+# Run an SSH command from history       #
 #########################################
 ffh() {
+	local host
+
 	host=$(history | rg --pcre2 '^(?= [\d]+  ssh )(.)+' | cut -d' ' -f5- | sort | uniq | fzf --height=20 --prompt='')
 
 	if [ -n "${host}" ]; then
@@ -81,10 +89,13 @@ ffh() {
 }
 
 #########################################
-# Bookmarks			       			    #
+# Open Chrome bookmarks                 #
 #########################################
 bookmarks() {
 	# https://github.com/junegunn/fzf/wiki/Examples#bookmarks
+	local bookmarks_path
+	local jq_script
+
 	bookmarks_path=~/Library/Application\ Support/Google/Chrome/Default/Bookmarks
 
 	jq_script='
@@ -103,7 +114,7 @@ bookmarks() {
 }
 
 #########################################
-# Launch app 						    #
+# Launch an application                 #
 #########################################
 app() {
 	fd '.app' --search-path '/Applications' --search-path '/System/Applications' --search-path '/System/Library/CoreServices/Finder.app/Contents/Applications/' --prune -t d | sort | \
@@ -116,9 +127,11 @@ app() {
 }
 
 #########################################
-# Icon picker 						    #
+# Copy icons to the Desktop             #
 #########################################
 icons() {
+	local current_dir
+
 	current_dir=$(pwd)
 	cd "${HOME}/Dropbox/Photos/Icons/" || { echo "Could not find icons folder"; return; }
 
@@ -133,18 +146,25 @@ icons() {
 }
 
 #########################################
-# Bin 								    #
+# Select a dotfiles bin command         #
 #########################################
 bin() {
+	local commands
+	local cmd
+
 	commands=$(command ls $DOTFILES_PATH/bin)
 	cmd=$( echo "$commands" | fzf --color=dark --color='gutter:black,bg+:black,prompt:gray,info:black' --preview-window=right,70% --preview='bat --color=always --style=numbers $(which {})')
 	print -z "$cmd "
 }
 
 #########################################
-# Run an alias                          #
+# Select an alias                       #
 #########################################
 falias() {
+	local alias
+	local command
+	local cmdwidth
+
 	alias=$(alias | fzf --prompt="   alias: "--color=dark --color='gutter:black,bg+:black,prompt:gray,info:black' --preview-window=top:5,border-none --preview 'alias=$(echo {1} | cut -d "=" -f1); command=$( echo {1} | cut -d "=" -f2 | cut -c 2-); alias="  $alias  ";command="  $command  ";space=$(( $FZF_PREVIEW_COLUMNS/9 )); printf "\e[90;100m%-${space}s\e[0m   \e[90;100m%-${space}s\e[0m\n\e[7;106;90m%-${space}s\e[0m \e[2m→ \e[0m\e[7;102;90m%-${space}s\e[0m\n\e[90;100m%-${space}s\e[0m   \e[90;100m%-${space}s\e[0m" $alias $command $alias $command $alias $command' | cut -d "=" -f1 )
 
 	command=$(which "${alias}" | cut -d':' -f2 | cut -d ' ' -f4-)
@@ -160,9 +180,11 @@ falias() {
 }
 
 #########################################
-# Run a                        #
+# Select a function                     #
 #########################################
 ffunc() {
+	local func
+
 	func=$(functions | \
 	grep -E -e "^([^_^$(printf '\t')^\s])+? (?:\(\) {)" | \
 	cut -d ' ' -f1 | \
@@ -172,9 +194,15 @@ ffunc() {
 }
 
 #########################################
-# Run a or script			    #
+# Select a function or script           #
 #########################################
 run() {
+	local bins
+	local current_dir
+	local funcs
+	local query
+	local runit
+
 	current_dir=$(pwd)
 	query="$@"
 
@@ -213,10 +241,12 @@ run() {
 }
 
 #########################################
-# Open a VSCode project, if             #
-# it's set up with Project Manager      #
+# Open a VS Code project                #
 #########################################
 proj() {
+	local project
+	local query
+
 	query="$@"
 
 	project=$(jq -r '.[] | [.name, .rootPath] | @tsv' ${HOME}/Library/Application\ Support/Code/User/globalStorage/alefragnani.project-manager/projects.json | \

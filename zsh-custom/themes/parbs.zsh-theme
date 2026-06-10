@@ -5,7 +5,7 @@ setopt extended_glob
 
 ZSH_THEME_GIT_PROMPT_PREFIX="שׂ "
 ZSH_THEME_GIT_PROMPT_SUFFIX=""
-ZSH_THEME_GIT_PROMPT_CLEAN=" %{$FG[118]%}%{$reset_color%}"
+ZSH_THEME_GIT_PROMPT_CLEAN="%{$FG[118]%}%{$reset_color%}"
 ZSH_THEME_GIT_PROMPT_DIRTY=''
 ZSH_THEME_GIT_PROMPT_ADDED="%{$FG[082]%} %{$reset_color%}"
 ZSH_THEME_GIT_PROMPT_MODIFIED="%{$FG[166]%} %{$reset_color%}"
@@ -14,49 +14,157 @@ ZSH_THEME_GIT_PROMPT_RENAMED="%{$FG[220]%} %{$reset_color%}"
 ZSH_THEME_GIT_PROMPT_UNTRACKED="%{$FG[190]%} %{$reset_color%}"
 ZSH_THEME_GIT_PROMPT_AHEAD="%{$FG[133]%}ﰵ %{$reset_color%}"
 ZSH_THEME_GIT_PROMPT_BEHIND="%{$FG[133]%} %{$reset_color%}"
-ZSH_THEME_GIT_PROMPT_REMOTE_MISSING="%{$FG[193]%}  %{$reset_color%}"
+ZSH_THEME_GIT_PROMPT_REMOTE_MISSING="%{$FG[193]%} %{$reset_color%}"
+PARBS_GIT_PROMPT_SHOW_UNTRACKED=${PARBS_GIT_PROMPT_SHOW_UNTRACKED:-false}
 
-# Show battery icon
-__battery_icon() {
-	return
+typeset -g PARBS_GIT_INFO=""
 
-	if ! hash pmset 2>/dev/null; then
+__parbs_git() {
+	GIT_OPTIONAL_LOCKS=0 command git "$@"
+}
+
+__append_git_prompt_symbol() {
+	local symbol="$1"
+	[[ -n "$symbol" ]] || return
+	printf '%s' "$symbol"
+}
+
+__refresh_git_info() {
+	local status_output line ref oid upstream ahead behind
+	local xy index_state worktree_state
+	local has_added has_modified has_deleted has_renamed has_unmerged has_untracked has_stashed has_changes
+	local prompt_segment=""
+	local -a git_status_args fields ab_fields
+
+	git_status_args=(status --porcelain=v2 --branch --ignore-submodules=dirty)
+
+	if [[ "$PARBS_GIT_PROMPT_SHOW_UNTRACKED" == "true" ]]; then
+		git_status_args+=(--untracked-files=normal)
+	else
+		git_status_args+=(--untracked-files=no)
+	fi
+
+	status_output="$(__parbs_git "${git_status_args[@]}" 2>/dev/null)" || {
+		PARBS_GIT_INFO=""
+		return
+	}
+
+	while IFS= read -r line; do
+		case "$line" in
+			"# branch.head "*)
+				ref="${line#\# branch.head }"
+				;;
+			"# branch.oid "*)
+				oid="${line#\# branch.oid }"
+				;;
+			"# branch.upstream "*)
+				upstream="${line#\# branch.upstream }"
+				;;
+			"# branch.ab "*)
+				ab_fields=(${=line#\# branch.ab })
+				ahead=${ab_fields[1]#+}
+				behind=${ab_fields[2]#-}
+				;;
+			"1 "*|"2 "*)
+				fields=(${(s: :)line})
+				xy="${fields[2]}"
+				index_state="${xy[1]}"
+				worktree_state="${xy[2]}"
+
+				case "$index_state" in
+					A) has_added=1 ;;
+					M|T) has_modified=1 ;;
+					D) has_deleted=1 ;;
+					R|C) has_renamed=1 ;;
+					U) has_unmerged=1 ;;
+				esac
+
+				case "$worktree_state" in
+					M|T) has_modified=1 ;;
+					D) has_deleted=1 ;;
+					U) has_unmerged=1 ;;
+				esac
+				;;
+			"u "*)
+				has_unmerged=1
+				;;
+			"? "*)
+				has_untracked=1
+				;;
+		esac
+	done <<< "$status_output"
+
+	if [[ "$ref" == "(detached)" && -n "$oid" ]]; then
+		ref="${oid[1,7]}"
+	fi
+
+	if [[ -z "$ref" ]]; then
+		PARBS_GIT_INFO=""
 		return
 	fi
 
-	local batt
-	local percent
-	local charge
-	local display
+	prompt_segment="${ZSH_THEME_GIT_PROMPT_PREFIX}${ref}"
 
-	batt=($(echo "$(pmset -g batt)" | tr '	' '\n'))
-	percent=${"${batt[8]}"//\%\;/}
-	charge=${"${batt[9]}"//\;/}
-
-	if [ "$percent" -le "10" ]; then
-		display="%{$FG[088]%} %{$reset_color%}"
-	elif [ "$percent" -le "20" ]; then
-		display="%{$FG[088]%} %{$reset_color%}"
-	elif [ "$percent" -le "50" ]; then
-		display="%{$FG[228]%} %{$reset_color%}"
-	elif [ "$percent" -le "90" ]; then
-		display="%{$FG[065]%} %{$reset_color%}"
-	else
-		display=""
+	if __parbs_git rev-parse --verify refs/stash &>/dev/null; then
+		has_stashed=1
 	fi
 
-	if [[ "$charge" = "AC" ]]; then
-		echo "${display}"
-	elif [[ "$charge" = "charging" ]]; then
-		echo "%{$FG[042]%}%{$reset_color%}${display}"
-	else
-		if [ "$percent" -le "50" ]; then
-			echo "%{$FG[088]%} %{$reset_color%}${display}"
-		else
-			echo "${display}"
-		fi
+	if (( ${ahead:-0} > 0 && ${behind:-0} > 0 )); then
+		prompt_segment+="$(__append_git_prompt_symbol "${ZSH_THEME_GIT_PROMPT_DIVERGED}")"
+		has_changes=1
+	elif (( ${behind:-0} > 0 )); then
+		prompt_segment+="$(__append_git_prompt_symbol "${ZSH_THEME_GIT_PROMPT_BEHIND}")"
+		has_changes=1
+	elif (( ${ahead:-0} > 0 )); then
+		prompt_segment+="$(__append_git_prompt_symbol "${ZSH_THEME_GIT_PROMPT_AHEAD}")"
+		has_changes=1
 	fi
+
+	if [[ -n "$has_unmerged" ]]; then
+		prompt_segment+="$(__append_git_prompt_symbol "${ZSH_THEME_GIT_PROMPT_UNMERGED}")"
+		has_changes=1
+	fi
+
+	if [[ -n "$has_stashed" ]]; then
+		prompt_segment+="$(__append_git_prompt_symbol "${ZSH_THEME_GIT_PROMPT_STASHED}")"
+		has_changes=1
+	fi
+
+	if [[ -n "$has_deleted" ]]; then
+		prompt_segment+="$(__append_git_prompt_symbol "${ZSH_THEME_GIT_PROMPT_DELETED}")"
+		has_changes=1
+	fi
+
+	if [[ -n "$has_renamed" ]]; then
+		prompt_segment+="$(__append_git_prompt_symbol "${ZSH_THEME_GIT_PROMPT_RENAMED}")"
+		has_changes=1
+	fi
+
+	if [[ -n "$has_modified" ]]; then
+		prompt_segment+="$(__append_git_prompt_symbol "${ZSH_THEME_GIT_PROMPT_MODIFIED}")"
+		has_changes=1
+	fi
+
+	if [[ -n "$has_added" ]]; then
+		prompt_segment+="$(__append_git_prompt_symbol "${ZSH_THEME_GIT_PROMPT_ADDED}")"
+		has_changes=1
+	fi
+
+	if [[ -n "$has_untracked" ]]; then
+		prompt_segment+="$(__append_git_prompt_symbol "${ZSH_THEME_GIT_PROMPT_UNTRACKED}")"
+		has_changes=1
+	fi
+
+	if [[ -z "$has_changes" ]]; then
+		prompt_segment+="$(__append_git_prompt_symbol "${ZSH_THEME_GIT_PROMPT_CLEAN}")"
+	fi
+
+	PARBS_GIT_INFO="%{$FG[012]%}${prompt_segment}${ZSH_THEME_GIT_PROMPT_SUFFIX}%{$reset_color%}"
 }
+
+add-zsh-hook precmd __refresh_git_info
+add-zsh-hook chpwd __refresh_git_info
+__refresh_git_info
 
 __internet_icon() {
 	no_connection="%{$FG[088]%}睊 %{$reset_color%}"
@@ -75,56 +183,7 @@ __internet_icon() {
 __write_protected_icon() {
 	if [[ ! -w . ]]; then
 		echo "%{$FG[186]%} %{$reset_color%}"
-  	fi
-}
-
-__file_icon() {
-	local display
-
-	if [[ -f package.json || -d node_modules || -n ./*.js(#qN^/) ]]; then
-		js_icon="%{$FG[070]%}  "
-
-		pkgjson=$(jq -r '.version' package.json 2>/dev/null)
-
-		if [[ "$pkgjson" != "null" && "$pkgjson" != "" ]]; then
-			js_icon="${js_icon}%{$FG[250]%}${pkgjson} "
-		fi
-
-		display="${display}${js_icon}"
 	fi
-
-	if [[ -f composer.json || -n ./*.php(#qN^/) ]]; then
-		php_icon="%{$FG[104]%}  "
-
-		if [[ -f composer.json ]]; then
-			composer_ver=$(jq -r '.version' composer.json 2>/dev/null)
-
-			if [[ "$composer_ver" != "null" ]]; then
-				php_icon="${php_icon}%{$FG[250]%}${composer_ver} "
-			fi
-		fi
-
-		display="${display}${php_icon}"
-	fi
-
-	echo "${display}"
-}
-
-__icons() {
-	if [[ $HOME == ${PWD}] ]]; then
-		return
-	fi
-
-	local display_icons
-
-	icons=$(__file_icon)
-
-	if [[ "$icons" != "" ]]; then
-		display_icons="%{$FG[236]%}  %{$reset_color%}%{$BG[236]%}$(__file_icon) %{$reset_color%}%{$FG[236]%} %{$reset_color%}"
-
-	fi
-
-	echo "$(__write_protected_icon) ${display_icons}"
 }
 
 __remote_host() {
@@ -145,7 +204,7 @@ __git_remote_warning() {
 }
 
 __git_info() {
-	echo "%{$FG[012]%}$(git_prompt_info)$(__git_remote_warning)$(git_prompt_status)%{$reset_color%}"
+	echo "$PARBS_GIT_INFO"
 }
 
 __prompt_color() {
@@ -157,6 +216,6 @@ __() {
 }
 
 PROMPT='$(__prompt_path) %{$reset_color%}
-$(__git_info)$(__remote_host)$(__prompt_color)△  %{$reset_color%}'
-RPROMPT="$(__battery_icon)"
+$(__git_info)$(__remote_host)$(__prompt_color)△ %{$reset_color%}'
+RPROMPT=""
 PS2='%{$FG[246]%}↳  %{$reset_color%}'

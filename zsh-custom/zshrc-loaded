@@ -10,3 +10,7 @@
 
 # Don't show `cache` option for cat/bat
 compdef _files bat
+
+# Keep eza on its default palette instead of Oh My Zsh's fallback LS_COLORS.
+unset LS_COLORS
+zstyle ':completion:*' list-colors ''

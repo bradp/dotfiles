@@ -20,7 +20,6 @@ export DOCKER_SCAN_SUGGEST=false
 
 export EDITOR="vim";
 
-
 export FZF_BASE="/opt/homebrew/bin/fzf"
 export FZF_COMPLETION_OPTS='--border --info=inline'
 export FZF_COMPLETION_TRIGGER=',,'
