@@ -74,26 +74,31 @@ $ bash ~/dotfiles/misc/install
 
 |Name|Description|
 |--|----|
+|`-x`| Mark files as executable |
 |`$`| Strips out the leading `$` when you paste a command.|
 |`add-dock-spacer`| Adds a blank space in your Mac's dock|
+|`ai`| Helper for running AI prompts and utilities|
 |`api`| Helper to easily call APIs|
 |`backup`| Backup various things|
+|`char`| Character picker |
 |`chars`| Display all available nerd-font characters|
 |`clean-filename`| Removes spaces, removes numbers, and lowercases a filename|
-|`day`| Helper to get your computer ready for the start or end of the day|
+|`copy-local-wp`| Add a local development mu-plugin to a WordPress project|
 |`emoji`| Emoji picker to copy emoji to your clipboard|
 |`gh-backup`| Backup various GitHub things|
 |`gh-backup-repo`| Backup a GitHub repo|
-|`git-current-branch`| `git current-branch` or `current-branch` displays your git branch|
-|`git-submodule-remove`| Helper to remove a git submodule|
 |`hr`| Output a horizontal line in the terminal|
 |`meow`| Alternative `catimg` script|
 |`mirror-site`| Run httrack on a full website|
+|`new-wp-env`| Generate a `.wp-env.json` file for a WordPress project |
 |`pocket-to-notion`| Export all Pocket items to a Notion DB.|
 |`pubkey`| Display public key and copy to clipboard.|
-|`srht`| Add [sr.ht](https://sr.ht) as a secondary origin remote to a repo, to allow for pushing to both at once.
+|`srht`| Add [sr.ht](https://sr.ht) as a secondary origin remote to a repo, to allow for pushing to both at once |
 |`todo`| Add an item to a todo list in Notion|
+|`version`| Tag the current package version |
+|`versioncheckout`| Check out a ref and tag the current package version |
 |`wayback`| Save items to the [Archive.org](http://archive.org) Wayback Machine|
+|`weather`| Show the current weather summary |
 |`yt-backup`| Download a youtube video and push it to b2|
 |`ytdl`| Wrapper for youtube-dlp with preffered settings|
 
@@ -115,6 +120,17 @@ $ bash ~/dotfiles/misc/install
 |`proj`| Open a VSCode project |
 |`run`| Combines `bin` and `ffunc` to allow you to any of your scripts or commands |
 
+### Keybinds
+
+|Keys|Command|Description|
+|--|----|----|
+|`ctrl+l`|`eza -Flam --git --color-scale --icons`| List files with git status, icons, and color |
+|`ctrl+s`|`git status`| Show git status |
+|`ctrl+a`|`git commit -m "`| Start a git commit message |
+|`ctrl+f`|`git diff`| Show the current git diff |
+|`ctrl+u`|`bun run build`| Run the project build |
+|`ctrl+p`|`gpob`| Push the current branch to origin |
+
 ### Functions
 
 |Name|Description|
@@ -122,30 +138,60 @@ $ bash ~/dotfiles/misc/install
 |`1p`| Helper to run 1Password cli |
 |`battery`| Get battery percent |
 |`bak`| Move `<name>` (files and folders) to `<name>.bak` |
-|`unbak`| Move `<name>.bak` to `<name>` |
 |`deploy`| Deployments for hugo sites |
+|`dash`| Open a Dash documentation search |
+|`gpob`| Push the current git branch to origin |
 |`ha`| Grep for a history entry |
 |`hook`| Run a git hook |
+|`ip`| Print public IP address and copy it to the clipboard |
 |`mkd`| Make a directory and cd into it |
+|`o`| Open a file, or the current directory when no file is passed |
 |`pa`| Grep for a running process |
 |`purge-cloudflare-cache`| Purge Cloudflare cache |
 |`root`| Go to the root of git directory |
 |`s`| Quickly jump to site directory |
 |`site`| Quickly jump to Sites/www/site |
+|`unbak`| Move `<name>.bak` to `<name>` |
 
 ### Aliases
 
-_Note:_ This is just a few of the many aliases set up.
+_Note:_ This is a curated list of common aliases, not every alias.
 
 |Name|Description|
 |--|----|
 |`3d <text>`|Display text as 3d|
+|`ack`|Alias of `ag`|
+|`artisan`|Alias of `php artisan`|
+|`b`|Alias of `bun`|
+|`branch`|Show the current git branch|
+|`branches`|List local git branches by recent commit date|
+|`box`|Jump to `~/Dropbox`|
 |`c`|Alias of `pbcopy`|
-|`p`| Alias of `pbpaste`|
+|`caff`|Run `caffeinate -dis`|
+|`cat`|Alias of `bat`|
 |`cleanup`| Delete all `.DS_Store` files|
 |`codeo <file>`| Open a file in the current VSCode window|
+|`ct`|Alias of `code`|
+|`ctt`|Open the current directory in VS Code|
 |`f`| File picker using `fzf`|
+|`g`|Alias of `git`|
+|`gc`|Start a git commit message|
 |`gcm`| Allows you to do `gcm This is my commit message`|
+|`gpre`|Run `git pull --rebase`|
+|`gs`|Alias of `git status`|
+|`hist`|Alias of `history`|
+|`jbp`|Compact clipboard JSON with `jq` and copy it back|
+|`kdiff`|Run Kaleidoscope as a git difftool|
+|`p`| Alias of `pbpaste`|
+|`pbj`|Pretty-print clipboard JSON with `jq` and copy it back|
+|`rg`|Run `rg` with VS Code hyperlink formatting|
+|`scr`|Jump to the scratch working directory|
+|`scrw`|Jump to the scratch WordPress working directory|
+|`showdotfiles`|Show dotfiles in Finder|
+|`hidedotfiles`|Hide dotfiles in Finder|
+|`wpstart`|Start `wp-env`|
+|`wpstop`|Stop `wp-env`|
 |`vu`|Bring up a vagrant machine and ssh into it.|
+|`ww`|Jump to `~/Dropbox/Working`|
 |`x`| Way better than `ls` |
 |`xcode-agree`| Because it's a pain to have to agree every update|
