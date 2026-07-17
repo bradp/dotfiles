@@ -76,6 +76,15 @@ npmr() {
 }
 
 #########################################
+# Select an npm script, run via bun     #
+#########################################
+bunr() {
+	if [ -f package.json ]; then
+		print -z "bun run $(cat package.json | jq -r '.scripts | to_entries[] | [.key, .value] | join("||||")' | column -t -s "||||" | fzf --no-multi --height=25 --prompt='' --border=none --color=dark --color="gutter:-1" | cut -d' ' -f1) "
+	fi
+}
+
+#########################################
 # Run an SSH command from history       #
 #########################################
 ffh() {
@@ -152,7 +161,7 @@ bin() {
 	local commands
 	local cmd
 
-	commands=$(command ls $DOTFILES_PATH/bin)
+	commands=$(fd --type f --base-directory "$DOTFILES_PATH/bin" . | sed 's#.*/##' | sort)
 	cmd=$( echo "$commands" | fzf --color=dark --color='gutter:black,bg+:black,prompt:gray,info:black' --preview-window=right,70% --preview='bat --color=always --style=numbers $(which {})')
 	print -z "$cmd "
 }
@@ -186,7 +195,7 @@ ffunc() {
 	local func
 
 	func=$(functions | \
-	grep -E -e "^([^_^$(printf '\t')^\s])+? (?:\(\) {)" | \
+	grep -E -e "^[A-Za-z0-9][A-Za-z0-9_-]* \(\) \{" | \
 	cut -d ' ' -f1 | \
 	fzf --prompt="   function: " --color=dark --color='gutter:black,bg+:black,prompt:gray,info:black' --preview-window=right,70% --preview 'source .zshrc; which {1} | bat --color=always --style=numbers --language zsh')
 
@@ -198,20 +207,17 @@ ffunc() {
 #########################################
 run() {
 	local bins
-	local current_dir
 	local funcs
 	local query
 	local runit
 
-	current_dir=$(pwd)
 	query="$@"
 
 	funcs=$(cat "${ZSH_CUSTOM}"/*.zsh | grep '^function' | cut -d' ' -f2 | sed 's/(//g' | sed 's/)//g')
 
-	cd "$DOTFILES_PATH/bin" && bins=$(fd . --type f) && cd "$current_dir"
+	bins=$(fd . "$DOTFILES_PATH/bin" --type f --exclude util | sed 's#.*/##')
 
 	runit=$(echo "$funcs $bins" | \
-	sed -n '/util\//!p' | \
 	sed -n '/\$/!p' | \
 	sed -n '/^hr$/!p' | \
 	sed -n '/^starter$/!p' | \
