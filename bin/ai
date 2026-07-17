@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# Run local AI helper workflows through llm.
+# Run local AI helper workflows through Codex or llm.
 #
 # Usage:
 #   ai query [flags] <question>
@@ -33,10 +33,11 @@ Flags:
   --clipboard       Append the current clipboard contents to the prompt.
   --no-cwd          Do not include current directory or git context.
   --oneline         For commit-message: return a one-line commit message without a body.
+                   ai commit always uses this format.
   --output <file>   Write the output to a file.
   --print           Print the output to the terminal. Default: true.
   --no-print        Do not print the output to the terminal.
-  -m, --model <id>  Model to use. Shorthands like claude, gpt5, and claude-opus are accepted.
+  -m, --model <id>  Model to use. Default uses codex exec. Shorthands like codex and gpt5 are accepted.
 EOF
 }
 
@@ -46,7 +47,7 @@ EOF
 function ai-reset-options() {
   AI_CLIPBOARD=0
   AI_CWD=1
-  AI_MODEL="${AI_MODEL:-}"
+  AI_MODEL="${AI_MODEL:-codex}"
   AI_ONELINE=0
   AI_OUTPUT=""
   AI_PRINT=1
@@ -230,20 +231,25 @@ function ai-resolve-model() {
     gpt5-* | gpt5.*)
       printf 'gpt-5%s' "${normalized#gpt5}"
       ;;
-    claude | sonnet | claude-sonnet)
-      printf 'anthropic/claude-sonnet-4-6'
-      ;;
-    opus | claude-opus)
-      printf 'anthropic/claude-opus-4-8'
-      ;;
-    haiku | claude-haiku)
-      printf 'anthropic/claude-haiku-4-5-20251001'
-      ;;
-    claude-fable | fable)
-      printf 'claude-fable'
+    codex | default)
+      printf 'codex'
       ;;
     *)
       printf '%s' "$model"
+      ;;
+  esac
+}
+
+##
+# Return success when a resolved model should be handled by Codex.
+#
+function ai-is-codex-model() {
+  case "$1" in
+    codex)
+      return 0
+      ;;
+    *)
+      return 1
       ;;
   esac
 }
@@ -253,30 +259,60 @@ function ai-resolve-model() {
 #
 function ai-model-shorthands() {
   cat <<'EOF'
+codex:codex
 gpt5:gpt5
 gpt5-mini:gpt5-mini
 gpt5-nano:gpt5-nano
 gpt5.1:gpt5.1
 gpt5.2:gpt5.2
-claude:claude
-claude-sonnet:claude-sonnet
-claude-opus:claude-opus
-claude-haiku:claude-haiku
-claude-fable:claude-fable
 EOF
 }
 
 ##
-# Call llm with the configured model, system prompt, and user prompt.
+# Call the configured model with the system prompt and user prompt.
 #
 function ai-call-llm() {
   local system_prompt="$1"
   local user_prompt="$2"
   local model
+  local codex_prompt
+  local error_file
+  local output_file
 
   model="$(ai-resolve-model "$AI_MODEL")"
 
-  if [[ -n "$model" ]]; then
+  if ai-is-codex-model "$model"; then
+    if ! command -v codex >/dev/null 2>&1; then
+      echo "ai: codex is the default model, but the codex CLI was not found." >&2
+      return 1
+    fi
+
+    output_file="$(mktemp "${TMPDIR:-/tmp}/ai-codex-output.XXXXXX")" || return 1
+    error_file="$(mktemp "${TMPDIR:-/tmp}/ai-codex-error.XXXXXX")" || {
+      rm -f "$output_file"
+      return 1
+    }
+    codex_prompt="$(cat <<EOF
+System instructions:
+${system_prompt}
+
+User request:
+${user_prompt}
+EOF
+)"
+
+    codex exec --skip-git-repo-check --sandbox read-only --output-last-message "$output_file" "$codex_prompt" >/dev/null 2>"$error_file" < /dev/null || {
+      local status=$?
+      cat "$error_file" >&2
+      rm -f "$output_file"
+      rm -f "$error_file"
+      return "$status"
+    }
+
+    cat "$output_file"
+    rm -f "$output_file"
+    rm -f "$error_file"
+  elif [[ -n "$model" ]]; then
     llm prompt --no-stream --model "$model" --system "$system_prompt" "$user_prompt"
   else
     llm prompt --no-stream --system "$system_prompt" "$user_prompt"
@@ -322,7 +358,7 @@ function ai-query() {
 }
 
 ##
-# Generate a commit message from the staged diff, or unstaged diff as fallback.
+# Generate a commit message from the staged diff.
 #
 function ai-commit-message() {
   ai-parse-options "$@" || return 1
@@ -333,20 +369,17 @@ function ai-commit-message() {
   fi
 
   local diff
-  local diff_source
   local format_instructions
   local prompt
   local response
+  local staged_files
   local system_prompt
 
   if ai-staged-diff-exists; then
-    diff_source="staged"
     diff="$(git diff --cached --no-ext-diff)"
-  elif ai-worktree-diff-exists; then
-    diff_source="unstaged"
-    diff="$(git diff --no-ext-diff)"
+    staged_files="$(git diff --cached --name-status)"
   else
-    echo "ai commit-message: no staged or unstaged diff found." >&2
+    echo "ai commit-message: no staged diff found." >&2
     return 1
   fi
 
@@ -363,15 +396,14 @@ function ai-commit-message() {
   fi
 
   prompt="$(cat <<EOF
-Generate a commit message for the ${diff_source} git diff below.
+Generate a commit message for the staged git files below.
 
 ${format_instructions}
 
-Repository context:
-$(ai-project-context)
-$(ai-clipboard-context)
+Staged files:
+${staged_files}
 
-Git diff:
+Staged diff:
 ${diff}
 EOF
 )"
@@ -539,7 +571,11 @@ function ai() {
       shift
       ai-query "$@"
       ;;
-    commit | commit-message | commit-msg)
+    commit)
+      shift
+      ai-commit-message --oneline "$@"
+      ;;
+    commit-message | commit-msg)
       shift
       ai-commit-message "$@"
       ;;
