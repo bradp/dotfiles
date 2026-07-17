@@ -15,10 +15,10 @@ bindkey -s '^l' 'eza -Flam --git --color-scale --icons^M'
 bindkey -s '^s' 'git status^M'
 
 # ctrl + a → git commit
-bindkey -s '^a' 'git commit -m "'
+bindkey -s '^a' 'git commit -m ""^B'
 
-# ctrl + g → git diff
-bindkey -s '^g' 'git diff^M'
+# ctrl + f → git diff
+bindkey -s '^f' 'git diff^M'
 
 # ctrl + u → bun run build
 bindkey -s '^u' 'bun run build^M'
