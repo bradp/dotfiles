@@ -37,8 +37,6 @@ if [ -z "$1" ]; then
 	exit
 fi
 
-clear
-
 case "${1-}" in
 	all) echo "$all" ;;
 	f) echo "$fa"; echo "$fae" ;;
