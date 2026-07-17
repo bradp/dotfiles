@@ -3,17 +3,17 @@ setopt promptsubst # Allows command substitution.
 autoload -U add-zsh-hook # Autoload hooks.
 setopt extended_glob
 
-ZSH_THEME_GIT_PROMPT_PREFIX="שׂ "
+ZSH_THEME_GIT_PROMPT_PREFIX=" "
 ZSH_THEME_GIT_PROMPT_SUFFIX=""
-ZSH_THEME_GIT_PROMPT_CLEAN="%{$FG[118]%}%{$reset_color%}"
+ZSH_THEME_GIT_PROMPT_CLEAN="%{$FG[118]%}%{$reset_color%}"
 ZSH_THEME_GIT_PROMPT_DIRTY=''
 ZSH_THEME_GIT_PROMPT_ADDED="%{$FG[082]%} %{$reset_color%}"
 ZSH_THEME_GIT_PROMPT_MODIFIED="%{$FG[166]%} %{$reset_color%}"
-ZSH_THEME_GIT_PROMPT_DELETED="%{$FG[160]%} %{$reset_color%}"
+ZSH_THEME_GIT_PROMPT_DELETED="%{$FG[160]%}  %{$reset_color%}"
 ZSH_THEME_GIT_PROMPT_RENAMED="%{$FG[220]%} %{$reset_color%}"
 ZSH_THEME_GIT_PROMPT_UNTRACKED="%{$FG[190]%} %{$reset_color%}"
-ZSH_THEME_GIT_PROMPT_AHEAD="%{$FG[133]%}ﰵ %{$reset_color%}"
-ZSH_THEME_GIT_PROMPT_BEHIND="%{$FG[133]%} %{$reset_color%}"
+ZSH_THEME_GIT_PROMPT_AHEAD="%{$FG[133]%} %{$reset_color%}"
+ZSH_THEME_GIT_PROMPT_BEHIND="%{$FG[133]%}  %{$reset_color%}"
 ZSH_THEME_GIT_PROMPT_REMOTE_MISSING="%{$FG[193]%} %{$reset_color%}"
 PARBS_GIT_PROMPT_SHOW_UNTRACKED=${PARBS_GIT_PROMPT_SHOW_UNTRACKED:-false}
 
